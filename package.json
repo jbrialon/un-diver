@@ -1,0 +1,19 @@
+{
+    "name": "un-diver",
+    "version": "1.0.0",
+    "description": "UN Diver collection page",
+    "private": true,
+    "main": "index.js",
+    "scripts": {
+        "dev": "webpack --config webpack.config.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "webpack": "^4.16.5"
+    },
+    "dependencies": {
+        "vue": "^2.5.17"
+    }
+}

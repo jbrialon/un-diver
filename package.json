@@ -3,17 +3,28 @@
     "version": "1.0.0",
     "description": "UN Diver collection page",
     "private": true,
-    "main": "index.js",
+    "main": "main.js",
     "scripts": {
-        "dev": "webpack --config webpack.config.js"
+        "dev": "webpack-dev-server --host 0.0.0.0 --port 8080 --hot --mode development"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "webpack": "^4.16.5"
+        "css-loader": "^1.0.0",
+        "node-sass": "^4.9.2",
+        "sass-loader": "^7.1.0",
+        "style-loader": "^0.22.0",
+        "vue-loader": "^15.2.7",
+        "vue-template-compiler": "^2.5.17",
+        "webpack": "^4.16.5",
+        "webpack-cli": "^3.1.0"
     },
     "dependencies": {
-        "vue": "^2.5.17"
+        "@babel/core": "^7.0.0-beta.56",
+        "@babel/preset-env": "^7.0.0-beta.56",
+        "babel-loader": "^8.0.0-beta.4",
+        "vue": "^2.5.17",
+        "webpack-dev-server": "^3.1.5"
     }
 }

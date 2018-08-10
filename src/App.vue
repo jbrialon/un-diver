@@ -13,7 +13,10 @@ module.exports = {
       stageDOMElement: null,
       scene: null,
       camera: null,
+      cameraPositionVector: null,
+      cameraRotationQuaternion: null,
       pageHeight: 0,
+      pageHeightMultiplyer: 0.5,
       samples: [
         {
           text: "WELCOME",
@@ -47,6 +50,8 @@ module.exports = {
 
   methods: {
     initScene: function() {
+      this.cameraPositionVector = new THREE.Vector3();
+      this.cameraRotationQuaternion = new THREE.Quaternion();
       this.stageDOMElement = document.getElementById("stage");
       this.scene = new THREE.Scene();
       this.camera = new THREE.PerspectiveCamera(
@@ -72,19 +77,16 @@ module.exports = {
 
       let animate = () => {
         requestAnimationFrame(animate);
-        this.camera.position.set(
-          0,
-          0,
-          -(document.scrollingElement || document.documentElement).scrollTop
-        );
+        this.cameraPositionVector.set(0,0, -(document.scrollingElement || document.documentElement).scrollTop * this.pageHeightMultiplyer);
+
+        this.camera.position.lerp(this.cameraPositionVector, 0.1);
+        this.camera.quaternion.slerp(this.cameraRotationQuaternion, 0.1);
         renderer.render(this.scene, this.camera);
       };
-      document.addEventListener("mousemove", (e) => {
-        console.log(e.clientX, e.clientY);
-    
-        var t = new THREE.Vector2(e.clientX, e.clientY);
-        let a = new THREE.Quaternion();
-        this.camera.rotation = new THREE.Euler(-t.y, -t.x, 0);
+      document.addEventListener("mousemove", e => {
+        let t = new THREE.Vector2(e.clientX, e.clientY);
+        this.restrictFOV(t);
+        this.cameraRotationQuaternion.setFromEuler(new THREE.Euler(-t.y, -t.x, 0));
       });
       animate();
     },
@@ -95,11 +97,11 @@ module.exports = {
           this.createCanvasText(this.samples[index].text)
         );
         texture.needsUpdate = true;
-        let material = new THREE.MeshBasicMaterial({ map: texture });
+        let material = new THREE.MeshBasicMaterial({ map: texture, transparent: !0, visible: 1 });
         let geometry = new THREE.PlaneGeometry(200, 200);
         let mesh = new THREE.Mesh(geometry, material);
         mesh.position.z = -this.samples[index].zpos;
-        this.pageHeight = this.samples[index].zpos;
+        this.pageHeight = this.samples[index].zpos * 1/this.pageHeightMultiplyer;
         this.scene.add(mesh);
       }
     },
@@ -115,26 +117,30 @@ module.exports = {
       );
 
       let ctx = canvas.getContext("2d");
-      ctx.font = "20pt Arial";
-      ctx.fillStyle = "white";
+      ctx.font = "35pt Arial";
+      ctx.fillStyle = "rgba(255,255,255,1)";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-      console.log(text);
 
       return canvas;
+    },
+
+    updateCamera: function(theCamera) {
+      this.cameraMatrix.multiplyMatrices(
+        theCamera.projectionMatrix,
+        this.cameraMatrix.getInverse(theCamera.matrixWorld)
+      );
+    },
+
+    restrictFOV(vec2) {
+      var maxWidth = window.innerWidth >> 1,
+        maxHeight = window.innerHeight >> 1;
+      return (vec2.x = (vec2.x - maxWidth) / maxWidth), (vec2.y = (vec2.y - maxHeight) / maxHeight), vec2;
     }
   },
 
-  onMouseMoved: function(e) {
-    
-  },
-
-  unknownFunc: function(e) {
-    var t = h >> 1,
-      n = m >> 1;
-    return (e.x = (e.x - t) / t), (e.y = (e.y - n) / n), e;
-  }
+  onMouseMoved: function(e) {}
 };
 </script>
 

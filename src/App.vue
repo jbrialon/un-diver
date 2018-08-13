@@ -12,6 +12,8 @@
 <script>
 import * as THREE from 'three'
 import Title from './components/Title.js'
+import Watch from './components/Watch.js'
+import Plankton from './components/Plankton.js'
 
 export default {
   data: function () {
@@ -19,6 +21,7 @@ export default {
       stageSize: new THREE.Vector2(0, 0),
       stageDOMElement: null,
       scene: null,
+      cameraDummy: new THREE.Group(),
       camera: null,
       cameraPositionVector: null,
       cameraRotationQuaternion: null,
@@ -42,12 +45,21 @@ export default {
           zpos: 5000
         },
         {
-          text: 'STAIN CASE',
+          type: 'watch',
+          title: 'Diver Monaco Yacht Show',
+          texturePath: require('./assets/watches/3203.png'),
+          infoLink: 'toto.com',
+          buyLink: 'toto.com',
+          price: '12,000 CHF',
           zpos: 7000
         },
         {
-          text: 'PHOSPHORESCENT NEEDLES & NUMBERS',
+          text: 'STAIN CASE',
           zpos: 9000
+        },
+        {
+          text: 'PHOSPHORESCENT NEEDLES & NUMBERS',
+          zpos: 11000
         }
       ]
     }
@@ -55,6 +67,7 @@ export default {
   mounted: function () {
     this.stageDOMElement = document.getElementById('stage')
     this.initScene()
+    this.initEnvironment()
     this.addContentInSpace()
     this.handleEvents()
     document.body.style.height = this.pageHeight + 'px'
@@ -71,7 +84,7 @@ export default {
         1,
         2e5
       )
-      let renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false })
+      let renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })
       renderer.setSize(this.stageSize.width, this.stageSize.height)
       renderer.autoClear = !1
       renderer.setClearColor(0, 0)
@@ -79,25 +92,48 @@ export default {
         window.devicePixelRatio || window.webkitDevicePixelRatio || 1
       )
       this.stageDOMElement.appendChild(renderer.domElement)
-      this.camera.position.set(0, 0, 500)
       let animate = () => {
         requestAnimationFrame(animate)
         this.cameraPositionVector.set(0, 0, -(document.scrollingElement || document.documentElement).scrollTop * this.pageHeightMultiplyer)
-        this.camera.position.lerp(this.cameraPositionVector, 0.1)
+        this.cameraDummy.position.lerp(this.cameraPositionVector, 0.1)
         this.updateCameraRotation()
         this.camera.quaternion.slerp(this.cameraRotationQuaternion, 0.1)
         renderer.render(this.scene, this.camera)
       }
-      window.ThreeCamera = this.camera
+      this.cameraDummy.add(this.camera)
+      this.scene.add(this.cameraDummy)
+      // this.scene.fog = new THREE.FogExp2(0x1c3c4a, 0.000045)
+      window.ThreeCameraDummy = this.cameraDummy
       window.ThreeStageSize = this.stageSize
       animate()
     },
+    initEnvironment: function () {
+      let geometry = new THREE.SphereGeometry(10000, 32, 32)
+      let texture = new THREE.TextureLoader().load(require('./assets/underwater.jpg'))
+      let material = new THREE.MeshBasicMaterial({map: texture})
+      material.side = THREE.BackSide
+      let sphere = new THREE.Mesh(geometry, material)
+      this.cameraDummy.add(sphere)
+
+      // set up plankton
+      let plankton = new Plankton()
+      this.scene.add(plankton)
+    },
     addContentInSpace: function () {
       for (let index = 0; index < this.samples.length; index++) {
-        let title = new Title(this.samples[index].text)
-        title.position.z = -this.samples[index].zpos
-        this.scene.add(title)
-        this.pageHeight = this.samples[index].zpos * 1 / this.pageHeightMultiplyer
+        let item = this.samples[index]
+        let itemObject
+        switch (item.type) {
+          case 'watch':
+            itemObject = new Watch(item.title, item.price, item.infoLink, item.buyLink, item.texturePath)
+            break
+          default:
+            itemObject = new Title(item.text)
+            break
+        }
+        itemObject.position.z = -item.zpos
+        this.scene.add(itemObject)
+        this.pageHeight = item.zpos * 1 / this.pageHeightMultiplyer
       }
     },
     handleEvents: function () {

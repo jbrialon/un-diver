@@ -11,6 +11,7 @@
 
 <script>
 import * as THREE from 'three'
+import Title from './components/Title.js'
 
 export default {
   data: function () {
@@ -34,19 +35,19 @@ export default {
         },
         {
           text: 'DIVER COLLECTION',
-          zpos: 2000
-        },
-        {
-          text: 'THE NEW DIVER',
           zpos: 3000
         },
         {
+          text: 'THE NEW DIVER',
+          zpos: 5000
+        },
+        {
           text: 'STAIN CASE',
-          zpos: 4000
+          zpos: 7000
         },
         {
           text: 'PHOSPHORESCENT NEEDLES & NUMBERS',
-          zpos: 5000
+          zpos: 9000
         }
       ]
     }
@@ -87,20 +88,16 @@ export default {
         this.camera.quaternion.slerp(this.cameraRotationQuaternion, 0.1)
         renderer.render(this.scene, this.camera)
       }
+      window.ThreeCamera = this.camera
+      window.ThreeStageSize = this.stageSize
       animate()
     },
     addContentInSpace: function () {
       for (let index = 0; index < this.samples.length; index++) {
-        let texture = new THREE.Texture(
-          this.createCanvasText(this.samples[index].text)
-        )
-        texture.needsUpdate = true
-        let material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
-        let geometry = new THREE.PlaneGeometry(THREE.Math.ceilPowerOfTwo(this.stageSize.width), THREE.Math.ceilPowerOfTwo(this.stageSize.height))
-        let mesh = new THREE.Mesh(geometry, material)
-        mesh.position.z = -this.samples[index].zpos
+        let title = new Title(this.samples[index].text)
+        title.position.z = -this.samples[index].zpos
+        this.scene.add(title)
         this.pageHeight = this.samples[index].zpos * 1 / this.pageHeightMultiplyer
-        this.scene.add(mesh)
       }
     },
     handleEvents: function () {
@@ -115,23 +112,6 @@ export default {
       window.removeEventListener('deviceorientation', this.onDeviceOrientationChange, false)
       window.removeEventListener('deviceorientation', this.onDeviceOrientationInit, false)
       window.removeEventListener('compassneedscalibration', this.onCompassNeedsCalibration, false)
-    },
-    createCanvasText: function (text) {
-      let canvas = document.createElement('canvas')
-      // document.body.appendChild(canvas)
-      canvas.width = THREE.Math.ceilPowerOfTwo(
-        this.stageSize.width
-      )
-      canvas.height = THREE.Math.ceilPowerOfTwo(
-        this.stageSize.height
-      )
-      let ctx = canvas.getContext('2d')
-      ctx.font = '35pt Arial'
-      ctx.fillStyle = 'rgba(255,255,255,1)'
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'middle'
-      ctx.fillText(text, canvas.width / 2, canvas.height / 2)
-      return canvas
     },
     restrictFOV: function (vec2) {
       let maxWidth = this.stageSize.width >> 1

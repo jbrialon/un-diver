@@ -8,8 +8,9 @@
     "dev": "vue-cli-service serve"
   },
   "dependencies": {
+    "three": "^0.95.0",
     "vue": "^2.5.17",
-    "three": "^0.95.0"
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.0",

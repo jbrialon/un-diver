@@ -23,20 +23,20 @@ export default class Watch extends THREE.Object3D {
 
       this.texture = new THREE.TextureLoader().load(texturePath)
       this.material = new THREE.MeshBasicMaterial({ map: this.texture, transparent: true, visible: true })
-      this.geometry = new THREE.PlaneGeometry(window.ThreeStageSize.width, window.ThreeStageSize.width * 0.533333)
+      this.geometry = new THREE.PlaneGeometry(window.AppStageSize.width, window.AppStageSize.width * 0.533333)
       this.mesh = new THREE.Mesh(this.geometry, this.material)
-      this.mesh.position.x = -window.ThreeStageSize.width * 0.15
+      this.mesh.position.x = -window.AppStageSize.width * 0.15
       this.mesh.position.z = -5
       super.add(this.mesh)
 
       this.infoButton = new Button('More information', 'toto.com')
-      this.infoButton.position.x = window.ThreeStageSize.width * 0.15
-      this.infoButton.position.y = -window.ThreeStageSize.height * 0.1
+      this.infoButton.position.x = window.AppStageSize.width * 0.15
+      this.infoButton.position.y = -window.AppStageSize.height * 0.1
       super.add(this.infoButton)
 
       this.buyButton = new Button('Buy', 'toto.com')
-      this.buyButton.position.x = window.ThreeStageSize.width * 0.15
-      this.buyButton.position.y = -window.ThreeStageSize.height * 0.2
+      this.buyButton.position.x = window.AppStageSize.width * 0.15
+      this.buyButton.position.y = -window.AppStageSize.height * 0.2
       super.add(this.buyButton)
 
       return Object.assign(

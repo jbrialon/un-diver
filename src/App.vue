@@ -6,16 +6,22 @@
           <img src="./assets/logo.png" alt="Ulysse Nardin">
         </a>
       </div>
+      <Menu></Menu>
   </div>
 </template>
 
 <script>
 import * as THREE from 'three'
+import Menu from './components/Menu.vue'
+import VrRenderer from './components/VrRenderer.js'
 import Title from './components/Title.js'
 import Watch from './components/Watch.js'
 import Plankton from './components/Plankton.js'
 
 export default {
+  components: {
+    Menu
+  },
   data: function () {
     return {
       stageSize: new THREE.Vector2(0, 0),
@@ -24,9 +30,8 @@ export default {
       cameraDummy: new THREE.Group(),
       camera: null,
       renderer: null,
-      cameraPositionVector: null,
       cameraRotationQuaternion: null,
-      pageHeightMultiplyer: 0.5,
+      pageHeightMultiplyer: 5,
       deviceOrientation: null,
       screenOrientation: window.orientation || 0,
       mousePosition: new THREE.Vector2(),
@@ -77,7 +82,6 @@ export default {
   methods: {
     initScene: function () {
       this.stageSize.set(this.stageDOMElement.clientWidth, this.stageDOMElement.clientHeight)
-      this.cameraPositionVector = new THREE.Vector3()
       this.cameraRotationQuaternion = new THREE.Quaternion()
       this.scene = new THREE.Scene()
       this.camera = new THREE.PerspectiveCamera(
@@ -93,24 +97,22 @@ export default {
       this.renderer.setPixelRatio(
         window.devicePixelRatio || window.webkitDevicePixelRatio || 1
       )
+      this.vrRenderer = new VrRenderer(this.renderer)
+      this.vrRenderer.separation = 1.3
       this.stageDOMElement.appendChild(this.renderer.domElement)
       let animate = () => {
         requestAnimationFrame(animate)
-        /*
-        camera.position.z += (-(document.scrollingElement || document.documentElement).scrollTop * g - camera.position.z) / 10
-        window.vr ? camera.quaternion.copy(cameraVect.quaternion) : camera.quaternion.slerp(cameraVect.quaternion, .1)
-        */
-        this.cameraPositionVector.set(0, 0, -(document.scrollingElement || document.documentElement).scrollTop * this.pageHeightMultiplyer)
-        this.cameraDummy.position.lerp(this.cameraPositionVector, 0.1)
+        this.cameraDummy.position.z += (-(document.scrollingElement || document.documentElement).scrollTop * this.pageHeightMultiplyer - this.cameraDummy.position.z) / 10
         this.updateCameraRotation()
-        this.camera.quaternion.slerp(this.cameraRotationQuaternion, 0.1)
-        this.renderer.render(this.scene, this.camera)
+        window.AppVrMode ? this.camera.quaternion.copy(this.cameraRotationQuaternion) : this.camera.quaternion.slerp(this.cameraRotationQuaternion, 0.1)
+        this.renderer.clear()
+        window.AppVrMode ? this.vrRenderer.render(this.scene, this.camera) : this.renderer.render(this.scene, this.camera)
       }
       this.cameraDummy.add(this.camera)
       this.scene.add(this.cameraDummy)
       // this.scene.fog = new THREE.FogExp2(0x1c3c4a, 0.000045)
-      window.ThreeCameraDummy = this.cameraDummy
-      window.ThreeStageSize = this.stageSize
+      window.AppCameraDummy = this.cameraDummy
+      window.AppStageSize = this.stageSize
       animate()
     },
     initEnvironment: function () {
@@ -215,7 +217,7 @@ export default {
       this.stageSize.set(this.stageDOMElement.clientWidth, this.stageDOMElement.clientHeight)
       this.renderer.setSize(this.stageSize.width, this.stageSize.height)
       this.camera.aspect = this.stageSize.width / this.stageSize.height
-      // this.vrRenderer.setSize(this.stageSize.width, this.stageSize.height)
+      this.vrRenderer.setSize(this.stageSize.width, this.stageSize.height)
       this.camera.updateProjectionMatrix()
       this.setPageHeight()
     }

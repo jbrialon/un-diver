@@ -17,7 +17,7 @@ export default class Title extends THREE.Object3D {
       )
       this.texture.needsUpdate = true
       this.material = new THREE.MeshBasicMaterial({ map: this.texture, transparent: true, visible: true })
-      this.geometry = new THREE.PlaneGeometry(THREE.Math.ceilPowerOfTwo(window.ThreeStageSize.width), THREE.Math.ceilPowerOfTwo(window.ThreeStageSize.height))
+      this.geometry = new THREE.PlaneGeometry(THREE.Math.ceilPowerOfTwo(window.AppStageSize.width), THREE.Math.ceilPowerOfTwo(window.AppStageSize.height))
       this.mesh = new THREE.Mesh(this.geometry, this.material)
       super.add(this.mesh)
       return Object.assign(
@@ -30,10 +30,10 @@ export default class Title extends THREE.Object3D {
       let canvas = document.createElement('canvas')
       // document.body.appendChild(canvas)
       canvas.width = THREE.Math.ceilPowerOfTwo(
-        window.ThreeStageSize.width
+        window.AppStageSize.width
       )
       canvas.height = THREE.Math.ceilPowerOfTwo(
-        window.ThreeStageSize.height
+        window.AppStageSize.height
       )
       let ctx = canvas.getContext('2d')
       ctx.font = '35pt Arial'

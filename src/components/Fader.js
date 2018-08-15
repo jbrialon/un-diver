@@ -7,7 +7,7 @@ export default class Fader {
 
   constructor (object) {
     this.referenceObject3D = object
-    this.camera = window.ThreeCameraDummy
+    this.camera = window.AppCameraDummy
     this.closeDistance = 500
     this.farDistance = 2000
     this.updateFade()

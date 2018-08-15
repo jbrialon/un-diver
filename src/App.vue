@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation}">
       <div id="stage"></div>
       <div id="logo">
         <a href="/">
@@ -7,11 +7,15 @@
         </a>
       </div>
       <Menu></Menu>
+      <div id="rotate-device-message">
+        Please rotate your device to landscape
+      </div>
   </div>
 </template>
 
 <script>
 import * as THREE from 'three'
+import { mapGetters } from 'vuex'
 import Menu from './components/Menu.vue'
 import VrRenderer from './components/VrRenderer.js'
 import Title from './components/Title.js'
@@ -71,6 +75,17 @@ export default {
       ]
     }
   },
+  computed: {
+    landscapeOrientation: function () {
+      return this.screenOrientation === 90
+    },
+    portraitOrientation: function () {
+      return this.screenOrientation === 0
+    },
+    ...mapGetters([
+      'vrModeActivated'
+    ])
+  },
   mounted: function () {
     this.stageDOMElement = document.getElementById('stage')
     this.initScene()
@@ -111,6 +126,8 @@ export default {
       this.cameraDummy.add(this.camera)
       this.scene.add(this.cameraDummy)
       // this.scene.fog = new THREE.FogExp2(0x1c3c4a, 0.000045)
+      this.$store.commit('setCameraDummy', this.cameraDummy)
+      this.$store.commit('setStageSize', this.stageSize)
       window.AppCameraDummy = this.cameraDummy
       window.AppStageSize = this.stageSize
       animate()
@@ -222,6 +239,11 @@ export default {
       this.setPageHeight()
     }
   },
+  watch: {
+    'vrModeActivated': function (newVal) {
+      this.onResize()
+    }
+  },
   beforeDestroy: function () {
     this.removeListeners()
   }
@@ -233,10 +255,27 @@ export default {
 
   body {
     min-height: 200vh;
+    background: black;
   }
 
   #app {
     height: 100vh;
+
+    &.vr {
+      #logo, #menu-about, #menu-help {
+        display: none;
+      }
+
+      &.portrait {
+        #rotate-device-message {
+          display: block;
+        }
+      }
+
+      #menu-vr {
+        opacity: 1;
+      }
+    }
 
     #stage {
       height: 100vh;
@@ -253,12 +292,24 @@ export default {
       position: fixed;
       top: 3vh;
       left: 50%;
-      transform: translateX(-50%);
+      @include transform(translateX(-50%));
       width: 35vw;
 
       img {
         width: 100%;
       }
+    }
+
+    #rotate-device-message {
+      display: none;
+      position: fixed;
+      padding: 2em;
+      background: rgba(0,0,0,0.7);
+      color: $white;
+      top: 50%;
+      left: 50%;
+      text-align: center;
+      @include transform(translate3d(-50%, -50%, 0));
     }
   }
 </style>

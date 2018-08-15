@@ -31,6 +31,7 @@ export default {
   methods: {
     toggleVrMode: function () {
       window.AppVrMode = !window.AppVrMode
+      this.$store.commit('toggleVrMode')
     }
   }
 }
@@ -42,8 +43,8 @@ export default {
 #menu {
   z-index: 1;
   position: fixed;
-  top: 20px;
-  right: 40px;
+  top: 12vh;
+  right: 2vh;
   height: 40px;
   display: -webkit-box;
   display: -ms-flexbox;

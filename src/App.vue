@@ -23,14 +23,16 @@ export default {
       scene: null,
       cameraDummy: new THREE.Group(),
       camera: null,
+      renderer: null,
       cameraPositionVector: null,
       cameraRotationQuaternion: null,
-      pageHeight: 0,
       pageHeightMultiplyer: 0.5,
       deviceOrientation: null,
       screenOrientation: window.orientation || 0,
       mousePosition: new THREE.Vector2(),
       deviceOrientationInitialQuat: new THREE.Quaternion(),
+      startZPos: 0,
+      endZPos: 0,
       samples: [
         {
           text: 'WELCOME',
@@ -70,7 +72,7 @@ export default {
     this.initEnvironment()
     this.addContentInSpace()
     this.handleEvents()
-    document.body.style.height = this.pageHeight + 'px'
+    this.onResize()
   },
   methods: {
     initScene: function () {
@@ -84,21 +86,25 @@ export default {
         1,
         2e5
       )
-      let renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })
-      renderer.setSize(this.stageSize.width, this.stageSize.height)
-      renderer.autoClear = !1
-      renderer.setClearColor(0, 0)
-      renderer.setPixelRatio(
+      this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })
+      this.renderer.setSize(this.stageSize.width, this.stageSize.height)
+      this.renderer.autoClear = !1
+      this.renderer.setClearColor(0, 0)
+      this.renderer.setPixelRatio(
         window.devicePixelRatio || window.webkitDevicePixelRatio || 1
       )
-      this.stageDOMElement.appendChild(renderer.domElement)
+      this.stageDOMElement.appendChild(this.renderer.domElement)
       let animate = () => {
         requestAnimationFrame(animate)
+        /*
+        camera.position.z += (-(document.scrollingElement || document.documentElement).scrollTop * g - camera.position.z) / 10
+        window.vr ? camera.quaternion.copy(cameraVect.quaternion) : camera.quaternion.slerp(cameraVect.quaternion, .1)
+        */
         this.cameraPositionVector.set(0, 0, -(document.scrollingElement || document.documentElement).scrollTop * this.pageHeightMultiplyer)
         this.cameraDummy.position.lerp(this.cameraPositionVector, 0.1)
         this.updateCameraRotation()
         this.camera.quaternion.slerp(this.cameraRotationQuaternion, 0.1)
-        renderer.render(this.scene, this.camera)
+        this.renderer.render(this.scene, this.camera)
       }
       this.cameraDummy.add(this.camera)
       this.scene.add(this.cameraDummy)
@@ -120,6 +126,9 @@ export default {
       this.scene.add(plankton)
     },
     addContentInSpace: function () {
+      this.startZPos = this.samples[0].zpos
+      this.endZPos = this.samples[this.samples.length - 1].zpos
+
       for (let index = 0; index < this.samples.length; index++) {
         let item = this.samples[index]
         let itemObject
@@ -133,16 +142,20 @@ export default {
         }
         itemObject.position.z = -item.zpos
         this.scene.add(itemObject)
-        this.pageHeight = item.zpos * 1 / this.pageHeightMultiplyer
       }
     },
+    setPageHeight: function () {
+      document.body.style.height = (this.endZPos - this.startZPos) / this.pageHeightMultiplyer + this.stageSize.height + 'px'
+    },
     handleEvents: function () {
+      window.addEventListener('resize', this.onResize, false)
       window.addEventListener('mousemove', this.onMouseMove, false)
       window.addEventListener('orientationchange', this.onScreenOrientationChange, false)
       window.addEventListener('deviceorientation', this.onDeviceOrientationInit, false)
       window.addEventListener('compassneedscalibration', this.onCompassNeedsCalibration, false)
     },
     removeListeners: function () {
+      window.removeEventListener('resize', this.onResize, false)
       window.removeEventListener('mousemove', this.onMouseMove, false)
       window.removeEventListener('orientationchange', this.onScreenOrientationChange, false)
       window.removeEventListener('deviceorientation', this.onDeviceOrientationChange, false)
@@ -197,6 +210,14 @@ export default {
       quaternion.setFromEuler(euler) // orient the device
       quaternion.multiply(q1) // camera looks out the back of the device, not the top
       quaternion.multiply(q0.setFromAxisAngle(zee, -orient)) // adjust for screen orientation
+    },
+    onResize: function () {
+      this.stageSize.set(this.stageDOMElement.clientWidth, this.stageDOMElement.clientHeight)
+      this.renderer.setSize(this.stageSize.width, this.stageSize.height)
+      this.camera.aspect = this.stageSize.width / this.stageSize.height
+      // this.vrRenderer.setSize(this.stageSize.width, this.stageSize.height)
+      this.camera.updateProjectionMatrix()
+      this.setPageHeight()
     }
   },
   beforeDestroy: function () {

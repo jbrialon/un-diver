@@ -19,7 +19,6 @@ export default class BackgroundColorManager {
   }
 
   init () {
-    this.renderer.setClearColor(0xffffff, 1)
     this.updateFade()
   }
 

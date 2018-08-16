@@ -3,7 +3,7 @@
       <div id="stage"></div>
       <div id="logo">
         <a href="/">
-          <img src="./assets/logo.png" alt="Ulysse Nardin">
+          <!--<img src="./assets/logo.png" alt="Ulysse Nardin">-->
         </a>
       </div>
       <Menu></Menu>
@@ -16,7 +16,7 @@
 <script>
 import * as THREE from 'three'
 import { mapGetters } from 'vuex'
-import Menu from './components/Menu.vue'
+import Menu from './components/vue/Menu.vue'
 import Environment from './components/Environment.js'
 import BackgroundColorManager from './components/BackgroundColorManager.js'
 import VrRenderer from './components/VrRenderer.js'
@@ -45,20 +45,20 @@ export default {
       endZPos: 0,
       samples: [
         {
-          text: 'WELCOME',
+          text: 'DIVER',
           zpos: 1000
         },
         {
-          text: 'DIVER COLLECTION',
+          text: 'DISCOVER THE COLLECTION',
           zpos: 3000
         },
         {
-          text: 'THE NEW DIVER',
+          text: 'DEEP DIVE',
           zpos: 5000
         },
         {
           type: 'watch',
-          title: 'Diver Monaco Yacht Show',
+          title: 'DIVER CHRONOGRAPH',
           texturePath: require('./assets/watches/3203.png'),
           infoLink: 'toto.com',
           buyLink: 'toto.com',
@@ -122,9 +122,9 @@ export default {
         window.AppScrollPercentage = (-this.cameraDummy.position.z / this.endZPos)
         this.cameraDummy.position.z += (-(document.scrollingElement || document.documentElement).scrollTop * this.pageHeightMultiplyer - this.cameraDummy.position.z) / 10
         this.updateCameraRotation()
-        window.AppVrMode ? this.camera.quaternion.copy(this.cameraRotationQuaternion) : this.camera.quaternion.slerp(this.cameraRotationQuaternion, 0.1)
+        this.vrModeActivated ? this.camera.quaternion.copy(this.cameraRotationQuaternion) : this.camera.quaternion.slerp(this.cameraRotationQuaternion, 0.1)
         this.renderer.clear()
-        window.AppVrMode ? this.vrRenderer.render(this.scene, this.camera) : this.renderer.render(this.scene, this.camera)
+        this.vrModeActivated ? this.vrRenderer.render(this.scene, this.camera) : this.renderer.render(this.scene, this.camera)
       }
       this.cameraDummy.add(this.camera)
       this.scene.add(this.cameraDummy)

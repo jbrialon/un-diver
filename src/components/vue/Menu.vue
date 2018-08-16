@@ -30,7 +30,6 @@ export default {
   },
   methods: {
     toggleVrMode: function () {
-      window.AppVrMode = !window.AppVrMode
       this.$store.commit('toggleVrMode')
     }
   }
@@ -38,7 +37,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../scss/_vars.scss';
+@import '../../scss/_vars.scss';
 
 #menu {
   z-index: 1;

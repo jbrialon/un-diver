@@ -8,6 +8,7 @@
     "dev": "vue-cli-service serve"
   },
   "dependencies": {
+    "stats.js": "^0.17.0",
     "three": "^0.95.0",
     "vue": "^2.5.17",
     "vuex": "^3.0.1"

@@ -17,6 +17,7 @@
 import * as THREE from 'three'
 import { mapGetters } from 'vuex'
 import Menu from './components/Menu.vue'
+import BackgroundColorManager from './components/BackgroundColorManager.js'
 import VrRenderer from './components/VrRenderer.js'
 import Title from './components/Title.js'
 import Watch from './components/Watch.js'
@@ -89,8 +90,8 @@ export default {
   mounted: function () {
     this.stageDOMElement = document.getElementById('stage')
     this.initScene()
-    this.initEnvironment()
     this.addContentInSpace()
+    this.initEnvironment()
     this.handleEvents()
     this.onResize()
   },
@@ -107,8 +108,7 @@ export default {
       )
       this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })
       this.renderer.setSize(this.stageSize.width, this.stageSize.height)
-      this.renderer.autoClear = !1
-      this.renderer.setClearColor(0, 0)
+      this.renderer.autoClear = false
       this.renderer.setPixelRatio(
         window.devicePixelRatio || window.webkitDevicePixelRatio || 1
       )
@@ -116,6 +116,7 @@ export default {
       this.vrRenderer.setSize(this.stageSize.width, this.stageSize.height)
       this.vrRenderer.setEyeSeparation(1.3)
       this.stageDOMElement.appendChild(this.renderer.domElement)
+
       let animate = () => {
         requestAnimationFrame(animate)
         this.cameraDummy.position.z += (-(document.scrollingElement || document.documentElement).scrollTop * this.pageHeightMultiplyer - this.cameraDummy.position.z) / 10
@@ -126,7 +127,6 @@ export default {
       }
       this.cameraDummy.add(this.camera)
       this.scene.add(this.cameraDummy)
-      // this.scene.fog = new THREE.FogExp2(0x1c3c4a, 0.000045)
       this.$store.commit('setCameraDummy', this.cameraDummy)
       this.$store.commit('setStageSize', this.stageSize)
       window.AppCameraDummy = this.cameraDummy
@@ -134,15 +134,10 @@ export default {
       animate()
     },
     initEnvironment: function () {
-      let geometry = new THREE.SphereGeometry(10000, 32, 32)
-      let texture = new THREE.TextureLoader().load(require('./assets/underwater.jpg'))
-      let material = new THREE.MeshBasicMaterial({map: texture})
-      material.side = THREE.BackSide
-      let sphere = new THREE.Mesh(geometry, material)
-      this.cameraDummy.add(sphere)
-
+      let bgManager = new BackgroundColorManager(this.renderer, this.scene, this.cameraDummy, this.endZPos)
+      bgManager.init()
       // set up plankton
-      let plankton = new Plankton()
+      let plankton = new Plankton(this.endZPos)
       this.scene.add(plankton)
     },
     addContentInSpace: function () {

@@ -9,7 +9,7 @@ export default class Fader {
     this.referenceObject3D = object
     this.camera = window.AppCameraDummy
     this.closeDistance = 500
-    this.farDistance = 2000
+    this.farDistance = 2e10
     this.updateFade()
   }
   updateFade = () => {
@@ -19,7 +19,7 @@ export default class Fader {
     let closeOpacity = distance / this.closeDistance
     let farOpacity = 1 - (distance / (this.farDistance + this.closeDistance))
     if (this.referenceObject3D.visible) {
-      this.referenceObject3D.material.opacity = Math.min(this.defaultOpacity, closeOpacity, farOpacity) // Math.min(this.defaultOpacity, 1 / (-distance + this.farDistance))
+      this.referenceObject3D.material.opacity = Math.min(this.defaultOpacity, closeOpacity, farOpacity)
     } else {
       this.referenceObject3D.material.opacity = 0
     }

@@ -17,11 +17,11 @@
 import * as THREE from 'three'
 import { mapGetters } from 'vuex'
 import Menu from './components/Menu.vue'
+import Environment from './components/Environment.js'
 import BackgroundColorManager from './components/BackgroundColorManager.js'
 import VrRenderer from './components/VrRenderer.js'
 import Title from './components/Title.js'
 import Watch from './components/Watch.js'
-import Plankton from './components/Plankton.js'
 
 export default {
   components: {
@@ -119,6 +119,7 @@ export default {
 
       let animate = () => {
         requestAnimationFrame(animate)
+        window.AppScrollPercentage = (-this.cameraDummy.position.z / this.endZPos)
         this.cameraDummy.position.z += (-(document.scrollingElement || document.documentElement).scrollTop * this.pageHeightMultiplyer - this.cameraDummy.position.z) / 10
         this.updateCameraRotation()
         window.AppVrMode ? this.camera.quaternion.copy(this.cameraRotationQuaternion) : this.camera.quaternion.slerp(this.cameraRotationQuaternion, 0.1)
@@ -134,11 +135,11 @@ export default {
       animate()
     },
     initEnvironment: function () {
-      let bgManager = new BackgroundColorManager(this.renderer, this.scene, this.cameraDummy, this.endZPos)
+      let bgManager = new BackgroundColorManager(this.renderer, this.scene)
       bgManager.init()
-      // set up plankton
-      let plankton = new Plankton(this.endZPos)
-      this.scene.add(plankton)
+
+      let envManager = new Environment(this.scene, this.endZPos)
+      envManager.init()
     },
     addContentInSpace: function () {
       this.startZPos = this.samples[0].zpos

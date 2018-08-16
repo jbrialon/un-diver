@@ -113,7 +113,8 @@ export default {
         window.devicePixelRatio || window.webkitDevicePixelRatio || 1
       )
       this.vrRenderer = new VrRenderer(this.renderer)
-      this.vrRenderer.separation = 1.3
+      this.vrRenderer.setSize(this.stageSize.width, this.stageSize.height)
+      this.vrRenderer.setEyeSeparation(1.3)
       this.stageDOMElement.appendChild(this.renderer.domElement)
       let animate = () => {
         requestAnimationFrame(animate)

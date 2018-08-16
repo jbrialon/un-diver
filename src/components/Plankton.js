@@ -32,7 +32,7 @@ export default class Plankton extends THREE.Object3D {
       var sphere = this.spheres[i]
       sphere.position.x = 1250 * Math.cos(timer + i)
       sphere.position.y = 1250 * Math.sin(timer + i * 1.1)
-      sphere.material.rotation = 50 * Math.cos(timer + i)
+      sphere.material.rotation = 20 * Math.cos(timer + i)
     }
   }
 }

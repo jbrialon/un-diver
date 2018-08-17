@@ -1,13 +1,13 @@
 /*
-* Handles the backgroudn color of the scene
+* Handles the background color of the scene
 * Fades between two colors when
 * camera is moving down to bottom of the scene
 */
 import * as THREE from 'three'
 
 export default class BackgroundColorManager {
-  surfaceColor = new THREE.Color(0x4C707F)
-  bottomColor = new THREE.Color(0x1C292F)
+  surfaceColor = new THREE.Color(0x298295)
+  bottomColor = new THREE.Color(0x0e293c)
   backgroundColor = new THREE.Color()
   renderer
   scene
@@ -26,6 +26,6 @@ export default class BackgroundColorManager {
     requestAnimationFrame(this.updateFade)
     this.backgroundColor = this.surfaceColor.clone().lerp(this.bottomColor, window.AppScrollPercentage)
     this.renderer.setClearColor(this.backgroundColor, 1)
-    this.scene.fog = new THREE.FogExp2(this.backgroundColor.getHex(), 0.00025)
+    this.scene.fog = new THREE.FogExp2(this.backgroundColor.getHex(), 0.00035)
   }
 }

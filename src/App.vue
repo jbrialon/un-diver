@@ -1,6 +1,6 @@
 <template>
   <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation}">
-      <div id="stage"></div>
+      <div id="stage" ref="stage"></div>
       <div id="logo">
         <a href="/">
           <!--<img src="./assets/logo.png" alt="Ulysse Nardin">-->
@@ -27,7 +27,7 @@ export default {
   components: {
     Menu
   },
-  data: function () {
+  data () {
     return {
       stageSize: new THREE.Vector2(0, 0),
       stageDOMElement: null,
@@ -77,18 +77,18 @@ export default {
     }
   },
   computed: {
-    landscapeOrientation: function () {
+    landscapeOrientation () {
       return this.screenOrientation === 90
     },
-    portraitOrientation: function () {
+    portraitOrientation () {
       return this.screenOrientation === 0
     },
     ...mapGetters([
       'vrModeActivated'
     ])
   },
-  mounted: function () {
-    this.stageDOMElement = document.getElementById('stage')
+  mounted () {
+    this.stageDOMElement = this.$refs.stage
     this.initScene()
     this.addContentInSpace()
     this.initEnvironment()
@@ -96,7 +96,7 @@ export default {
     this.onResize()
   },
   methods: {
-    initScene: function () {
+    initScene () {
       this.stageSize.set(this.stageDOMElement.clientWidth, this.stageDOMElement.clientHeight)
       this.cameraRotationQuaternion = new THREE.Quaternion()
       this.scene = new THREE.Scene()
@@ -134,14 +134,14 @@ export default {
       window.AppStageSize = this.stageSize
       animate()
     },
-    initEnvironment: function () {
+    initEnvironment () {
       let bgManager = new BackgroundColorManager(this.renderer, this.scene)
       bgManager.init()
 
       let envManager = new Environment(this.scene, this.endZPos)
       envManager.init()
     },
-    addContentInSpace: function () {
+    addContentInSpace () {
       this.startZPos = this.samples[0].zpos
       this.endZPos = this.samples[this.samples.length - 1].zpos
 
@@ -160,17 +160,17 @@ export default {
         this.scene.add(itemObject)
       }
     },
-    setPageHeight: function () {
+    setPageHeight () {
       document.body.style.height = (this.endZPos - this.startZPos) / this.pageHeightMultiplyer + this.stageSize.height + 'px'
     },
-    handleEvents: function () {
+    handleEvents () {
       window.addEventListener('resize', this.onResize, false)
       window.addEventListener('mousemove', this.onMouseMove, false)
       window.addEventListener('orientationchange', this.onScreenOrientationChange, false)
       window.addEventListener('deviceorientation', this.onDeviceOrientationInit, false)
       window.addEventListener('compassneedscalibration', this.onCompassNeedsCalibration, false)
     },
-    removeListeners: function () {
+    removeListeners () {
       window.removeEventListener('resize', this.onResize, false)
       window.removeEventListener('mousemove', this.onMouseMove, false)
       window.removeEventListener('orientationchange', this.onScreenOrientationChange, false)
@@ -178,33 +178,33 @@ export default {
       window.removeEventListener('deviceorientation', this.onDeviceOrientationInit, false)
       window.removeEventListener('compassneedscalibration', this.onCompassNeedsCalibration, false)
     },
-    restrictFOV: function (vec2) {
+    restrictFOV (vec2) {
       let maxWidth = this.stageSize.width >> 1
       let maxHeight = this.stageSize.height >> 1
       vec2.x = (vec2.x - maxWidth) / maxWidth
       vec2.y = (vec2.y - maxHeight) / maxHeight
     },
-    onMouseMove: function (e) {
+    onMouseMove (e) {
       this.mousePosition.x = e.clientX
       this.mousePosition.y = e.clientY
       this.restrictFOV(this.mousePosition)
     },
-    onDeviceOrientationInit: function (e) {
+    onDeviceOrientationInit (e) {
       this.deviceOrientationToQuaternion(this.deviceOrientationInitialQuat, e)
       this.deviceOrientationInitialQuat = this.deviceOrientationInitialQuat.clone().conjugate()
       window.addEventListener('deviceorientation', this.onDeviceOrientationChange, false)
       window.removeEventListener('deviceorientation', this.onDeviceOrientationInit, false)
     },
-    onDeviceOrientationChange: function (e) {
+    onDeviceOrientationChange (e) {
       this.deviceOrientation = e
     },
-    onScreenOrientationChange: function (e) {
+    onScreenOrientationChange (e) {
       this.screenOrientation = window.orientation || 0
     },
-    onCompassNeedsCalibration: function (e) {
+    onCompassNeedsCalibration (e) {
       e.preventDefault()
     },
-    updateCameraRotation: function () {
+    updateCameraRotation () {
       if (this.deviceOrientation) {
         this.deviceOrientationToQuaternion(this.cameraRotationQuaternion, this.deviceOrientation)
         this.cameraRotationQuaternion.premultiply(this.deviceOrientationInitialQuat)
@@ -212,7 +212,7 @@ export default {
         this.cameraRotationQuaternion.setFromEuler(new THREE.Euler(-this.mousePosition.y, -this.mousePosition.x, 0))
       }
     },
-    deviceOrientationToQuaternion: function (quaternion, deviceOrientation) {
+    deviceOrientationToQuaternion (quaternion, deviceOrientation) {
       let zee = new THREE.Vector3(0, 0, 1)
       let q0 = new THREE.Quaternion()
       let q1 = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5)) // - PI/2 around the x-axis
@@ -227,7 +227,7 @@ export default {
       quaternion.multiply(q1) // camera looks out the back of the device, not the top
       quaternion.multiply(q0.setFromAxisAngle(zee, -orient)) // adjust for screen orientation
     },
-    onResize: function () {
+    onResize () {
       this.stageSize.set(this.stageDOMElement.clientWidth, this.stageDOMElement.clientHeight)
       this.renderer.setSize(this.stageSize.width, this.stageSize.height)
       this.camera.aspect = this.stageSize.width / this.stageSize.height
@@ -237,11 +237,11 @@ export default {
     }
   },
   watch: {
-    'vrModeActivated': function (newVal) {
+    'vrModeActivated' (newVal) {
       this.onResize()
     }
   },
-  beforeDestroy: function () {
+  beforeDestroy () {
     this.removeListeners()
   }
 }
@@ -289,7 +289,7 @@ export default {
       position: fixed;
       top: 3vh;
       left: 50%;
-      @include transform(translateX(-50%));
+      transform: translateX(-50%);
       width: 35vw;
 
       img {
@@ -306,7 +306,7 @@ export default {
       top: 50%;
       left: 50%;
       text-align: center;
-      @include transform(translate3d(-50%, -50%, 0));
+      transform :translate3d(-50%, -50%, 0);
     }
   }
 </style>

@@ -29,7 +29,7 @@ export default {
     vrmode: false
   },
   methods: {
-    toggleVrMode: function () {
+    toggleVrMode () {
       this.$store.commit('toggleVrMode')
     }
   }
@@ -45,13 +45,8 @@ export default {
   top: 12vh;
   right: 2vh;
   height: 40px;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
   will-change: opacity,transform;
 
@@ -95,13 +90,11 @@ export default {
       position: absolute;
       top: 50%;
       left: 50%;
-      -webkit-transform: translate(-50%,-50%);
       transform: translate(-50%,-50%);
       width: 4.2em;
       height: 4.2em;
       background-image: radial-gradient(circle closest-side,rgba(255,255,255,.25),transparent);
       opacity: 0;
-      -webkit-transition: opacity .35s ease-out;
       transition: opacity .35s ease-out;
     }
   }

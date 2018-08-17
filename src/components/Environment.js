@@ -11,11 +11,13 @@ export default class Environment {
   terrainModelPath = 'environment.fbx'
   sharkModelPath = 'shark.fbx'
   turtleModelPath = 'turtle.fbx'
+  diverModelPath = 'diver.fbx'
   scene
   sceneFarDistance
   terrainModel
   sharkModel
   turtleModel
+  diverModel
   modelMixers = []
 
   constructor (scene, sceneFarDistance) {
@@ -32,6 +34,7 @@ export default class Environment {
     loader.load(this.terrainModelPath, (object) => this.onTerrainLoaded(object))
     loader.load(this.sharkModelPath, (object) => this.onSharkLoaded(object))
     loader.load(this.turtleModelPath, (object) => this.onTurtleLoaded(object))
+    loader.load(this.diverModelPath, (object) => this.onDiverLoaded(object))
 
     // set up plankton
     let plankton = new Plankton(this.sceneFarDistance)
@@ -51,7 +54,7 @@ export default class Environment {
     this.terrainModel.children[2].material.side = THREE.BackSide
     this.terrainModel.position.x = -2000
     this.terrainModel.position.y = 5000
-    this.terrainModel.position.z = 38000
+    this.terrainModel.position.z = 40000
     this.terrainModel.scale.x = object.scale.y = object.scale.z = 10
     this.terrainModel.rotateX(THREE.Math.degToRad(90))
     this.scene.add(this.terrainModel)
@@ -77,6 +80,16 @@ export default class Environment {
     this.scene.add(this.turtleModel)
   }
 
+  onDiverLoaded (object) {
+    this.diverModel = object
+    this.initAnimal(this.diverModel)
+    this.diverModel.position.y = 150
+    this.diverModel.position.x = -500
+    this.diverModel.position.z = -1000
+    this.diverModel.rotateX(THREE.Math.degToRad(90))
+    this.scene.add(this.diverModel)
+  }
+
   initAnimal (animalModel) {
     this.initModelAnimation(animalModel)
     animalModel.traverse(function (child) {
@@ -99,6 +112,7 @@ export default class Environment {
     this.light.intensity = 1 - ((window.AppScrollPercentage * 0.5) + 0.25)
     if (this.sharkModel) this.sharkModel.position.x -= 1
     if (this.turtleModel) this.turtleModel.position.x += 0.5
+    if (this.diverModel) this.diverModel.position.y -= 0.4
     if (this.modelMixers.length > 0) {
       for (var i = 0; i < this.modelMixers.length; i++) {
         this.modelMixers[i].update(delta)

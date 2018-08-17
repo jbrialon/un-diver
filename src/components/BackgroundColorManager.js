@@ -12,6 +12,7 @@ export default class BackgroundColorManager {
   renderer
   scene
   light
+  density = 0.00030
 
   constructor (renderer, scene) {
     this.renderer = renderer
@@ -26,6 +27,6 @@ export default class BackgroundColorManager {
     requestAnimationFrame(this.updateFade)
     this.backgroundColor = this.surfaceColor.clone().lerp(this.bottomColor, window.AppScrollPercentage)
     this.renderer.setClearColor(this.backgroundColor, 1)
-    this.scene.fog = new THREE.FogExp2(this.backgroundColor.getHex(), 0.00035)
+    this.scene.fog = new THREE.FogExp2(this.backgroundColor.getHex(), this.density)
   }
 }

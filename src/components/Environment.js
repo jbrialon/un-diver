@@ -52,9 +52,9 @@ export default class Environment {
       }
     })
     this.terrainModel.children[2].material.side = THREE.BackSide
-    this.terrainModel.position.x = -2000
-    this.terrainModel.position.y = 5000
-    this.terrainModel.position.z = 40000
+    this.terrainModel.position.x = -2400
+    this.terrainModel.position.y = 6000
+    this.terrainModel.position.z = 32000
     this.terrainModel.scale.x = object.scale.y = object.scale.z = 10
     this.terrainModel.rotateX(THREE.Math.degToRad(90))
     this.scene.add(this.terrainModel)

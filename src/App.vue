@@ -23,12 +23,16 @@ import VrRenderer from './components/VrRenderer.js'
 import Title from './components/Title.js'
 import Watch from './components/Watch.js'
 
+import * as dat from 'dat.gui'
+
+
 export default {
   components: {
     Menu
   },
   data () {
     return {
+      gui: new dat.GUI(),
       stageSize: new THREE.Vector2(0, 0),
       stageDOMElement: null,
       scene: null,
@@ -140,6 +144,18 @@ export default {
 
       let envManager = new Environment(this.scene, this.endZPos)
       envManager.init()
+
+      //TODO: initialize this only on dev mode, maybe not in a setTimeout
+      setTimeout(() => {
+        const guiTerrainFolder = this.gui.addFolder('Terrain')
+        guiTerrainFolder.add(envManager.terrainModel.position, 'x')
+        guiTerrainFolder.add(envManager.terrainModel.position, 'y')
+        guiTerrainFolder.add(envManager.terrainModel.position, 'z')
+
+        const guiFogFoler = this.gui.addFolder('Fog')
+        guiFogFoler.add(bgManager, 'density')
+      }, 2000)
+
     },
     addContentInSpace () {
       this.startZPos = this.samples[0].zpos

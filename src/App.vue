@@ -14,7 +14,22 @@
 </template>
 
 <script>
+import * as dat from 'dat.gui'
 import * as THREE from 'three'
+/* eslint-disable */
+import * as EffectComposer from './postprocessing/EffectComposer.js'
+import * as RenderPass from './postprocessing/RenderPass.js'
+import * as TexturePass from './postprocessing/TexturePass.js'
+import * as FilmPass from './postprocessing/FilmPass.js'
+import * as ShaderPass from './postprocessing/ShaderPass.js'
+import * as BloomPass from './postprocessing/BloomPass.js'
+import * as FXAAShader from './shaders/FXAAShader.js'
+import * as BleachBypassShader from './shaders/BleachBypassShader.js'
+import * as FilmShader from './shaders/FilmShader.js'
+import * as ConvolutionShader from './shaders/ConvolutionShader.js'
+import * as CopyShader from './shaders/CopyShader.js'
+import * as VignetteShader from './shaders/VignetteShader.js'
+/* eslint-enable */
 import { mapGetters } from 'vuex'
 import Menu from './components/vue/Menu.vue'
 import Environment from './components/Environment.js'
@@ -22,9 +37,6 @@ import BackgroundColorManager from './components/BackgroundColorManager.js'
 import VrRenderer from './components/VrRenderer.js'
 import Title from './components/Title.js'
 import Watch from './components/Watch.js'
-
-import * as dat from 'dat.gui'
-
 
 export default {
   components: {
@@ -47,6 +59,7 @@ export default {
       deviceOrientationInitialQuat: new THREE.Quaternion(),
       startZPos: 0,
       endZPos: 0,
+      composerScene: null,
       samples: [
         {
           text: 'DIVER',
@@ -96,8 +109,10 @@ export default {
     this.initScene()
     this.addContentInSpace()
     this.initEnvironment()
+    this.initPostProcessing()
     this.handleEvents()
     this.onResize()
+    this.render3D()
   },
   methods: {
     initScene () {
@@ -121,22 +136,12 @@ export default {
       this.vrRenderer.setEyeSeparation(1.3)
       this.stageDOMElement.appendChild(this.renderer.domElement)
 
-      let animate = () => {
-        requestAnimationFrame(animate)
-        window.AppScrollPercentage = (-this.cameraDummy.position.z / this.endZPos)
-        this.cameraDummy.position.z += (-(document.scrollingElement || document.documentElement).scrollTop * this.pageHeightMultiplyer - this.cameraDummy.position.z) / 10
-        this.updateCameraRotation()
-        this.vrModeActivated ? this.camera.quaternion.copy(this.cameraRotationQuaternion) : this.camera.quaternion.slerp(this.cameraRotationQuaternion, 0.1)
-        this.renderer.clear()
-        this.vrModeActivated ? this.vrRenderer.render(this.scene, this.camera) : this.renderer.render(this.scene, this.camera)
-      }
       this.cameraDummy.add(this.camera)
       this.scene.add(this.cameraDummy)
       this.$store.commit('setCameraDummy', this.cameraDummy)
       this.$store.commit('setStageSize', this.stageSize)
       window.AppCameraDummy = this.cameraDummy
       window.AppStageSize = this.stageSize
-      animate()
     },
     initEnvironment () {
       let bgManager = new BackgroundColorManager(this.renderer, this.scene)
@@ -145,7 +150,7 @@ export default {
       let envManager = new Environment(this.scene, this.endZPos)
       envManager.init()
 
-      //TODO: initialize this only on dev mode, maybe not in a setTimeout
+      // TODO: initialize this only on dev mode, maybe not in a setTimeout
       setTimeout(() => {
         const guiTerrainFolder = this.gui.addFolder('Terrain')
         guiTerrainFolder.add(envManager.terrainModel.position, 'x')
@@ -155,7 +160,34 @@ export default {
         const guiFogFoler = this.gui.addFolder('Fog')
         guiFogFoler.add(bgManager, 'density')
       }, 2000)
+    },
+    initPostProcessing () {
+      let rtParameters = {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        format: THREE.RGBFormat,
+        stencilBuffer: false
+      }
+      let renderScene = new THREE.RenderPass(this.scene, this.camera)
+      let effectBloom = new THREE.BloomPass(0.5)
+      let effectFilm = new THREE.FilmPass(0.15, 0.025, 100, false)
+      let effectBleach = new THREE.ShaderPass(THREE.BleachBypassShader)
+      let effectVignette = new THREE.ShaderPass(THREE.VignetteShader)
+      let antiAliasing = new THREE.ShaderPass(THREE.FXAAShader)
+      effectBleach.uniforms[ 'opacity' ].value = 0.15
+      effectVignette.uniforms[ 'offset' ].value = 0.55
+      effectVignette.uniforms[ 'darkness' ].value = 1.6
+      effectVignette.renderToScreen = true
+      antiAliasing.uniforms.resolution.value.x = 1 / this.stageSize.width
+      antiAliasing.uniforms.resolution.value.y = 1 / this.stageSize.height
 
+      this.composerScene = new THREE.EffectComposer(this.renderer, new THREE.WebGLRenderTarget(this.stageSize.width, this.stageSize.height, rtParameters))
+      this.composerScene.addPass(renderScene)
+      this.composerScene.addPass(effectBloom)
+      this.composerScene.addPass(effectFilm)
+      this.composerScene.addPass(effectBleach)
+      this.composerScene.addPass(effectVignette)
+      // this.composerScene.addPass(antiAliasing)
     },
     addContentInSpace () {
       this.startZPos = this.samples[0].zpos
@@ -250,6 +282,17 @@ export default {
       this.vrRenderer.setSize(this.stageSize.width, this.stageSize.height)
       this.camera.updateProjectionMatrix()
       this.setPageHeight()
+    },
+    render3D () {
+      requestAnimationFrame(() => this.render3D())
+      window.AppScrollPercentage = (-this.cameraDummy.position.z / this.endZPos)
+      this.cameraDummy.position.z += (-(document.scrollingElement || document.documentElement).scrollTop * this.pageHeightMultiplyer - this.cameraDummy.position.z) / 10
+      this.updateCameraRotation()
+      this.vrModeActivated ? this.camera.quaternion.copy(this.cameraRotationQuaternion) : this.camera.quaternion.slerp(this.cameraRotationQuaternion, 0.1)
+      this.renderer.clear()
+      this.vrModeActivated ? this.vrRenderer.render(this.scene, this.camera) : this.renderer.render(this.scene, this.camera)
+
+      this.composerScene.render(0.001)
     }
   },
   watch: {

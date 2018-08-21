@@ -60,8 +60,7 @@ export default class Watch extends THREE.Object3D {
     }
 
     initGUI () {
-      let guiModelFolder = GuiManager.addFolder('Watch View')
-      guiModelFolder.add(this, 'watch3DModelVisible').name('Toggle 3D / 2D').onFinishChange(() => this.toggle3D())
+      GuiManager.add(this, 'watch3DModelVisible').name('Watch 3D Model').onFinishChange(() => this.toggle3D())
     }
 
     toggle3D () {
@@ -82,11 +81,13 @@ export default class Watch extends THREE.Object3D {
 
     addTitle () {
       let texture = new THREE.Texture(
-        CanvasText.getText(this.title, '35pt', 'Arial', 'rgba(255,255,255,1)', 'left', 'middle')
+        CanvasText.getText(this.title, 50, 'Arial', 'rgba(255,255,255,1)', 'center', 'middle')
       )
       texture.needsUpdate = true
+      texture.minFilter = THREE.LinearFilter
       let material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
-      let geometry = new THREE.PlaneGeometry(THREE.Math.ceilPowerOfTwo(window.AppStageSize.width), THREE.Math.ceilPowerOfTwo(window.AppStageSize.height))
+      let geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
+      geometry.applyMatrix(new THREE.Matrix4().makeTranslation(texture.image.width * 0.5, 0, 0))
       let mesh = new THREE.Mesh(geometry, material)
       mesh.position.z = 10
       mesh.position.x = window.AppStageSize.width * 0.1

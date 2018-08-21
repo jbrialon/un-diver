@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import Fader from './Fader.js'
+import CanvasText from '../utils/CanvasText.js'
 
 export default class Title extends THREE.Object3D {
     text = ''
@@ -13,34 +14,18 @@ export default class Title extends THREE.Object3D {
       this.text = text
 
       this.texture = new THREE.Texture(
-        this.createCanvasText(this.text)
+        CanvasText.getText(this.text, 80, 'Arial', 'rgba(255,255,255,1)', 'center', 'middle')
       )
       this.texture.needsUpdate = true
+      this.texture.minFilter = THREE.LinearFilter
       this.material = new THREE.MeshBasicMaterial({ map: this.texture, transparent: true, visible: true })
-      this.geometry = new THREE.PlaneGeometry(THREE.Math.ceilPowerOfTwo(window.AppStageSize.width), THREE.Math.ceilPowerOfTwo(window.AppStageSize.height))
+      this.geometry = new THREE.PlaneGeometry(this.texture.image.width, this.texture.image.height)
       this.mesh = new THREE.Mesh(this.geometry, this.material)
+      this.mesh.scale.set(0.5, 0.5, 0.5)
       super.add(this.mesh)
       return Object.assign(
         this,
         new Fader(this)
       )
-    }
-
-    createCanvasText (text) {
-      let canvas = document.createElement('canvas')
-      // document.body.appendChild(canvas)
-      canvas.width = THREE.Math.ceilPowerOfTwo(
-        window.AppStageSize.width
-      )
-      canvas.height = THREE.Math.ceilPowerOfTwo(
-        window.AppStageSize.height
-      )
-      let ctx = canvas.getContext('2d')
-      ctx.font = '35pt Arial'
-      ctx.fillStyle = 'rgba(255,255,255,1)'
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'middle'
-      ctx.fillText(text, canvas.width / 2, canvas.height / 2)
-      return canvas
     }
 }

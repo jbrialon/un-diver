@@ -15,11 +15,17 @@ class GuiManager {
     }
   }
 
+  static add (...params) {
+    return GuiManager.gui.add(...params)
+  }
+
   static getUniqueID () {
     return '_' + Math.random().toString(36).substr(2, 9)
   }
 }
 
-GuiManager.gui = new dat.GUI()
+GuiManager.gui = new dat.GUI({closed: true})
+GuiManager.gui.close()
+GuiManager.gui.domElement.className = GuiManager.gui.domElement.className + ' gui'
 
 export default GuiManager

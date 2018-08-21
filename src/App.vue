@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import GuiManager from './utils/GuiManager'
 import * as THREE from 'three'
 import { mapGetters } from 'vuex'
 import Menu from './components/vue/Menu.vue'
@@ -45,6 +46,7 @@ export default {
       startZPos: 0,
       endZPos: 0,
       postProcessingManager: null,
+      test: false,
       samples: [
         {
           text: 'DIVER',
@@ -60,7 +62,7 @@ export default {
         },
         {
           type: 'watch',
-          title: 'DIVER CHRONOGRAPH',
+          title: 'CHRONOGRAPH',
           texturePath: require('./assets/watches/3203.png'),
           infoLink: 'toto.com',
           buyLink: 'toto.com',
@@ -98,6 +100,8 @@ export default {
     this.handleEvents()
     this.onResize()
     this.render3D()
+
+    GuiManager.add(this, 'resetOrientation').name('Reset Orientation')
   },
   methods: {
     initScene () {
@@ -227,12 +231,18 @@ export default {
       quaternion.multiply(q1) // camera looks out the back of the device, not the top
       quaternion.multiply(q0.setFromAxisAngle(zee, -orient)) // adjust for screen orientation
     },
+    resetOrientation () {
+      this.mousePosition.x = this.stageSize.width * 0.5
+      this.mousePosition.y = this.stageSize.height * 0.5
+      this.restrictFOV(this.mousePosition)
+    },
     onResize () {
       this.stageSize.set(this.stageDOMElement.clientWidth, this.stageDOMElement.clientHeight)
       this.renderer.setSize(this.stageSize.width, this.stageSize.height)
       this.camera.aspect = this.stageSize.width / this.stageSize.height
       this.vrRenderer.setSize(this.stageSize.width, this.stageSize.height)
       this.camera.updateProjectionMatrix()
+      this.postProcessingManager.resize()
       this.setPageHeight()
     },
     render3D () {
@@ -240,16 +250,22 @@ export default {
       window.AppScrollPercentage = (-this.cameraDummy.position.z / this.endZPos)
       this.cameraDummy.position.z += (-(document.scrollingElement || document.documentElement).scrollTop * this.pageHeightMultiplyer - this.cameraDummy.position.z) / 10
       this.updateCameraRotation()
-      this.vrModeActivated ? this.camera.quaternion.copy(this.cameraRotationQuaternion) : this.camera.quaternion.slerp(this.cameraRotationQuaternion, 0.1)
       this.renderer.clear()
-      this.vrModeActivated ? this.vrRenderer.render(this.scene, this.camera) : this.renderer.render(this.scene, this.camera)
-
-      this.postProcessingManager.render()
+      if (this.vrModeActivated) {
+        this.camera.quaternion.copy(this.cameraRotationQuaternion)
+        this.vrRenderer.render(this.scene, this.camera)
+      } else {
+        this.camera.quaternion.slerp(this.cameraRotationQuaternion, 0.1)
+        this.renderer.render(this.scene, this.camera)
+        this.postProcessingManager.render()
+      }
     }
   },
   watch: {
-    'vrModeActivated' (newVal) {
+    'vrModeActivated' (activated) {
       this.onResize()
+      this.postProcessingManager.toggleVisibility()
+      document.body.className = activated ? 'vr' : ''
     }
   },
   beforeDestroy () {
@@ -264,6 +280,12 @@ export default {
   body {
     min-height: 200vh;
     background: black;
+
+    &.vr {
+      .stats, .gui {
+        display: none;
+      }
+    }
   }
 
   #app {

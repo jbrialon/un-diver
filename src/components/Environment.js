@@ -41,10 +41,7 @@ export default class Environment {
     // set up plankton
     let plankton = new Plankton(this.sceneFarDistance)
     this.scene.add(plankton)
-    let guiPlanktonFolder = GuiManager.addFolder('Plankton')
-    guiPlanktonFolder.add(this, 'togglePlankton').name('Show / Hide').onFinishChange(() => {
-      plankton.visible = this.togglePlankton
-    })
+    GuiManager.add(plankton, 'visible').name('Plankton')
 
     this.updateFade()
   }
@@ -65,10 +62,10 @@ export default class Environment {
     this.terrainModel.rotateX(THREE.Math.degToRad(90))
     this.scene.add(this.terrainModel)
 
-    let guiTerrainFolder = GuiManager.addFolder('Terrain')
-    guiTerrainFolder.add(this.terrainModel.position, 'x')
-    guiTerrainFolder.add(this.terrainModel.position, 'y')
-    guiTerrainFolder.add(this.terrainModel.position, 'z')
+    let guiTerrainFolder = GuiManager.addFolder('Terrain position')
+    guiTerrainFolder.add(this.terrainModel.position, 'x', -3000, 2000)
+    guiTerrainFolder.add(this.terrainModel.position, 'y', 3000, 9000)
+    guiTerrainFolder.add(this.terrainModel.position, 'z', 15000, 45000)
   }
 
   onSharkLoaded (object) {

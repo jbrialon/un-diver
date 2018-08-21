@@ -19,8 +19,7 @@ export default class BackgroundColorManager {
     this.renderer = renderer
     this.scene = scene
 
-    let guiFogFoler = GuiManager.addFolder('Fog')
-    guiFogFoler.add(this, 'density')
+    GuiManager.add(this, 'density', 0.00001, 0.0005).name('Fog depth')
   }
 
   init () {

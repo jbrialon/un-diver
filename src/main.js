@@ -15,6 +15,7 @@ new Vue({
 let stats
 if (process.env.NODE_ENV === 'development') {
   stats = new Stats()
+  stats.domElement.className = 'stats'
   stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
   document.body.appendChild(stats.dom)
   requestAnimationFrame(animate)

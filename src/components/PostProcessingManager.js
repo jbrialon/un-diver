@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import GuiManager from '../utils/GuiManager'
 /* eslint-disable */
 import * as EffectComposer from '../postprocessing/EffectComposer.js'
 import * as RenderPass from '../postprocessing/RenderPass.js'
@@ -21,6 +22,8 @@ export default class PostProcessingManager {
   stageSize
   composerScene
   composerSceneEffects
+  visible = true
+
   constructor (renderer, scene, camera, stageSize) {
     this.renderer = renderer
     this.scene = scene
@@ -52,9 +55,19 @@ export default class PostProcessingManager {
     this.composerSceneEffects.addPass(effectBleach)
     this.composerSceneEffects.addPass(effectVignette)
     // this.composerScene.addPass(antiAliasing)
+
+    GuiManager.add(this, 'visible').name('Post processing')
+  }
+
+  resize () {
+    this.composerSceneEffects.setSize(this.stageSize.width, this.stageSize.height)
   }
 
   render () {
-    this.composerSceneEffects.render(0.01)
+    if (this.visible) this.composerSceneEffects.render(0.01)
+  }
+
+  toggleVisibility () {
+    this.visible = !this.visible
   }
 }

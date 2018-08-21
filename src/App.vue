@@ -16,22 +16,9 @@
 <script>
 import * as dat from 'dat.gui'
 import * as THREE from 'three'
-/* eslint-disable */
-import * as EffectComposer from './postprocessing/EffectComposer.js'
-import * as RenderPass from './postprocessing/RenderPass.js'
-import * as TexturePass from './postprocessing/TexturePass.js'
-import * as FilmPass from './postprocessing/FilmPass.js'
-import * as ShaderPass from './postprocessing/ShaderPass.js'
-import * as BloomPass from './postprocessing/BloomPass.js'
-import * as FXAAShader from './shaders/FXAAShader.js'
-import * as BleachBypassShader from './shaders/BleachBypassShader.js'
-import * as FilmShader from './shaders/FilmShader.js'
-import * as ConvolutionShader from './shaders/ConvolutionShader.js'
-import * as CopyShader from './shaders/CopyShader.js'
-import * as VignetteShader from './shaders/VignetteShader.js'
-/* eslint-enable */
 import { mapGetters } from 'vuex'
 import Menu from './components/vue/Menu.vue'
+import PostProcessingManager from './components/PostProcessingManager.js'
 import Environment from './components/Environment.js'
 import BackgroundColorManager from './components/BackgroundColorManager.js'
 import VrRenderer from './components/VrRenderer.js'
@@ -59,7 +46,7 @@ export default {
       deviceOrientationInitialQuat: new THREE.Quaternion(),
       startZPos: 0,
       endZPos: 0,
-      composerScene: null,
+      postProcessingManager: null,
       samples: [
         {
           text: 'DIVER',
@@ -162,32 +149,7 @@ export default {
       }, 2000)
     },
     initPostProcessing () {
-      let rtParameters = {
-        minFilter: THREE.LinearFilter,
-        magFilter: THREE.LinearFilter,
-        format: THREE.RGBFormat,
-        stencilBuffer: false
-      }
-      let renderScene = new THREE.RenderPass(this.scene, this.camera)
-      let effectBloom = new THREE.BloomPass(0.5)
-      let effectFilm = new THREE.FilmPass(0.15, 0.025, 100, false)
-      let effectBleach = new THREE.ShaderPass(THREE.BleachBypassShader)
-      let effectVignette = new THREE.ShaderPass(THREE.VignetteShader)
-      let antiAliasing = new THREE.ShaderPass(THREE.FXAAShader)
-      effectBleach.uniforms[ 'opacity' ].value = 0.15
-      effectVignette.uniforms[ 'offset' ].value = 0.55
-      effectVignette.uniforms[ 'darkness' ].value = 1.6
-      effectVignette.renderToScreen = true
-      antiAliasing.uniforms.resolution.value.x = 1 / this.stageSize.width
-      antiAliasing.uniforms.resolution.value.y = 1 / this.stageSize.height
-
-      this.composerScene = new THREE.EffectComposer(this.renderer, new THREE.WebGLRenderTarget(this.stageSize.width, this.stageSize.height, rtParameters))
-      this.composerScene.addPass(renderScene)
-      this.composerScene.addPass(effectBloom)
-      this.composerScene.addPass(effectFilm)
-      this.composerScene.addPass(effectBleach)
-      this.composerScene.addPass(effectVignette)
-      // this.composerScene.addPass(antiAliasing)
+      this.postProcessingManager = new PostProcessingManager(this.renderer, this.scene, this.camera, this.stageSize)
     },
     addContentInSpace () {
       this.startZPos = this.samples[0].zpos
@@ -292,7 +254,7 @@ export default {
       this.renderer.clear()
       this.vrModeActivated ? this.vrRenderer.render(this.scene, this.camera) : this.renderer.render(this.scene, this.camera)
 
-      this.composerScene.render(0.001)
+      this.postProcessingManager.render()
     }
   },
   watch: {

@@ -42,12 +42,12 @@ export default {
 #menu {
   z-index: 1;
   position: fixed;
-  top: 12vh;
-  right: 2vh;
+  bottom: 2vh;
+  left: 50%;
   height: 40px;
   display: flex;
   align-items: center;
-  transform: translateY(-50%);
+  transform: translateY(-50%) translateX(-50%);
   will-change: opacity,transform;
 
   &-vr {

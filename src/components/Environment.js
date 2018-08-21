@@ -5,7 +5,7 @@
 import * as THREE from 'three'
 import FBXLoader from 'three-fbxloader-offical'
 import GuiManager from '../utils/GuiManager'
-// import Plankton from './Plankton.js'
+import Plankton from './Plankton.js'
 
 export default class Environment {
   clock = new THREE.Clock();
@@ -20,6 +20,7 @@ export default class Environment {
   turtleModel
   diverModel
   modelMixers = []
+  togglePlankton = true
 
   constructor (scene, sceneFarDistance) {
     this.scene = scene
@@ -38,8 +39,12 @@ export default class Environment {
     loader.load(this.diverModelPath, (object) => this.onDiverLoaded(object))
 
     // set up plankton
-    // let plankton = new Plankton(this.sceneFarDistance)
-    // this.scene.add(plankton)
+    let plankton = new Plankton(this.sceneFarDistance)
+    this.scene.add(plankton)
+    let guiPlanktonFolder = GuiManager.addFolder('Plankton')
+    guiPlanktonFolder.add(this, 'togglePlankton').name('Show / Hide').onFinishChange(() => {
+      plankton.visible = this.togglePlankton
+    })
 
     this.updateFade()
   }

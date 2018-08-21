@@ -5,7 +5,18 @@ class GuiManager {
   }
 
   static addFolder (name) {
-    return GuiManager.gui.addFolder(name)
+    try {
+      return GuiManager.gui.addFolder(name)
+    } catch (error) {
+      let newName = name + GuiManager.getUniqueID()
+      // eslint-disable-next-line
+      console.warn('You already have a folder in this GUI by the name "' + name + '", renamed : ' + newName)
+      return GuiManager.gui.addFolder(newName)
+    }
+  }
+
+  static getUniqueID () {
+    return '_' + Math.random().toString(36).substr(2, 9)
   }
 }
 

@@ -13,7 +13,7 @@ export default class BackgroundColorManager {
   renderer
   scene
   light
-  density = 0.0001
+  density = 0.0003
 
   constructor (renderer, scene) {
     this.renderer = renderer

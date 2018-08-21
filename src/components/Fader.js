@@ -7,10 +7,12 @@ export default class Fader {
 
   constructor (object) {
     this.referenceObject3D = object
-    this.camera = window.AppCameraDummy
-    this.closeDistance = 500
-    this.farDistance = 2e10
-    this.updateFade()
+    if (this.referenceObject3D.material) {
+      this.camera = window.AppCameraDummy
+      this.closeDistance = 500
+      this.farDistance = 2e10
+      this.updateFade()
+    }
   }
   updateFade = () => {
     requestAnimationFrame(this.updateFade)

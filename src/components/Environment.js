@@ -4,6 +4,7 @@
 */
 import * as THREE from 'three'
 import FBXLoader from 'three-fbxloader-offical'
+import GuiManager from '../utils/GuiManager'
 // import Plankton from './Plankton.js'
 
 export default class Environment {
@@ -58,6 +59,11 @@ export default class Environment {
     this.terrainModel.scale.x = object.scale.y = object.scale.z = 10
     this.terrainModel.rotateX(THREE.Math.degToRad(90))
     this.scene.add(this.terrainModel)
+
+    let guiTerrainFolder = GuiManager.addFolder('Terrain')
+    guiTerrainFolder.add(this.terrainModel.position, 'x')
+    guiTerrainFolder.add(this.terrainModel.position, 'y')
+    guiTerrainFolder.add(this.terrainModel.position, 'z')
   }
 
   onSharkLoaded (object) {

@@ -4,6 +4,7 @@
 * camera is moving down to bottom of the scene
 */
 import * as THREE from 'three'
+import GuiManager from '../utils/GuiManager'
 
 export default class BackgroundColorManager {
   surfaceColor = new THREE.Color(0x298295)
@@ -12,11 +13,14 @@ export default class BackgroundColorManager {
   renderer
   scene
   light
-  density = 0.00030
+  density = 0.0001
 
   constructor (renderer, scene) {
     this.renderer = renderer
     this.scene = scene
+
+    let guiFogFoler = GuiManager.addFolder('Fog')
+    guiFogFoler.add(this, 'density')
   }
 
   init () {

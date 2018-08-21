@@ -182,9 +182,12 @@ export default {
       vec2.y = (vec2.y - maxHeight) / maxHeight
     },
     onMouseMove (e) {
-      this.mousePosition.x = e.clientX
-      this.mousePosition.y = e.clientY
-      this.restrictFOV(this.mousePosition)
+      // TODO : handle this for mobile devices
+      if (e.target.nodeName === 'CANVAS') {
+        this.mousePosition.x = e.clientX
+        this.mousePosition.y = e.clientY
+        this.restrictFOV(this.mousePosition)
+      }
     },
     onDeviceOrientationInit (e) {
       this.deviceOrientationToQuaternion(this.deviceOrientationInitialQuat, e)

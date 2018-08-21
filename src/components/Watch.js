@@ -28,12 +28,17 @@ export default class Watch extends THREE.Object3D {
       loader.load(this.watch3DModelPath, (object) => this.onWatchModelLoaded(object))
 
       let texture = new THREE.TextureLoader().load(texturePath)
+      texture.wrapS = THREE.RepeatWrapping
+      texture.wrapT = THREE.RepeatWrapping
+      // TODO : review texture offset and aspect ratio handling
+      texture.repeat.set(0.5, 1)
+      texture.offset.set(0.25, 0)
+      texture.minFilter = THREE.LinearFilter
       let material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
-      let geometry = new THREE.PlaneGeometry(window.AppStageSize.width, window.AppStageSize.width * 0.533333)
+      let geometry = new THREE.PlaneGeometry(window.AppStageSize.width * 0.5, window.AppStageSize.width * 0.533333)
       this.watch2DMesh = new THREE.Mesh(geometry, material)
       this.watch2DMesh.position.x = -window.AppStageSize.width * 0.15
-      this.watch2DMesh.position.z = -5
-      this.watch2DMesh.visible = false
+      this.watch2DMesh.position.z = 20
       super.add(this.watch2DMesh)
 
       this.addTitle()
@@ -56,18 +61,23 @@ export default class Watch extends THREE.Object3D {
 
     initGUI () {
       let guiModelFolder = GuiManager.addFolder('Watch View')
-      guiModelFolder.add(this, 'watch3DModelVisible').name('Toggle 3D / 2D').onFinishChange(() => {
-        this.watch2DMesh.visible = !this.watch3DModelVisible
-        this.watch3DModel.visible = this.watch3DModelVisible
-      })
+      guiModelFolder.add(this, 'watch3DModelVisible').name('Toggle 3D / 2D').onFinishChange(() => this.toggle3D())
+    }
+
+    toggle3D () {
+      this.watch2DMesh.visible = !this.watch3DModelVisible
+      this.watch3DModel.visible = this.watch3DModelVisible
     }
 
     onWatchModelLoaded (object) {
+      // TODO : handle correctly sizing and positioning
       this.watch3DModel = object
-      this.watch3DModel.scale.set(10, 10, 10)
-      this.watch3DModel.position.x = -window.AppStageSize.width * 0.3
+      let modelScale = 10 - (1000 / window.AppStageSize.width)
+      this.watch3DModel.scale.set(modelScale, modelScale, modelScale)
+      this.watch3DModel.position.x = -200 * (modelScale / 7)
       super.add(this.watch3DModel)
       this.initGUI()
+      this.toggle3D()
     }
 
     addTitle () {

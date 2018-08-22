@@ -1,19 +1,5 @@
-import * as THREE from 'three'
 import GuiManager from '../utils/GuiManager'
-/* eslint-disable */
-import * as EffectComposer from '../postprocessing/EffectComposer.js'
-import * as RenderPass from '../postprocessing/RenderPass.js'
-import * as TexturePass from '../postprocessing/TexturePass.js'
-import * as FilmPass from '../postprocessing/FilmPass.js'
-import * as ShaderPass from '../postprocessing/ShaderPass.js'
-import * as BloomPass from '../postprocessing/BloomPass.js'
-import * as FXAAShader from '../shaders/FXAAShader.js'
-import * as BleachBypassShader from '../shaders/BleachBypassShader.js'
-import * as FilmShader from '../shaders/FilmShader.js'
-import * as ConvolutionShader from '../shaders/ConvolutionShader.js'
-import * as CopyShader from '../shaders/CopyShader.js'
-import * as VignetteShader from '../shaders/VignetteShader.js'
-/* eslint-enable */
+import THREE from './PostProcessingImports.js'
 
 export default class PostProcessingManager {
   renderer

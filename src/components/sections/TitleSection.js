@@ -1,17 +1,18 @@
+import Section from '../Section.js'
 import * as THREE from 'three'
-import Fader from './Fader.js'
-import CanvasText from '../utils/CanvasText.js'
+import Fader from '../Fader.js'
+import CanvasText from '../../utils/CanvasText.js'
 
-export default class Title extends THREE.Object3D {
+export default class TitleSection extends Section {
     text = ''
     texture
     material
     geometry
     mesh
 
-    constructor (text) {
-      super()
-      this.text = text
+    constructor (sectionData) {
+      super(sectionData)
+      this.text = this.sectionData.title
 
       this.texture = new THREE.Texture(
         CanvasText.getText(this.text, 80, 'Arial', 'rgba(255,255,255,1)', 'center', 'middle')

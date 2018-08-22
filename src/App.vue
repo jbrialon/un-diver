@@ -6,6 +6,7 @@
           <!--<img src="./assets/logo.png" alt="Ulysse Nardin">-->
         </a>
       </div>
+      <Sections :items="samples"></Sections>
       <Menu></Menu>
       <div id="rotate-device-message">
         Please rotate your device to landscape
@@ -15,22 +16,30 @@
 
 <script>
 import GuiManager from './utils/GuiManager'
+import {TweenLite} from 'gsap/TweenMax'
+// eslint-disable-next-line
+import ScrollToPlugin from 'gsap/ScrollToPlugin'
 import * as THREE from 'three'
 import { mapGetters } from 'vuex'
 import Menu from './components/vue/Menu.vue'
+import Sections from './components/vue/Sections.vue'
 import PostProcessingManager from './components/PostProcessingManager.js'
 import Environment from './components/Environment.js'
 import BackgroundColorManager from './components/BackgroundColorManager.js'
 import VrRenderer from './components/VrRenderer.js'
-import Title from './components/Title.js'
-import Watch from './components/Watch.js'
+import TitleSection from './components/sections/TitleSection.js'
+import WatchSection from './components/sections/WatchSection.js'
 
 export default {
   components: {
-    Menu
+    Menu,
+    Sections
   },
   data () {
     return {
+      scrollingElement: null,
+      sceneIsScrolling: false,
+      pageHeight: 0,
       stageSize: new THREE.Vector2(0, 0),
       stageDOMElement: null,
       scene: null,
@@ -46,23 +55,30 @@ export default {
       startZPos: 0,
       endZPos: 0,
       postProcessingManager: null,
-      test: false,
+      scrollTween: null,
       samples: [
         {
+          id: 0,
+          title: 'Diver',
           text: 'DIVER',
           zpos: 1000
         },
         {
+          id: 1,
+          title: 'Discover the collection',
           text: 'DISCOVER THE COLLECTION',
           zpos: 3000
         },
         {
+          id: 2,
+          title: 'Deep dive',
           text: 'DEEP DIVE',
           zpos: 5000
         },
         {
+          id: 3,
           type: 'watch',
-          title: 'CHRONOGRAPH',
+          title: 'Chronograph',
           texturePath: require('./assets/watches/3203.png'),
           infoLink: 'toto.com',
           buyLink: 'toto.com',
@@ -70,10 +86,14 @@ export default {
           zpos: 7000
         },
         {
+          id: 4,
+          title: 'Stain case',
           text: 'STAIN CASE',
           zpos: 9000
         },
         {
+          id: 5,
+          title: 'Phosphorescent needles & numbers',
           text: 'PHOSPHORESCENT NEEDLES & NUMBERS',
           zpos: 11000
         }
@@ -88,13 +108,15 @@ export default {
       return this.screenOrientation === 0
     },
     ...mapGetters([
-      'vrModeActivated'
+      'vrModeActivated',
+      'goToSectionId'
     ])
   },
   mounted () {
+    this.scrollingElement = (document.scrollingElement || document.documentElement)
     this.stageDOMElement = this.$refs.stage
     this.initScene()
-    this.addContentInSpace()
+    this.buildSections()
     this.initEnvironment()
     this.initPostProcessing()
     this.handleEvents()
@@ -142,27 +164,32 @@ export default {
     initPostProcessing () {
       this.postProcessingManager = new PostProcessingManager(this.renderer, this.scene, this.camera, this.stageSize)
     },
-    addContentInSpace () {
+    buildSections () {
       this.startZPos = this.samples[0].zpos
       this.endZPos = this.samples[this.samples.length - 1].zpos
 
       for (let index = 0; index < this.samples.length; index++) {
         let item = this.samples[index]
-        let itemObject
+        let section
         switch (item.type) {
           case 'watch':
-            itemObject = new Watch(item.title, item.price, item.infoLink, item.buyLink, item.texturePath)
+            section = new WatchSection(item)
             break
           default:
-            itemObject = new Title(item.text)
+            section = new TitleSection(item)
             break
         }
-        itemObject.position.z = -item.zpos
-        this.scene.add(itemObject)
+        section.addEventListener('setCurrentSectionId', this.onCurrentSectionIdChange)
+        section.position.z = -item.zpos
+        this.scene.add(section)
       }
     },
+    onCurrentSectionIdChange (event) {
+      if (!this.sceneIsScrolling) this.$store.commit('setCurrentSectionId', event.message)
+    },
     setPageHeight () {
-      document.body.style.height = (this.endZPos - this.startZPos) / this.pageHeightMultiplyer + this.stageSize.height + 'px'
+      this.pageHeight = (this.endZPos - this.startZPos) / this.pageHeightMultiplyer + this.stageSize.height
+      document.body.style.height = this.pageHeight + 'px'
     },
     handleEvents () {
       window.addEventListener('resize', this.onResize, false)
@@ -236,6 +263,8 @@ export default {
       this.mousePosition.y = this.stageSize.height * 0.5
       this.restrictFOV(this.mousePosition)
     },
+    updateCurrentSection () {
+    },
     onResize () {
       this.stageSize.set(this.stageDOMElement.clientWidth, this.stageDOMElement.clientHeight)
       this.renderer.setSize(this.stageSize.width, this.stageSize.height)
@@ -245,10 +274,13 @@ export default {
       this.postProcessingManager.resize()
       this.setPageHeight()
     },
+    zPosToScrollTop (zPos) {
+      return (zPos / this.endZPos) * (this.pageHeight - this.stageSize.height)
+    },
     render3D () {
       requestAnimationFrame(() => this.render3D())
       window.AppScrollPercentage = (-this.cameraDummy.position.z / this.endZPos)
-      this.cameraDummy.position.z += (-(document.scrollingElement || document.documentElement).scrollTop * this.pageHeightMultiplyer - this.cameraDummy.position.z) / 10
+      this.cameraDummy.position.z += (-this.scrollingElement.scrollTop * this.pageHeightMultiplyer - this.cameraDummy.position.z) / 10
       this.updateCameraRotation()
       this.renderer.clear()
       if (this.vrModeActivated) {
@@ -266,6 +298,17 @@ export default {
       this.onResize()
       this.postProcessingManager.toggleVisibility()
       document.body.className = activated ? 'vr' : ''
+    },
+    'goToSectionId' (id) {
+      let scrollVal = Math.floor(this.zPosToScrollTop((this.samples[id].zpos - 300)))
+      this.sceneIsScrolling = true
+      this.$store.commit('setCurrentSectionId', id)
+      TweenLite.to(window, 1, {
+        scrollTo: scrollVal,
+        onComplete: () => {
+          this.sceneIsScrolling = false
+        }
+      })
     }
   },
   beforeDestroy () {

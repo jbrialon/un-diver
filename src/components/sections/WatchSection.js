@@ -1,15 +1,12 @@
-import GuiManager from '../utils/GuiManager'
+import GuiManager from '../../utils/GuiManager'
+import Section from '../Section.js'
 import * as THREE from 'three'
 import FBXLoader from 'three-fbxloader-offical'
-import CanvasText from '../utils/CanvasText.js'
-import Button from './Button.js'
-import Fader from './Fader.js'
+import CanvasText from '../../utils/CanvasText'
+import Button from '../Button'
+import Fader from '../Fader'
 
-export default class Watch extends THREE.Object3D {
-    title = ''
-    price = ''
-    infoLink = ''
-    buyLink = ''
+export default class WatchSection extends Section {
     watch2DMesh
     watch3DModelPath = 'diver_watch_blue_LOW.fbx'
     watch3DModel
@@ -17,17 +14,13 @@ export default class Watch extends THREE.Object3D {
     buyButton
     watch3DModelVisible = true
 
-    constructor (title, price, infoLink, buyLink, texturePath) {
-      super()
-      this.title = title
-      this.price = price
-      this.infoLink = infoLink
-      this.buyLink = buyLink
+    constructor (sectionData) {
+      super(sectionData)
 
       let loader = new FBXLoader()
       loader.load(this.watch3DModelPath, (object) => this.onWatchModelLoaded(object))
 
-      let texture = new THREE.TextureLoader().load(texturePath)
+      let texture = new THREE.TextureLoader().load(this.sectionData.texturePath)
       texture.wrapS = THREE.RepeatWrapping
       texture.wrapT = THREE.RepeatWrapping
       // TODO : review texture offset and aspect ratio handling
@@ -81,7 +74,7 @@ export default class Watch extends THREE.Object3D {
 
     addTitle () {
       let texture = new THREE.Texture(
-        CanvasText.getText(this.title, 50, 'Arial', 'rgba(255,255,255,1)', 'center', 'middle')
+        CanvasText.getText(this.sectionData.title, 50, 'Arial', 'rgba(255,255,255,1)', 'center', 'middle')
       )
       texture.needsUpdate = true
       texture.minFilter = THREE.LinearFilter

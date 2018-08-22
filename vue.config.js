@@ -7,6 +7,7 @@ module.exports = {
       })
     ]
   },
+
   chainWebpack: config => {
     // GraphQL Loader
     config.module
@@ -15,5 +16,14 @@ module.exports = {
       .use('raw-loader')
         .loader('raw-loader')
         .end()
+  },
+
+  pluginOptions: {
+    i18n: {
+      locale: 'en',
+      fallbackLocale: 'en',
+      localeDir: 'i18n',
+      enableInSFC: true
+    }
   }
 }

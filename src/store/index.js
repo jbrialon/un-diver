@@ -7,7 +7,9 @@ const store = new Vuex.Store({
   state: {
     cameraDummy: null,
     stageSize: null,
-    vrMode: false
+    vrMode: false,
+    currentSectionId: 0,
+    goToSectionId: 0
   },
   mutations: {
     toggleVrMode (state) {
@@ -18,11 +20,23 @@ const store = new Vuex.Store({
     },
     setStageSize (state, object) {
       state.stageSize = object
+    },
+    setCurrentSectionId (state, id) {
+      state.currentSectionId = id
+    },
+    goToSectionId (state, id) {
+      state.goToSectionId = id
     }
   },
   getters: {
     vrModeActivated: state => {
       return state.vrMode
+    },
+    currentSectionId: state => {
+      return state.currentSectionId
+    },
+    goToSectionId: state => {
+      return state.goToSectionId
     }
   }
 })

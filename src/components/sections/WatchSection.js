@@ -1,3 +1,4 @@
+import {TweenMax, Power2} from 'gsap'
 import GuiManager from '../../utils/GuiManager'
 import Section from '../Section.js'
 import * as THREE from 'three'
@@ -35,7 +36,7 @@ export default class WatchSection extends Section {
       this.watch2DMesh.position.z = 20
       super.add(this.watch2DMesh)
 
-      this.addTitle()
+      this.addSubTexts()
 
       this.infoButton = new Button('More information', 'toto.com')
       this.infoButton.position.x = window.AppStageSize.width * 0.15
@@ -65,9 +66,8 @@ export default class WatchSection extends Section {
     onWatchModelLoaded (object) {
       // TODO : handle correctly sizing and positioning
       this.watch3DModel = object
-      let modelScale = 5 - (1000 / window.AppStageSize.width)
+      let modelScale = 3 - (1000 / window.AppStageSize.width)
       this.watch3DModel.scale.set(modelScale, modelScale, modelScale)
-      this.watch3DModel.position.x = -200 * (modelScale / 7)
       super.add(this.watch3DModel)
       Object.assign(
         this.watch3DModel,
@@ -75,21 +75,27 @@ export default class WatchSection extends Section {
       )
       this.initGUI()
       this.toggle3D()
+      this.watch3DModel.rotation.y = -Math.PI * 0.3
+      TweenMax.to(this.watch3DModel.rotation, 3, {y: Math.PI * 0.3, yoyo: true, yoyoEase: true, ease: Power2.easeInOut, repeat: -1})
     }
 
-    addTitle () {
-      let texture = new THREE.Texture(
-        CanvasText.getText(this.sectionData.title, 50, 'Arial', 'rgba(255,255,255,1)', 'center', 'middle')
-      )
-      texture.needsUpdate = true
-      texture.minFilter = THREE.LinearFilter
-      let material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
-      let geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
-      geometry.applyMatrix(new THREE.Matrix4().makeTranslation(texture.image.width * 0.5, 0, 0))
-      let mesh = new THREE.Mesh(geometry, material)
-      mesh.position.z = 10
-      mesh.position.x = window.AppStageSize.width * 0.1
-      // mesh.rotation.y = THREE.Math.degToRad(-25)
-      super.add(mesh)
+    addSubTexts () {
+      let textIndex = 0
+      let textsDistance = this.sectionDepth / (this.sectionData.subTexts.length - 1)
+      this.sectionData.subTexts.forEach(text => {
+        let texture = new THREE.Texture(
+          CanvasText.getText(text, 50, 'Arial', 'rgba(255,255,255,1)', 'center', 'middle')
+        )
+        texture.needsUpdate = true
+        texture.minFilter = THREE.LinearFilter
+        let material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
+        let geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(texture.image.width * 0.5 * (textIndex % 2 === 0) ? -1 : 1, 0, 0))
+        let mesh = new THREE.Mesh(geometry, material)
+        mesh.position.z = -(textIndex * textsDistance)
+        mesh.position.x = (textIndex % 2 === 0) ? (window.AppStageSize.width * 0.2) : -(window.AppStageSize.width * 0.2)
+        super.add(mesh)
+        textIndex++
+      })
     }
 }

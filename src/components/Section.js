@@ -8,6 +8,7 @@ export default class Section extends THREE.Object3D {
 
   constructor (sectionData) {
     super()
+    this.sectionDepth = sectionData.sectionDepth
     this.sectionData = sectionData
     AnimationLoopManager.addCallback(() => this.render())
     Object.assign(this, THREE.EventDispatcher)

@@ -63,19 +63,19 @@ export default {
           id: 0,
           title: 'Diver',
           text: 'DIVER',
-          sectionWeight: 1
+          sectionWeight: 0
         },
         {
           id: 1,
           title: 'Discover the collection',
           text: 'DISCOVER THE COLLECTION',
-          sectionWeight: 1
+          sectionWeight: 0
         },
         {
           id: 2,
           title: 'Deep dive',
           text: 'DEEP DIVE',
-          sectionWeight: 1
+          sectionWeight: 0
         },
         {
           id: 3,
@@ -85,19 +85,28 @@ export default {
           infoLink: 'toto.com',
           buyLink: 'toto.com',
           price: '12,000 CHF',
-          sectionWeight: 4
+          sectionWeight: 4,
+          subTexts: [
+            'Blue Dial',
+            'Diameter 44mm',
+            'UN-118 Caliber',
+            'Glowing technology',
+            'Waterproof up to 300m',
+            'Blue Shark stamped on the Case-Back',
+            '5\'800 CHF'
+          ]
         },
         {
           id: 4,
           title: 'Stain case',
           text: 'STAIN CASE',
-          sectionWeight: 1
+          sectionWeight: 0
         },
         {
           id: 5,
           title: 'Phosphorescent needles & numbers',
           text: 'PHOSPHORESCENT NEEDLES & NUMBERS',
-          sectionWeight: 1
+          sectionWeight: 0
         }
       ]
     }
@@ -172,7 +181,7 @@ export default {
     },
     buildSections () {
       let currentZPos = 0
-      let sectionsSlotsCount = 0
+      let sectionsSlotsCount = this.samples.length
       this.samples.forEach(item => {
         sectionsSlotsCount += item.sectionWeight
       })
@@ -180,6 +189,7 @@ export default {
       for (let index = 0; index < this.samples.length; index++) {
         let item = this.samples[index]
         let section
+        item.sectionDepth = sectionSlotDepth * item.sectionWeight
         switch (item.type) {
           case 'watch':
             section = new WatchSection(item)
@@ -191,8 +201,7 @@ export default {
         section.addEventListener('setCurrentSectionId', this.onCurrentSectionIdChange)
         section.position.z = -currentZPos
         item.zpos = -section.position.z
-        section.sectionDepth = sectionSlotDepth * item.sectionWeight
-        currentZPos += section.sectionDepth
+        currentZPos += item.sectionDepth + sectionSlotDepth
         this.scene.add(section)
       }
       this.startZPos = this.samples[0].zpos
@@ -388,7 +397,7 @@ export default {
     height: 100vh;
 
     &.vr {
-      #logo, #menu-about, #menu-help {
+      #logo, #menu-about, #menu-help, #sections {
         display: none;
       }
 

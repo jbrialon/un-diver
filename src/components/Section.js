@@ -3,12 +3,13 @@ import AnimationLoopManager from '../utils/AnimationLoopManager'
 
 export default class Section extends THREE.Object3D {
   sectionData
+  sectionDepth
   sectionIdSent = false
 
   constructor (sectionData) {
     super()
     this.sectionData = sectionData
-    AnimationLoopManager.addInLoop(() => this.render())
+    AnimationLoopManager.addCallback(() => this.render())
     Object.assign(this, THREE.EventDispatcher)
   }
 

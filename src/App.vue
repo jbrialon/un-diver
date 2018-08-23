@@ -6,7 +6,7 @@
           <!--<img src="./assets/logo.png" alt="Ulysse Nardin">-->
         </a>
       </div>
-      <Sections :items="samples"></Sections>
+      <SectionsAnchors :items="samples"></SectionsAnchors>
       <Menu></Menu>
       <div id="rotate-device-message">
         Please rotate your device to landscape
@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import * as CONST from './Constants'
 import GuiManager from './utils/GuiManager'
 import AnimationLoopManager from './utils/AnimationLoopManager'
 import {TweenLite} from 'gsap/TweenMax'
@@ -23,7 +24,7 @@ import ScrollToPlugin from 'gsap/ScrollToPlugin'
 import * as THREE from 'three'
 import { mapGetters } from 'vuex'
 import Menu from './components/vue/Menu.vue'
-import Sections from './components/vue/Sections.vue'
+import SectionsAnchors from './components/vue/SectionsAnchors.vue'
 import PostProcessingManager from './components/PostProcessingManager.js'
 import Environment from './components/Environment.js'
 import BackgroundColorManager from './components/BackgroundColorManager.js'
@@ -34,7 +35,7 @@ import WatchSection from './components/sections/WatchSection.js'
 export default {
   components: {
     Menu,
-    Sections
+    SectionsAnchors
   },
   data () {
     return {
@@ -62,19 +63,19 @@ export default {
           id: 0,
           title: 'Diver',
           text: 'DIVER',
-          zpos: 1000
+          sectionWeight: 1
         },
         {
           id: 1,
           title: 'Discover the collection',
           text: 'DISCOVER THE COLLECTION',
-          zpos: 3000
+          sectionWeight: 1
         },
         {
           id: 2,
           title: 'Deep dive',
           text: 'DEEP DIVE',
-          zpos: 5000
+          sectionWeight: 1
         },
         {
           id: 3,
@@ -84,19 +85,19 @@ export default {
           infoLink: 'toto.com',
           buyLink: 'toto.com',
           price: '12,000 CHF',
-          zpos: 7000
+          sectionWeight: 4
         },
         {
           id: 4,
           title: 'Stain case',
           text: 'STAIN CASE',
-          zpos: 9000
+          sectionWeight: 1
         },
         {
           id: 5,
           title: 'Phosphorescent needles & numbers',
           text: 'PHOSPHORESCENT NEEDLES & NUMBERS',
-          zpos: 11000
+          sectionWeight: 1
         }
       ]
     }
@@ -122,7 +123,8 @@ export default {
     this.initPostProcessing()
     this.handleEvents()
     this.onResize()
-    AnimationLoopManager.addInLoop(this.render3D)
+    AnimationLoopManager.addFirstCallback(this.updateCamera)
+    AnimationLoopManager.addLastCallback(this.render3D)
     this.renderer.setAnimationLoop(AnimationLoopManager.renderLoop)
 
     GuiManager.add(this, 'resetOrientation').name('Reset Orientation')
@@ -155,6 +157,8 @@ export default {
       this.$store.commit('setStageSize', this.stageSize)
       window.AppCameraDummy = this.cameraDummy
       window.AppStageSize = this.stageSize
+      window.AppRenderer = this.renderer
+      window.AppScene = this.scene
     },
     initEnvironment () {
       let bgManager = new BackgroundColorManager(this.renderer, this.scene)
@@ -167,9 +171,12 @@ export default {
       this.postProcessingManager = new PostProcessingManager(this.renderer, this.scene, this.camera, this.stageSize)
     },
     buildSections () {
-      this.startZPos = this.samples[0].zpos
-      this.endZPos = this.samples[this.samples.length - 1].zpos
-
+      let currentZPos = 0
+      let sectionsSlotsCount = 0
+      this.samples.forEach(item => {
+        sectionsSlotsCount += item.sectionWeight
+      })
+      let sectionSlotDepth = CONST.SceneDepth / sectionsSlotsCount
       for (let index = 0; index < this.samples.length; index++) {
         let item = this.samples[index]
         let section
@@ -182,9 +189,16 @@ export default {
             break
         }
         section.addEventListener('setCurrentSectionId', this.onCurrentSectionIdChange)
-        section.position.z = -item.zpos
+        section.position.z = -currentZPos
+        item.zpos = -section.position.z
+        section.sectionDepth = sectionSlotDepth * item.sectionWeight
+        currentZPos += section.sectionDepth
         this.scene.add(section)
       }
+      this.startZPos = this.samples[0].zpos
+      this.endZPos = this.samples[this.samples.length - 1].zpos
+
+      this.setPageHeight()
     },
     onCurrentSectionIdChange (event) {
       if (!this.sceneIsScrolling) this.$store.commit('setCurrentSectionId', event.message)
@@ -242,14 +256,6 @@ export default {
     onCompassNeedsCalibration (e) {
       e.preventDefault()
     },
-    updateCameraRotation () {
-      if (this.deviceOrientation) {
-        this.deviceOrientationToQuaternion(this.cameraRotationQuaternion, this.deviceOrientation)
-        this.cameraRotationQuaternion.premultiply(this.deviceOrientationInitialQuat)
-      } else {
-        this.cameraRotationQuaternion.setFromEuler(new THREE.Euler(-this.mousePosition.y, -this.mousePosition.x, 0))
-      }
-    },
     deviceOrientationToQuaternion (quaternion, deviceOrientation) {
       let zee = new THREE.Vector3(0, 0, 1)
       let q0 = new THREE.Quaternion()
@@ -282,16 +288,29 @@ export default {
     zPosToScrollTop (zPos) {
       return (zPos / this.endZPos) * (this.pageHeight - this.stageSize.height)
     },
-    render3D () {
-      window.AppScrollPercentage = (-this.cameraDummy.position.z / this.endZPos)
-      this.cameraDummy.position.z += (-this.scrollingElement.scrollTop * this.pageHeightMultiplyer - this.cameraDummy.position.z) / 10
+    updateCamera () {
+      this.cameraDummy.position.z += (((-this.scrollingElement.scrollTop * this.pageHeightMultiplyer) + CONST.CameraDistanceToSection) - this.cameraDummy.position.z) * 0.1
       this.updateCameraRotation()
-      this.renderer.clear()
+      window.AppScrollPercentage = (-this.cameraDummy.position.z / this.endZPos)
       if (this.vrModeActivated) {
         this.camera.quaternion.copy(this.cameraRotationQuaternion)
-        this.vrRenderer.render(this.scene, this.camera)
       } else {
         this.camera.quaternion.slerp(this.cameraRotationQuaternion, 0.1)
+      }
+    },
+    updateCameraRotation () {
+      if (this.deviceOrientation) {
+        this.deviceOrientationToQuaternion(this.cameraRotationQuaternion, this.deviceOrientation)
+        this.cameraRotationQuaternion.premultiply(this.deviceOrientationInitialQuat)
+      } else {
+        this.cameraRotationQuaternion.setFromEuler(new THREE.Euler(-this.mousePosition.y, -this.mousePosition.x, 0))
+      }
+    },
+    render3D () {
+      this.renderer.clear()
+      if (this.vrModeActivated) {
+        this.vrRenderer.render(this.scene, this.camera)
+      } else {
         this.renderer.render(this.scene, this.camera)
         this.postProcessingManager.render()
       }
@@ -334,7 +353,7 @@ export default {
       document.body.className = activated ? 'vr' : ''
     },
     'goToSectionId' (id) {
-      let scrollVal = Math.floor(this.zPosToScrollTop((this.samples[id].zpos - 300)))
+      let scrollVal = Math.floor(this.zPosToScrollTop((this.samples[id].zpos - CONST.CameraDistanceToSection)))
       this.sceneIsScrolling = true
       this.$store.commit('setCurrentSectionId', id)
       TweenLite.to(this.scrollingElement, 1, {

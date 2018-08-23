@@ -8,8 +8,16 @@ class AnimationLoopManager {
     throw new Error('Cannot construct singleton')
   }
 
-  static addInLoop (callback) {
-    return AnimationLoopManager.callbacks.push(callback)
+  static addFirstCallback (callback) {
+    AnimationLoopManager.callbacks.unshift(callback)
+  }
+
+  static addCallback (callback) {
+    AnimationLoopManager.callbacks.splice(Math.min(1, AnimationLoopManager.callbacks.length), 0, callback)
+  }
+
+  static addLastCallback (callback) {
+    AnimationLoopManager.callbacks.push(callback)
   }
 
   static renderLoop () {

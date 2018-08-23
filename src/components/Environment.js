@@ -44,7 +44,7 @@ export default class Environment {
     this.scene.add(plankton)
     GuiManager.add(plankton, 'visible').name('Plankton')
 
-    AnimationLoopManager.addInLoop(() => this.updateEnvironment())
+    AnimationLoopManager.addCallback(() => this.updateEnvironment())
   }
 
   onTerrainLoaded (object) {
@@ -57,17 +57,18 @@ export default class Environment {
     })
     this.terrainModel.children[2].material.side = THREE.BackSide
     this.terrainModel.position.x = -2400
-    this.terrainModel.position.y = 6000
-    this.terrainModel.position.z = 32000
+    this.terrainModel.position.y = 8535
+    this.terrainModel.position.z = 19767
     this.terrainModel.scale.x = object.scale.y = object.scale.z = 10
-    this.terrainModel.rotateX(THREE.Math.degToRad(90))
+    this.terrainModel.rotateX(THREE.Math.degToRad(85))
     this.terrainModel.name = 'Terrain'
     this.scene.add(this.terrainModel)
 
     let guiTerrainFolder = GuiManager.addFolder('Terrain position')
     guiTerrainFolder.add(this.terrainModel.position, 'x', -3000, 2000)
-    guiTerrainFolder.add(this.terrainModel.position, 'y', 3000, 9000)
+    guiTerrainFolder.add(this.terrainModel.position, 'y', 1000, 9000)
     guiTerrainFolder.add(this.terrainModel.position, 'z', 15000, 45000)
+    guiTerrainFolder.add(this.terrainModel.rotation, 'x', 0, Math.PI)
   }
 
   onSharkLoaded (object) {
@@ -118,7 +119,7 @@ export default class Environment {
 
   updateEnvironment () {
     let delta = this.clock.getDelta()
-    this.light.intensity = 1 - ((window.AppScrollPercentage * 0.5) + 0.25)
+    this.light.intensity = 1 // - ((window.AppScrollPercentage * 0.5) + 0.25)
     if (this.sharkModel) this.sharkModel.position.x -= 1
     if (this.turtleModel) this.turtleModel.position.x += 0.5
     if (this.diverModel) this.diverModel.position.y -= 0.4

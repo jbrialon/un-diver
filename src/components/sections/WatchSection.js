@@ -5,6 +5,7 @@ import FBXLoader from 'three-fbxloader-offical'
 import CanvasText from '../../utils/CanvasText'
 import Button from '../Button'
 import Fader from '../Fader'
+import StickToCamera from '../StickToCamera'
 
 export default class WatchSection extends Section {
     watch2DMesh
@@ -64,10 +65,14 @@ export default class WatchSection extends Section {
     onWatchModelLoaded (object) {
       // TODO : handle correctly sizing and positioning
       this.watch3DModel = object
-      let modelScale = 10 - (1000 / window.AppStageSize.width)
+      let modelScale = 5 - (1000 / window.AppStageSize.width)
       this.watch3DModel.scale.set(modelScale, modelScale, modelScale)
       this.watch3DModel.position.x = -200 * (modelScale / 7)
       super.add(this.watch3DModel)
+      Object.assign(
+        this.watch3DModel,
+        new StickToCamera(this.watch3DModel, this.sectionDepth)
+      )
       this.initGUI()
       this.toggle3D()
     }

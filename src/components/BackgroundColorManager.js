@@ -3,18 +3,19 @@
 * Fades between two colors when
 * camera is moving down to bottom of the scene
 */
+import * as CONST from '../Constants'
 import * as THREE from 'three'
 import GuiManager from '../utils/GuiManager'
 import AnimationLoopManager from '../utils/AnimationLoopManager'
 
 export default class BackgroundColorManager {
-  surfaceColor = new THREE.Color(0x298295)
-  bottomColor = new THREE.Color(0x0e293c)
+  surfaceColor = new THREE.Color(CONST.SeaSurfaceColorCode)
+  bottomColor = new THREE.Color(CONST.SeaBottomColorCode)
   backgroundColor = new THREE.Color()
   renderer
   scene
   light
-  density = 0.0003
+  density = CONST.FogDensity
 
   constructor (renderer, scene) {
     this.renderer = renderer
@@ -24,7 +25,7 @@ export default class BackgroundColorManager {
   }
 
   init () {
-    AnimationLoopManager.addInLoop(() => this.updateBackground())
+    AnimationLoopManager.addCallback(() => this.updateBackground())
   }
 
   updateBackground () {

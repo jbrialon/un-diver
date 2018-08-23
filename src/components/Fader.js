@@ -13,7 +13,7 @@ export default class Fader {
       this.camera = window.AppCameraDummy
       this.closeDistance = 500
       this.farDistance = 2e10
-      AnimationLoopManager.addInLoop(() => this.updateFade())
+      AnimationLoopManager.addCallback(() => this.updateFade())
     }
   }
   updateFade () {

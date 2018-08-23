@@ -8,8 +8,8 @@ const store = new Vuex.Store({
     cameraDummy: null,
     stageSize: null,
     vrMode: false,
-    currentSectionId: 0,
-    goToSectionId: 0
+    currentSectionId: undefined,
+    goToSectionId: undefined
   },
   mutations: {
     toggleVrMode (state) {

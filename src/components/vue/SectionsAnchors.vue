@@ -7,7 +7,7 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  name: 'Sections',
+  name: 'SectionsAnchors',
   props: {
     items: Array
   },

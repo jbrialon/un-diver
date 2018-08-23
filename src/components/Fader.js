@@ -1,4 +1,5 @@
 import AnimationLoopManager from '../utils/AnimationLoopManager'
+import * as THREE from 'three'
 
 export default class Fader {
   defaultOpacity = 1
@@ -17,7 +18,11 @@ export default class Fader {
     }
   }
   updateFade () {
-    let distance = this.camera.position.z - this.referenceObject3D.position.z - 50
+    let camVect = new THREE.Vector3()
+    let objectVect = new THREE.Vector3()
+    this.camera.getWorldPosition(camVect)
+    this.referenceObject3D.getWorldPosition(objectVect)
+    let distance = camVect.z - objectVect.z - 50
     this.referenceObject3D.visible = distance > 0 && distance < this.farDistance + this.closeDistance
     let closeOpacity = distance / this.closeDistance
     let farOpacity = 1 - (distance / (this.farDistance + this.closeDistance))

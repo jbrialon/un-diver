@@ -94,6 +94,10 @@ export default class WatchSection extends Section {
         let mesh = new THREE.Mesh(geometry, material)
         mesh.position.z = -(textIndex * textsDistance)
         mesh.position.x = (textIndex % 2 === 0) ? (window.AppStageSize.width * 0.2) : -(window.AppStageSize.width * 0.2)
+        Object.assign(
+          mesh,
+          new Fader(mesh)
+        )
         super.add(mesh)
         textIndex++
       })

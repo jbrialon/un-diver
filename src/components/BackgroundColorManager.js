@@ -5,6 +5,7 @@
 */
 import * as THREE from 'three'
 import GuiManager from '../utils/GuiManager'
+import AnimationLoopManager from '../utils/AnimationLoopManager'
 
 export default class BackgroundColorManager {
   surfaceColor = new THREE.Color(0x298295)
@@ -23,11 +24,10 @@ export default class BackgroundColorManager {
   }
 
   init () {
-    this.updateFade()
+    AnimationLoopManager.addInLoop(() => this.updateBackground())
   }
 
-  updateFade = () => {
-    requestAnimationFrame(this.updateFade)
+  updateBackground () {
     this.backgroundColor = this.surfaceColor.clone().lerp(this.bottomColor, window.AppScrollPercentage)
     this.renderer.setClearColor(this.backgroundColor, 1)
     this.scene.fog = new THREE.FogExp2(this.backgroundColor.getHex(), this.density)

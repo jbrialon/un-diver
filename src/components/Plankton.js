@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import AnimationLoopManager from '../utils/AnimationLoopManager'
 
 export default class Plankton extends THREE.Object3D {
   spheres = []
@@ -21,12 +22,10 @@ export default class Plankton extends THREE.Object3D {
       this.add(mesh)
       this.spheres.push(mesh)
     }
-
-    this.updatePlankton()
+    AnimationLoopManager.addInLoop(() => this.updatePlankton())
   }
 
-  updatePlankton = () => {
-    requestAnimationFrame(this.updatePlankton)
+  updatePlankton () {
     let timer = 0.00001 * Date.now()
     for (var i = 0, il = this.spheres.length; i < il; i++) {
       var sphere = this.spheres[i]

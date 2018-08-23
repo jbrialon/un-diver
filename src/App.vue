@@ -16,6 +16,7 @@
 
 <script>
 import GuiManager from './utils/GuiManager'
+import AnimationLoopManager from './utils/AnimationLoopManager'
 import {TweenLite} from 'gsap/TweenMax'
 // eslint-disable-next-line
 import ScrollToPlugin from 'gsap/ScrollToPlugin'
@@ -121,7 +122,8 @@ export default {
     this.initPostProcessing()
     this.handleEvents()
     this.onResize()
-    this.render3D()
+    AnimationLoopManager.addInLoop(this.render3D)
+    this.renderer.setAnimationLoop(AnimationLoopManager.renderLoop)
 
     GuiManager.add(this, 'resetOrientation').name('Reset Orientation')
   },
@@ -194,6 +196,7 @@ export default {
     handleEvents () {
       window.addEventListener('resize', this.onResize, false)
       window.addEventListener('mousemove', this.onMouseMove, false)
+      window.addEventListener('mouseout', this.onMouseOut, false)
       window.addEventListener('orientationchange', this.onScreenOrientationChange, false)
       window.addEventListener('deviceorientation', this.onDeviceOrientationInit, false)
       window.addEventListener('compassneedscalibration', this.onCompassNeedsCalibration, false)
@@ -201,6 +204,7 @@ export default {
     removeListeners () {
       window.removeEventListener('resize', this.onResize, false)
       window.removeEventListener('mousemove', this.onMouseMove, false)
+      window.removeEventListener('mouseout', this.onMouseOut, false)
       window.removeEventListener('orientationchange', this.onScreenOrientationChange, false)
       window.removeEventListener('deviceorientation', this.onDeviceOrientationChange, false)
       window.removeEventListener('deviceorientation', this.onDeviceOrientationInit, false)
@@ -211,6 +215,9 @@ export default {
       let maxHeight = this.stageSize.height >> 1
       vec2.x = (vec2.x - maxWidth) / maxWidth
       vec2.y = (vec2.y - maxHeight) / maxHeight
+    },
+    onMouseOut (e) {
+      this.resetOrientation()
     },
     onMouseMove (e) {
       // TODO : handle this for mobile devices
@@ -263,8 +270,6 @@ export default {
       this.mousePosition.y = this.stageSize.height * 0.5
       this.restrictFOV(this.mousePosition)
     },
-    updateCurrentSection () {
-    },
     onResize () {
       this.stageSize.set(this.stageDOMElement.clientWidth, this.stageDOMElement.clientHeight)
       this.renderer.setSize(this.stageSize.width, this.stageSize.height)
@@ -278,7 +283,6 @@ export default {
       return (zPos / this.endZPos) * (this.pageHeight - this.stageSize.height)
     },
     render3D () {
-      requestAnimationFrame(() => this.render3D())
       window.AppScrollPercentage = (-this.cameraDummy.position.z / this.endZPos)
       this.cameraDummy.position.z += (-this.scrollingElement.scrollTop * this.pageHeightMultiplyer - this.cameraDummy.position.z) / 10
       this.updateCameraRotation()
@@ -291,6 +295,36 @@ export default {
         this.renderer.render(this.scene, this.camera)
         this.postProcessingManager.render()
       }
+    },
+    clearThree (obj) {
+      if (obj !== null) {
+        for (var i = 0; i < obj.children.length; i++) {
+          this.clearThree(obj.children[i])
+        }
+        if (obj.geometry) {
+          obj.geometry.dispose()
+          obj.geometry = undefined
+        }
+        if (obj.material) {
+          if (obj.material.map) {
+            obj.material.map.dispose()
+            obj.material.map = undefined
+          }
+          obj.material.dispose()
+          obj.material = undefined
+        }
+      }
+      obj = undefined
+    },
+    disposeScene () {
+      this.removeListeners()
+      AnimationLoopManager.cleartLoop()
+      this.renderer.setAnimationLoop(() => {})
+      this.clearThree(this.scene)
+      this.renderer.dispose()
+      this.renderer.forceContextLoss()
+      this.renderer.context = undefined
+      this.renderer.domElement = undefined
     }
   },
   watch: {
@@ -303,7 +337,7 @@ export default {
       let scrollVal = Math.floor(this.zPosToScrollTop((this.samples[id].zpos - 300)))
       this.sceneIsScrolling = true
       this.$store.commit('setCurrentSectionId', id)
-      TweenLite.to(window, 1, {
+      TweenLite.to(this.scrollingElement, 1, {
         scrollTo: scrollVal,
         onComplete: () => {
           this.sceneIsScrolling = false
@@ -312,7 +346,7 @@ export default {
     }
   },
   beforeDestroy () {
-    this.removeListeners()
+    this.disposeScene()
   }
 }
 </script>

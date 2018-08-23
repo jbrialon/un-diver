@@ -5,6 +5,7 @@
 import * as THREE from 'three'
 import FBXLoader from 'three-fbxloader-offical'
 import GuiManager from '../utils/GuiManager'
+import AnimationLoopManager from '../utils/AnimationLoopManager'
 import Plankton from './Plankton.js'
 
 export default class Environment {
@@ -20,7 +21,6 @@ export default class Environment {
   turtleModel
   diverModel
   modelMixers = []
-  togglePlankton = true
 
   constructor (scene, sceneFarDistance) {
     this.scene = scene
@@ -40,10 +40,11 @@ export default class Environment {
 
     // set up plankton
     let plankton = new Plankton(this.sceneFarDistance)
+    plankton.visible = false
     this.scene.add(plankton)
     GuiManager.add(plankton, 'visible').name('Plankton')
 
-    this.updateFade()
+    AnimationLoopManager.addInLoop(() => this.updateEnvironment())
   }
 
   onTerrainLoaded (object) {
@@ -60,6 +61,7 @@ export default class Environment {
     this.terrainModel.position.z = 32000
     this.terrainModel.scale.x = object.scale.y = object.scale.z = 10
     this.terrainModel.rotateX(THREE.Math.degToRad(90))
+    this.terrainModel.name = 'Terrain'
     this.scene.add(this.terrainModel)
 
     let guiTerrainFolder = GuiManager.addFolder('Terrain position')
@@ -114,8 +116,7 @@ export default class Environment {
     model.mixer.clipAction(model.animations[ 0 ]).setDuration(5).play()
   }
 
-  updateFade = () => {
-    requestAnimationFrame(this.updateFade)
+  updateEnvironment () {
     let delta = this.clock.getDelta()
     this.light.intensity = 1 - ((window.AppScrollPercentage * 0.5) + 0.25)
     if (this.sharkModel) this.sharkModel.position.x -= 1

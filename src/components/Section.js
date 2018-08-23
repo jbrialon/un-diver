@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import AnimationLoopManager from '../utils/AnimationLoopManager'
 
 export default class Section extends THREE.Object3D {
   sectionData
@@ -7,12 +8,11 @@ export default class Section extends THREE.Object3D {
   constructor (sectionData) {
     super()
     this.sectionData = sectionData
-    this.render()
+    AnimationLoopManager.addInLoop(() => this.render())
     Object.assign(this, THREE.EventDispatcher)
   }
 
-  render = () => {
-    requestAnimationFrame(this.render)
+  render () {
     let distance = window.AppCameraDummy.position.z - this.position.z
     let isClose = distance > 0 && distance < 2000
     if (!this.sectionIdSent && isClose) {

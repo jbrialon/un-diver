@@ -8,11 +8,11 @@ export default class Fader {
   referenceObject3D
   camera
 
-  constructor (object) {
+  constructor (object, closeDistance) {
     this.referenceObject3D = object
     if (this.referenceObject3D.material) {
       this.camera = window.AppCameraDummy
-      this.closeDistance = 500
+      this.closeDistance = closeDistance || 500
       this.farDistance = 2e10
       AnimationLoopManager.addCallback(() => this.updateFade())
     }
@@ -22,7 +22,7 @@ export default class Fader {
     let objectVect = new THREE.Vector3()
     this.camera.getWorldPosition(camVect)
     this.referenceObject3D.getWorldPosition(objectVect)
-    let distance = camVect.z - objectVect.z - 50
+    let distance = camVect.z - objectVect.z
     this.referenceObject3D.visible = distance > 0 && distance < this.farDistance + this.closeDistance
     let closeOpacity = distance / this.closeDistance
     let farOpacity = 1 - (distance / (this.farDistance + this.closeDistance))

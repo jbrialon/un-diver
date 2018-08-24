@@ -11,13 +11,14 @@ export default class StickToCamera {
   referenceObject3D
   camera
   maxDistance
+  debug
 
-  constructor (object, maxDistance) {
+  constructor (object, maxDistance, debug) {
+    this.debug = debug
     this.maxDistance = maxDistance
     this.camera = window.AppCameraDummy
     this.referenceObject3D = object
     this.initialObjectPosition.copy(this.referenceObject3D.position)
-    this.maxObjectPosition.copy(this.initialObjectPosition)
     this.maxObjectPosition.z = -this.maxDistance
 
     this.referenceObject3D.parent.add(this.initialObject3D)
@@ -31,9 +32,10 @@ export default class StickToCamera {
     this.camera.getWorldPosition(vect)
     this.initialObject3D.worldToLocal(vect)
     vect.z -= CONST.CameraDistanceToSection
-    vectFinal.copy(vect).clamp(this.maxObjectPosition, this.zeroVect)
+    vectFinal.z = Math.max(vect.z, this.maxObjectPosition.z)
+    vectFinal.z = Math.min(vectFinal.z, 0)
     vectFinal.z += this.initialObjectPosition.z
-    // this.referenceObject3D.position.copy(vectFinal)
+
     this.referenceObject3D.position.z += (vectFinal.z - this.referenceObject3D.position.z) * 0.2
   }
 }

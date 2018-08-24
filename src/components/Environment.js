@@ -56,9 +56,9 @@ export default class Environment {
       }
     })
     this.terrainModel.children[2].material.side = THREE.BackSide
-    this.terrainModel.position.x = -2400
-    this.terrainModel.position.y = 8535
-    this.terrainModel.position.z = 19767
+    this.terrainModel.position.x = -2922
+    this.terrainModel.position.y = 9246
+    this.terrainModel.position.z = 19676
     this.terrainModel.scale.x = object.scale.y = object.scale.z = 10
     this.terrainModel.rotateX(THREE.Math.degToRad(85))
     this.terrainModel.name = 'Terrain'
@@ -66,7 +66,7 @@ export default class Environment {
 
     let guiTerrainFolder = GuiManager.addFolder('Terrain position')
     guiTerrainFolder.add(this.terrainModel.position, 'x', -3000, 2000)
-    guiTerrainFolder.add(this.terrainModel.position, 'y', 1000, 9000)
+    guiTerrainFolder.add(this.terrainModel.position, 'y', 1000, 15000)
     guiTerrainFolder.add(this.terrainModel.position, 'z', 15000, 45000)
     guiTerrainFolder.add(this.terrainModel.rotation, 'x', 0, Math.PI)
   }

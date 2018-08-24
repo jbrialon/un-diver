@@ -73,7 +73,7 @@ export default class WatchSection extends Section {
       TweenMax.to(this.watch3DModel.rotation, 3, {y: Math.PI * 0.3, yoyo: true, yoyoEase: true, ease: Power2.easeInOut, repeat: -1})
       Object.assign(
         this.watch3DModel,
-        new StickToCamera(this.watch3DModel, this.sectionDepth + this.watch3DModel.position.z)
+        new StickToCamera(this.watch3DModel, this.sectionDepth + this.watch3DModel.position.z, true)
       )
     }
 
@@ -99,14 +99,18 @@ export default class WatchSection extends Section {
         textMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(translate, 0, 0))
         textMesh.position.z = subTextZpos
         textMesh.position.x = leftText ? 75 : -75
-        subTextZpos -= this.stepsDistance
         textMesh.scale.set(0.5, 0.5, 0.5)
         super.add(textMesh)
         textIndex++
         Object.assign(
           textMesh,
-          new Fader(textMesh)
+          new StickToCamera(textMesh, this.stepsDistance * 0.5)
         )
+        Object.assign(
+          textMesh,
+          new Fader(textMesh, 750)
+        )
+        subTextZpos -= this.stepsDistance
       })
     }
 }

@@ -34,6 +34,10 @@ export default {
   left: 4vw;
   transform: translateY(-50%);
 
+  @media screen and (max-width: 480px) {
+    display: none;
+  }
+
   .section-title {
     font-family: Arial, Helvetica, sans-serif;
     display: flex;

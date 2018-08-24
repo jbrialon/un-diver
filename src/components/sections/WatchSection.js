@@ -64,7 +64,7 @@ export default class WatchSection extends Section {
     onWatchModelLoaded (object) {
       // TODO : handle correctly sizing and positioning
       this.watch3DModel = object
-      let modelScale = 3 - (1000 / window.AppStageSize.width)
+      let modelScale = 2 // - (1000 / window.AppStageSize.width)
       this.watch3DModel.scale.set(modelScale, modelScale, modelScale)
       this.watch3DModel.position.z = -this.stepsDistance
       this.watch3DModel.rotation.y = -Math.PI * 0.3

@@ -8,6 +8,7 @@
     "dev": "vue-cli-service serve"
   },
   "dependencies": {
+    "canvas-text-wrapper": "^0.10.2",
     "dat.gui": "^0.7.2",
     "gsap": "^2.0.1",
     "raw-loader": "^0.5.1",

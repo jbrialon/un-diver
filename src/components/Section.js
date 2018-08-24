@@ -1,5 +1,4 @@
 import * as THREE from 'three'
-import AnimationLoopManager from '../utils/AnimationLoopManager'
 
 export default class Section extends THREE.Object3D {
   sectionData
@@ -8,20 +7,21 @@ export default class Section extends THREE.Object3D {
 
   constructor (sectionData) {
     super()
-    this.sectionDepth = sectionData.sectionDepth
     this.sectionData = sectionData
-    AnimationLoopManager.addCallback(() => this.render())
+    this.sectionDepth = this.sectionData.sectionDepth
     Object.assign(this, THREE.EventDispatcher)
+    // this.addDebugCube()
   }
 
-  render () {
-    let distance = window.AppCameraDummy.position.z - this.position.z
-    let isClose = distance > 0 && distance < 2000
-    if (!this.sectionIdSent && isClose) {
-      this.dispatchEvent({type: 'setCurrentSectionId', message: this.sectionData.id})
-      this.sectionIdSent = true
-    } else if (this.sectionIdSent && !isClose) {
-      this.sectionIdSent = false
-    }
+  addDebugCube () {
+    const material = new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide})
+    const geometry = new THREE.CubeGeometry(100, 100, this.sectionDepth, material)
+    material.transparent = true
+    material.opacity = 0.5
+    const mesh = new THREE.Mesh(geometry, material)
+    mesh.position.z = -this.sectionDepth * 0.5
+    mesh.position.x = -100
+    mesh.position.y = -100
+    super.add(mesh)
   }
 }

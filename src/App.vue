@@ -40,7 +40,7 @@ export default {
   data () {
     return {
       scrollingElement: null,
-      sceneIsScrolling: false,
+      sceneIsAutoScrolling: false,
       pageHeight: 0,
       stageSize: new THREE.Vector2(0, 0),
       stageDOMElement: null,
@@ -58,29 +58,12 @@ export default {
       endZPos: 0,
       postProcessingManager: null,
       scrollTween: null,
+      sectionsDepthList: [],
       samples: [
         {
           id: 0,
-          title: 'Diver',
-          text: 'DIVER',
-          sectionWeight: 0
-        },
-        {
-          id: 1,
-          title: 'Discover the collection',
-          text: 'DISCOVER THE COLLECTION',
-          sectionWeight: 0
-        },
-        {
-          id: 2,
-          title: 'Deep dive',
-          text: 'DEEP DIVE',
-          sectionWeight: 0
-        },
-        {
-          id: 3,
           type: 'watch',
-          title: 'Chronograph',
+          title: 'The New Diver',
           texturePath: require('./assets/watches/3203.png'),
           infoLink: 'toto.com',
           buyLink: 'toto.com',
@@ -89,21 +72,21 @@ export default {
           subTexts: [
             'Blue Dial',
             'Diameter 44mm',
-            'UN-118 Caliber',
-            'Glowing technology',
-            'Waterproof up to 300m',
-            'Blue Shark stamped on the Case-Back',
+            'UN-118\nCaliber',
+            'Glowing\ntechnology',
+            'Waterproof\nup to 300m',
+            'Blue Shark stamped\non the Case-Back',
             '5\'800 CHF'
           ]
         },
         {
-          id: 4,
+          id: 1,
           title: 'Stain case',
           text: 'STAIN CASE',
           sectionWeight: 0
         },
         {
-          id: 5,
+          id: 2,
           title: 'Phosphorescent needles & numbers',
           text: 'PHOSPHORESCENT NEEDLES & NUMBERS',
           sectionWeight: 0
@@ -120,6 +103,7 @@ export default {
     },
     ...mapGetters([
       'vrModeActivated',
+      'currentSectionId',
       'goToSectionId'
     ])
   },
@@ -133,6 +117,7 @@ export default {
     this.handleEvents()
     this.onResize()
     AnimationLoopManager.addFirstCallback(this.updateCamera)
+    AnimationLoopManager.addCallback(this.checkCurrentSection)
     AnimationLoopManager.addLastCallback(this.render3D)
     this.renderer.setAnimationLoop(AnimationLoopManager.renderLoop)
 
@@ -188,8 +173,8 @@ export default {
       let sectionSlotDepth = CONST.SceneDepth / sectionsSlotsCount
       for (let index = 0; index < this.samples.length; index++) {
         let item = this.samples[index]
-        let section
         item.sectionDepth = sectionSlotDepth * item.sectionWeight
+        let section
         switch (item.type) {
           case 'watch':
             section = new WatchSection(item)
@@ -202,6 +187,7 @@ export default {
         section.position.z = -currentZPos
         item.zpos = -section.position.z
         currentZPos += item.sectionDepth + sectionSlotDepth
+        this.sectionsDepthList.push({id: item.id, start: section.position.z + sectionSlotDepth, end: section.position.z - item.sectionDepth})
         this.scene.add(section)
       }
       this.startZPos = this.samples[0].zpos
@@ -210,7 +196,7 @@ export default {
       this.setPageHeight()
     },
     onCurrentSectionIdChange (event) {
-      if (!this.sceneIsScrolling) this.$store.commit('setCurrentSectionId', event.message)
+      if (!this.sceneIsAutoScrolling) this.$store.commit('setCurrentSectionId', event.message)
     },
     setPageHeight () {
       this.pageHeight = (this.endZPos - this.startZPos) / this.pageHeightMultiplyer + this.stageSize.height
@@ -294,6 +280,15 @@ export default {
       this.postProcessingManager.resize()
       this.setPageHeight()
     },
+    checkCurrentSection () {
+      if (!this.sceneIsAutoScrolling) {
+        this.sectionsDepthList.forEach(sectionDepth => {
+          if (this.cameraDummy.position.z < sectionDepth.start &&
+          this.cameraDummy.position.z > sectionDepth.end &&
+          this.currentSectionId !== sectionDepth.id) this.$store.commit('setCurrentSectionId', sectionDepth.id)
+        })
+      }
+    },
     zPosToScrollTop (zPos) {
       return (zPos / this.endZPos) * (this.pageHeight - this.stageSize.height)
     },
@@ -363,12 +358,12 @@ export default {
     },
     'goToSectionId' (id) {
       let scrollVal = Math.floor(this.zPosToScrollTop((this.samples[id].zpos - CONST.CameraDistanceToSection)))
-      this.sceneIsScrolling = true
+      this.sceneIsAutoScrolling = true
       this.$store.commit('setCurrentSectionId', id)
       TweenLite.to(this.scrollingElement, 1, {
         scrollTo: scrollVal,
         onComplete: () => {
-          this.sceneIsScrolling = false
+          this.sceneIsAutoScrolling = false
         }
       })
     }

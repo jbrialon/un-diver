@@ -1,7 +1,6 @@
 import {TweenMax, Power2} from 'gsap'
-import GuiManager from '../../utils/GuiManager'
-import Section from '../Section.js'
 import * as THREE from 'three'
+import Section from '../Section.js'
 import FBXLoader from 'three-fbxloader-offical'
 import CanvasText from '../../utils/CanvasText'
 import Button from '../Button'
@@ -9,32 +8,21 @@ import Fader from '../Fader'
 import StickToCamera from '../StickToCamera'
 
 export default class WatchSection extends Section {
-    watch2DMesh
+    stepsDistance
     watch3DModelPath = 'diver_watch_blue_LOW.fbx'
     watch3DModel
+    watch3DModelSize = new THREE.Vector3()
     infoButton
     buyButton
-    watch3DModelVisible = true
 
     constructor (sectionData) {
       super(sectionData)
+      this.stepsDistance = this.sectionDepth / this.sectionData.subTexts.length
+
+      this.addTitle()
 
       let loader = new FBXLoader()
       loader.load(this.watch3DModelPath, (object) => this.onWatchModelLoaded(object))
-
-      let texture = new THREE.TextureLoader().load(this.sectionData.texturePath)
-      texture.wrapS = THREE.RepeatWrapping
-      texture.wrapT = THREE.RepeatWrapping
-      // TODO : review texture offset and aspect ratio handling
-      texture.repeat.set(0.5, 1)
-      texture.offset.set(0.25, 0)
-      texture.minFilter = THREE.LinearFilter
-      let material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
-      let geometry = new THREE.PlaneGeometry(window.AppStageSize.width * 0.5, window.AppStageSize.width * 0.533333)
-      this.watch2DMesh = new THREE.Mesh(geometry, material)
-      this.watch2DMesh.position.x = -window.AppStageSize.width * 0.15
-      this.watch2DMesh.position.z = 20
-      super.add(this.watch2DMesh)
 
       this.addSubTexts()
 
@@ -54,13 +42,23 @@ export default class WatchSection extends Section {
       )
     }
 
-    initGUI () {
-      GuiManager.add(this, 'watch3DModelVisible').name('Watch 3D Model').onFinishChange(() => this.toggle3D())
-    }
+    addTitle () {
+      const titleMesh = CanvasText.getTextMesh(this.sectionData.title, {
+        fontSize: 80,
+        font: '80px Arial, sans-serif',
+        textAlign: 'center',
+        verticalAlign: 'middle',
+        color: 'rgba(255,255,255,1)',
+        allowNewLine: true,
+        lineHeight: 1
+      })
+      titleMesh.scale.set(0.5, 0.5, 0.5)
+      super.add(titleMesh)
 
-    toggle3D () {
-      this.watch2DMesh.visible = !this.watch3DModelVisible
-      this.watch3DModel.visible = this.watch3DModelVisible
+      Object.assign(
+        titleMesh,
+        new Fader(titleMesh)
+      )
     }
 
     onWatchModelLoaded (object) {
@@ -68,38 +66,47 @@ export default class WatchSection extends Section {
       this.watch3DModel = object
       let modelScale = 3 - (1000 / window.AppStageSize.width)
       this.watch3DModel.scale.set(modelScale, modelScale, modelScale)
+      this.watch3DModel.position.z = -this.stepsDistance
+      this.watch3DModel.rotation.y = -Math.PI * 0.3
       super.add(this.watch3DModel)
+
+      TweenMax.to(this.watch3DModel.rotation, 3, {y: Math.PI * 0.3, yoyo: true, yoyoEase: true, ease: Power2.easeInOut, repeat: -1})
       Object.assign(
         this.watch3DModel,
-        new StickToCamera(this.watch3DModel, this.sectionDepth)
+        new StickToCamera(this.watch3DModel, this.sectionDepth + this.watch3DModel.position.z)
       )
-      this.initGUI()
-      this.toggle3D()
-      this.watch3DModel.rotation.y = -Math.PI * 0.3
-      TweenMax.to(this.watch3DModel.rotation, 3, {y: Math.PI * 0.3, yoyo: true, yoyoEase: true, ease: Power2.easeInOut, repeat: -1})
     }
 
     addSubTexts () {
       let textIndex = 0
-      let textsDistance = this.sectionDepth / (this.sectionData.subTexts.length - 1)
+      let subTextZpos = -this.stepsDistance
       this.sectionData.subTexts.forEach(text => {
-        let texture = new THREE.Texture(
-          CanvasText.getText(text, 50, 'Arial', 'rgba(255,255,255,1)', 'center', 'middle')
-        )
-        texture.needsUpdate = true
-        texture.minFilter = THREE.LinearFilter
-        let material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
-        let geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(texture.image.width * 0.5 * (textIndex % 2 === 0) ? -1 : 1, 0, 0))
-        let mesh = new THREE.Mesh(geometry, material)
-        mesh.position.z = -(textIndex * textsDistance)
-        mesh.position.x = (textIndex % 2 === 0) ? (window.AppStageSize.width * 0.2) : -(window.AppStageSize.width * 0.2)
-        Object.assign(
-          mesh,
-          new Fader(mesh)
-        )
-        super.add(mesh)
+        const leftText = textIndex % 2 === 0
+        let textMesh = CanvasText.getTextMesh(text, {
+          fontSize: 50,
+          font: '50px Arial, sans-serif',
+          textAlign: 'left',
+          verticalAlign: 'middle',
+          color: 'rgba(255,255,255,1)',
+          allowNewLine: true,
+          lineHeight: 1
+        })
+        const boxSize = new THREE.Vector3()
+        textMesh.geometry.computeBoundingBox()
+        textMesh.geometry.boundingBox.getSize(boxSize)
+        let translate = boxSize.x * 0.5
+        if (!leftText) translate *= -1
+        textMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(translate, 0, 0))
+        textMesh.position.z = subTextZpos
+        textMesh.position.x = leftText ? 75 : -75
+        subTextZpos -= this.stepsDistance
+        textMesh.scale.set(0.5, 0.5, 0.5)
+        super.add(textMesh)
         textIndex++
+        Object.assign(
+          textMesh,
+          new Fader(textMesh)
+        )
       })
     }
 }

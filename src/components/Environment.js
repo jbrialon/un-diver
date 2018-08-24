@@ -77,7 +77,7 @@ export default class Environment {
     this.sharkModel.position.y = 200
     this.sharkModel.position.x = 750
     this.sharkModel.position.z = -6000
-    this.sharkModel.rotateX(THREE.Math.degToRad(90))
+    this.sharkModel.rotateX(THREE.Math.degToRad(45))
     this.scene.add(this.sharkModel)
   }
 
@@ -87,17 +87,18 @@ export default class Environment {
     this.turtleModel.position.y = 150
     this.turtleModel.position.x = -500
     this.turtleModel.position.z = -3000
-    this.turtleModel.rotateX(THREE.Math.degToRad(90))
+    this.turtleModel.rotateX(THREE.Math.degToRad(45))
+    this.turtleModel.rotateY(THREE.Math.degToRad(45))
     this.scene.add(this.turtleModel)
   }
 
   onDiverLoaded (object) {
     this.diverModel = object
     this.initAnimal(this.diverModel)
-    this.diverModel.position.y = 150
-    this.diverModel.position.x = -500
-    this.diverModel.position.z = -1000
-    this.diverModel.rotateX(THREE.Math.degToRad(90))
+    this.diverModel.position.y = 0
+    this.diverModel.position.x = -0
+    this.diverModel.position.z = -1500
+    this.diverModel.rotateZ(THREE.Math.degToRad(60))
     this.scene.add(this.diverModel)
   }
 
@@ -122,7 +123,7 @@ export default class Environment {
     this.light.intensity = 1 // - ((window.AppScrollPercentage * 0.5) + 0.25)
     if (this.sharkModel) this.sharkModel.position.x -= 1
     if (this.turtleModel) this.turtleModel.position.x += 0.5
-    if (this.diverModel) this.diverModel.position.y -= 0.4
+    if (this.diverModel) this.diverModel.position.z += 0.7
     if (this.modelMixers.length > 0) {
       for (var i = 0; i < this.modelMixers.length; i++) {
         this.modelMixers[i].update(delta)

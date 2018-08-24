@@ -7,6 +7,7 @@
         </a>
       </div>
       <SectionsAnchors :items="samples"></SectionsAnchors>
+      <Meter></Meter>
       <Menu></Menu>
       <div id="rotate-device-message">
         Please rotate your device to landscape
@@ -23,6 +24,7 @@ import {TweenLite} from 'gsap/TweenMax'
 import ScrollToPlugin from 'gsap/ScrollToPlugin'
 import * as THREE from 'three'
 import { mapGetters } from 'vuex'
+import Meter from './components/vue/Meter.vue'
 import Menu from './components/vue/Menu.vue'
 import SectionsAnchors from './components/vue/SectionsAnchors.vue'
 import PostProcessingManager from './components/PostProcessingManager.js'
@@ -35,6 +37,7 @@ import WatchSection from './components/sections/WatchSection.js'
 export default {
   components: {
     Menu,
+    Meter,
     SectionsAnchors
   },
   data () {
@@ -295,7 +298,7 @@ export default {
     updateCamera () {
       this.cameraDummy.position.z += (((-this.scrollingElement.scrollTop * this.pageHeightMultiplyer) + CONST.CameraDistanceToSection) - this.cameraDummy.position.z) * 0.1
       this.updateCameraRotation()
-      window.AppScrollPercentage = (-this.cameraDummy.position.z / this.endZPos)
+      window.AppScrollPercentage = (-(this.cameraDummy.position.z - CONST.CameraDistanceToSection) / this.endZPos)
       if (this.vrModeActivated) {
         this.camera.quaternion.copy(this.cameraRotationQuaternion)
       } else {

@@ -8,7 +8,7 @@ export default class PostProcessingManager {
   stageSize
   composerScene
   composerSceneEffects
-  visible = false
+  visible = true
 
   constructor (renderer, scene, camera, stageSize) {
     this.renderer = renderer
@@ -23,13 +23,13 @@ export default class PostProcessingManager {
     }
     let renderScene = new THREE.RenderPass(this.scene, this.camera)
     let effectBloom = new THREE.BloomPass(0.5)
-    let effectFilm = new THREE.FilmPass(0.15, 0.025, 100, false)
+    // let effectFilm = new THREE.FilmPass(0.15, 0.025, 100, false)
     let effectBleach = new THREE.ShaderPass(THREE.BleachBypassShader)
     let effectVignette = new THREE.ShaderPass(THREE.VignetteShader)
     let antiAliasing = new THREE.ShaderPass(THREE.FXAAShader)
     effectBleach.uniforms[ 'opacity' ].value = 0.15
-    effectVignette.uniforms[ 'offset' ].value = 0.55
-    effectVignette.uniforms[ 'darkness' ].value = 1.6
+    effectVignette.uniforms[ 'offset' ].value = 0.8
+    effectVignette.uniforms[ 'darkness' ].value = 1.0
     effectVignette.renderToScreen = true
     antiAliasing.uniforms.resolution.value.x = 1 / this.stageSize.width
     antiAliasing.uniforms.resolution.value.y = 1 / this.stageSize.height
@@ -37,8 +37,8 @@ export default class PostProcessingManager {
     this.composerSceneEffects = new THREE.EffectComposer(this.renderer, new THREE.WebGLRenderTarget(this.stageSize.width, this.stageSize.height, rtParameters))
     this.composerSceneEffects.addPass(renderScene)
     this.composerSceneEffects.addPass(effectBloom)
-    this.composerSceneEffects.addPass(effectFilm)
-    this.composerSceneEffects.addPass(effectBleach)
+    // this.composerSceneEffects.addPass(effectFilm)
+    // this.composerSceneEffects.addPass(effectBleach)
     this.composerSceneEffects.addPass(effectVignette)
     // this.composerScene.addPass(antiAliasing)
 

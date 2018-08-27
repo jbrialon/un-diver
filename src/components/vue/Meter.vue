@@ -35,10 +35,19 @@ export default {
   height: 40px;
   display: flex;
   align-items: center;
+  transform: translateY(-50%);
   will-change: opacity,transform;
 
   font-family: Arial, Helvetica, sans-serif;
   color: $white;
   font-size: 2em;
+
+  @media screen and (max-width: 480px) {
+    transform: translateY(-50%) translateX(-50%);
+    top: auto;
+    right: auto;
+    left: 50%;
+    bottom: 2vh;
+  }
 }
 </style>

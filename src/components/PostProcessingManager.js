@@ -8,7 +8,7 @@ export default class PostProcessingManager {
   stageSize
   composerScene
   composerSceneEffects
-  visible = true
+  visible = false
 
   constructor (renderer, scene, camera, stageSize) {
     this.renderer = renderer

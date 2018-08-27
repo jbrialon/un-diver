@@ -135,7 +135,7 @@ export default {
         45,
         this.stageSize.width / this.stageSize.height,
         1,
-        2e5
+        5000
       )
       this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })
       this.renderer.setSize(this.stageSize.width, this.stageSize.height)
@@ -174,8 +174,7 @@ export default {
         sectionsSlotsCount += item.sectionWeight
       })
       let sectionSlotDepth = CONST.SceneDepth / sectionsSlotsCount
-      for (let index = 0; index < this.samples.length; index++) {
-        let item = this.samples[index]
+      this.samples.forEach(item => {
         item.sectionDepth = sectionSlotDepth * item.sectionWeight
         let section
         switch (item.type) {
@@ -187,14 +186,14 @@ export default {
             break
         }
         section.addEventListener('setCurrentSectionId', this.onCurrentSectionIdChange)
-        section.position.z = -currentZPos
-        item.zpos = -section.position.z
+        section.matrix.makeTranslation(0, 0, -currentZPos)
+        item.zpos = currentZPos
         currentZPos += item.sectionDepth + sectionSlotDepth
-        this.sectionsDepthList.push({id: item.id, start: section.position.z + sectionSlotDepth, end: section.position.z - item.sectionDepth})
+        this.sectionsDepthList.push({id: item.id, start: -item.zpos + sectionSlotDepth, end: -currentZPos})
         this.scene.add(section)
-      }
+        this.endZPos = item.zpos
+      })
       this.startZPos = this.samples[0].zpos
-      this.endZPos = this.samples[this.samples.length - 1].zpos
 
       this.setPageHeight()
     },
@@ -288,7 +287,9 @@ export default {
         this.sectionsDepthList.forEach(sectionDepth => {
           if (this.cameraDummy.position.z < sectionDepth.start &&
           this.cameraDummy.position.z > sectionDepth.end &&
-          this.currentSectionId !== sectionDepth.id) this.$store.commit('setCurrentSectionId', sectionDepth.id)
+          this.currentSectionId !== sectionDepth.id) {
+            this.$store.commit('setCurrentSectionId', sectionDepth.id)
+          }
         })
       }
     },
@@ -445,4 +446,6 @@ export default {
       transform :translate3d(-50%, -50%, 0);
     }
   }
+
+.stats { opacity: 0.4 !important; }
 </style>

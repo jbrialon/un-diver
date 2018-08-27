@@ -26,12 +26,14 @@ export default class Plankton extends THREE.Object3D {
   }
 
   updatePlankton () {
-    let timer = 0.00001 * Date.now()
-    for (var i = 0, il = this.spheres.length; i < il; i++) {
-      var sphere = this.spheres[i]
-      sphere.position.x = 1250 * Math.cos(timer + i)
-      sphere.position.y = 1250 * Math.sin(timer + i * 1.1)
-      sphere.material.rotation = 20 * Math.cos(timer + i)
+    if (this.visible) {
+      let timer = 0.00001 * Date.now()
+      for (var i = 0, il = this.spheres.length; i < il; i++) {
+        var sphere = this.spheres[i]
+        sphere.position.x = 1250 * Math.cos(timer + i)
+        sphere.position.y = 1250 * Math.sin(timer + i * 1.1)
+        sphere.material.rotation = 20 * Math.cos(timer + i)
+      }
     }
   }
 }

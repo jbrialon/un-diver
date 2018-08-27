@@ -1,23 +1,29 @@
-import {TweenMax, Power2} from 'gsap'
+import {TweenMax, Power4, Sine} from 'gsap'
 import * as THREE from 'three'
 import Section from '../Section.js'
 import FBXLoader from 'three-fbxloader-offical'
 import CanvasText from '../../utils/CanvasText'
-import Button from '../Button'
+// import Utils from '../../utils/Utils'
 import Fader from '../Fader'
 import StickToCamera from '../StickToCamera'
 
 export default class WatchSection extends Section {
     stepsDistance
+    subTextsStickToCameraDistance
     watch3DModelPath = 'diver_watch_blue_LOW.fbx'
+    watch3DModelContainer
     watch3DModel
     watch3DModelSize = new THREE.Vector3()
+    watchRotation = new THREE.Vector3()
+    watchRotationTween
     infoButton
     buyButton
 
     constructor (sectionData) {
       super(sectionData)
       this.stepsDistance = this.sectionDepth / this.sectionData.subTexts.length
+      this.subTextsStickToCameraDistance = this.stepsDistance * 0.5
+      this.stepsDistance = (this.sectionDepth - this.subTextsStickToCameraDistance) / this.sectionData.subTexts.length // recalculate stepsDistance in order to let last subText to unstick at sectionDepth and not after
 
       this.addTitle()
 
@@ -26,22 +32,15 @@ export default class WatchSection extends Section {
 
       this.addSubTexts()
 
-      this.infoButton = new Button('More information', 'toto.com')
-      this.infoButton.position.x = window.AppStageSize.width * 0.15
-      this.infoButton.position.y = -window.AppStageSize.height * 0.1
-      // super.add(this.infoButton)
-
-      this.buyButton = new Button('Buy', 'toto.com')
-      this.buyButton.position.x = window.AppStageSize.width * 0.15
-      this.buyButton.position.y = -window.AppStageSize.height * 0.2
-      // super.add(this.buyButton)
-
       return Object.assign(
         this,
         new Fader(this)
       )
     }
 
+    /*
+    * Add the main title for the watch section
+    */
     addTitle () {
       const titleMesh = CanvasText.getTextMesh(this.sectionData.title, {
         fontSize: 80,
@@ -64,19 +63,59 @@ export default class WatchSection extends Section {
     onWatchModelLoaded (object) {
       // TODO : handle correctly sizing and positioning
       this.watch3DModel = object
-      let modelScale = 2 // - (1000 / window.AppStageSize.width)
+      // Utils.fixFBXMaterials(this.watch3DModel)
+      this.watch3DModelContainer = new THREE.Object3D()
+      this.watch3DModelContainer.matrixAutoUpdate = false
+      this.watch3DModelContainer.add(this.watch3DModel)
+      let modelScale = 2
       this.watch3DModel.scale.set(modelScale, modelScale, modelScale)
-      this.watch3DModel.position.z = -this.stepsDistance
-      this.watch3DModel.rotation.y = -Math.PI * 0.3
-      super.add(this.watch3DModel)
+      this.watch3DModelContainer.position.z = -this.stepsDistance
+      this.watch3DModel.updateMatrix()
+      this.watch3DModel.updateMatrixWorld()
+      super.add(this.watch3DModelContainer)
 
-      TweenMax.to(this.watch3DModel.rotation, 3, {y: Math.PI * 0.3, yoyo: true, yoyoEase: true, ease: Power2.easeInOut, repeat: -1})
+      TweenMax.fromTo(this.watch3DModel.position, 3, {x: -3}, {
+        x: 3,
+        yoyo: true,
+        yoyoEase: true,
+        ease: Sine.easeInOut,
+        repeat: -1
+      })
+      TweenMax.fromTo(this.watch3DModel.position, 5, {x: -3}, {
+        y: 3,
+        yoyo: true,
+        yoyoEase: true,
+        ease: Sine.easeInOut,
+        repeat: -1
+      })
+
+      this.watchRotationTween = TweenMax.to({}, 0.1, {y: 0})
+
       Object.assign(
         this.watch3DModel,
-        new StickToCamera(this.watch3DModel, this.sectionDepth + this.watch3DModel.position.z, true)
+        new StickToCamera(this.watch3DModelContainer, this.sectionDepth + this.watch3DModelContainer.position.z)
       )
     }
 
+    /*
+    * When a subtexts is getting sticked / unsticked to camera
+    */
+    onSubtextSticked (subtext) {
+      if (this.watch3DModel) {
+        const duration = subtext ? 0.8 : 1.5
+        const rotationToGo = subtext ? (subtext.leftText ? Math.PI * 0.3 : -Math.PI * 0.3) : 0
+        this.watchRotationTween.kill()
+        this.watchRotationTween = TweenMax.to(this.watch3DModel.rotation, duration, {
+          y: rotationToGo,
+          ease: Power4.easeInOut
+        })
+      }
+    }
+
+    /*
+    * Adds all the subtexts
+    * Populated all along the z axis
+    */
     addSubTexts () {
       let textIndex = 0
       let subTextZpos = -this.stepsDistance
@@ -91,6 +130,8 @@ export default class WatchSection extends Section {
           allowNewLine: true,
           lineHeight: 1
         })
+        textMesh.matrixAutoUpdate = false
+        textMesh.leftText = leftText
         const boxSize = new THREE.Vector3()
         textMesh.geometry.computeBoundingBox()
         textMesh.geometry.boundingBox.getSize(boxSize)
@@ -100,11 +141,13 @@ export default class WatchSection extends Section {
         textMesh.position.z = subTextZpos
         textMesh.position.x = leftText ? 75 : -75
         textMesh.scale.set(0.5, 0.5, 0.5)
+        textMesh.updateMatrix()
+        textMesh.updateMatrixWorld()
         super.add(textMesh)
         textIndex++
         Object.assign(
           textMesh,
-          new StickToCamera(textMesh, this.stepsDistance * 0.5)
+          new StickToCamera(textMesh, this.subTextsStickToCameraDistance, (t) => this.onSubtextSticked(t))
         )
         Object.assign(
           textMesh,

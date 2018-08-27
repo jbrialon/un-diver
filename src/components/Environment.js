@@ -2,9 +2,11 @@
 * Creates the environment
 * add to the scene fishes, rocks etc...
 */
+import * as CONST from '../Constants'
 import * as THREE from 'three'
 import FBXLoader from 'three-fbxloader-offical'
 import GuiManager from '../utils/GuiManager'
+import Utils from '../utils/Utils'
 import AnimationLoopManager from '../utils/AnimationLoopManager'
 import Plankton from './Plankton.js'
 
@@ -29,7 +31,7 @@ export default class Environment {
 
   init () {
     this.light = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.8)
-    this.light.position.set(0, 200, -1000)
+    this.light.position.set(0, 2000, -(CONST.SceneDepth * 0.5))
     this.scene.add(this.light)
 
     let loader = new FBXLoader()
@@ -49,6 +51,7 @@ export default class Environment {
 
   onTerrainLoaded (object) {
     this.terrainModel = object
+    Utils.fixFBXMaterials(this.terrainModel)
     this.terrainModel.traverse(function (child) {
       if (child.isMesh) {
         child.castShadow = true
@@ -68,7 +71,7 @@ export default class Environment {
     guiTerrainFolder.add(this.terrainModel.position, 'x', -3000, 2000)
     guiTerrainFolder.add(this.terrainModel.position, 'y', 1000, 15000)
     guiTerrainFolder.add(this.terrainModel.position, 'z', 15000, 45000)
-    guiTerrainFolder.add(this.terrainModel.rotation, 'x', 0, Math.PI)
+    guiTerrainFolder.add(this.terrainModel.rotation, 'x', 0, Math.PI).name('rotationX')
   }
 
   onSharkLoaded (object) {

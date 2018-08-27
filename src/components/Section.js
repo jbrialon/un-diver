@@ -7,6 +7,7 @@ export default class Section extends THREE.Object3D {
 
   constructor (sectionData) {
     super()
+    this.matrixAutoUpdate = false
     this.sectionData = sectionData
     this.sectionDepth = this.sectionData.sectionDepth
     Object.assign(this, THREE.EventDispatcher)

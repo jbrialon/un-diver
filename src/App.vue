@@ -6,9 +6,9 @@
           <!--<img src="./assets/logo.png" alt="Ulysse Nardin">-->
         </a>
       </div>
-      <SectionsAnchors :items="samples"></SectionsAnchors>
-      <Meter></Meter>
-      <Menu></Menu>
+      <c-sections :items="samples"></c-sections>
+      <c-meter></c-meter>
+      <c-menu></c-menu>
       <div id="rotate-device-message">
         Please rotate your device to landscape
       </div>
@@ -16,29 +16,34 @@
 </template>
 
 <script>
-import * as CONST from './Constants'
-import GuiManager from './utils/GuiManager'
-import AnimationLoopManager from './utils/AnimationLoopManager'
-import {TweenLite} from 'gsap/TweenMax'
-// eslint-disable-next-line
-import ScrollToPlugin from 'gsap/ScrollToPlugin'
-import * as THREE from 'three'
+// Three JS
+import * as CONST from '@/Constants'
+import GuiManager from '@/utils/GuiManager'
+import AnimationLoopManager from '@/utils/AnimationLoopManager'
+import PostProcessingManager from '@/components/PostProcessingManager.js'
+import Environment from '@/components/Environment.js'
+import BackgroundColorManager from '@/components/BackgroundColorManager.js'
+import VrRenderer from '@/components/VrRenderer.js'
+import TitleSection from '@/components/sections/TitleSection.js'
+import WatchSection from '@/components/sections/WatchSection.js'
+
+// vue
 import { mapGetters } from 'vuex'
-import Meter from './components/vue/Meter.vue'
-import Menu from './components/vue/Menu.vue'
-import SectionsAnchors from './components/vue/SectionsAnchors.vue'
-import PostProcessingManager from './components/PostProcessingManager.js'
-import Environment from './components/Environment.js'
-import BackgroundColorManager from './components/BackgroundColorManager.js'
-import VrRenderer from './components/VrRenderer.js'
-import TitleSection from './components/sections/TitleSection.js'
-import WatchSection from './components/sections/WatchSection.js'
+import Meter from '@/components/vue/Meter.vue'
+import Menu from '@/components/vue/Menu.vue'
+import SectionsAnchors from '@/components/vue/SectionsAnchors.vue'
+
+// libs
+import {TweenLite} from 'gsap/TweenMax'
+import 'gsap/ScrollToPlugin'
+import * as THREE from 'three'
 
 export default {
+  name: 'Ulysse-Nardin-App',
   components: {
-    Menu,
-    Meter,
-    SectionsAnchors
+    'c-menu': Menu,
+    'c-meter': Meter,
+    'c-sections': SectionsAnchors
   },
   data () {
     return {
@@ -84,13 +89,13 @@ export default {
         },
         {
           id: 1,
-          title: 'Stain case',
+          title: 'Stain Case',
           text: 'STAIN CASE',
           sectionWeight: 0
         },
         {
           id: 2,
-          title: 'Phosphorescent needles & numbers',
+          title: 'Phosphorescent Needles & Numbers',
           text: 'PHOSPHORESCENT NEEDLES & NUMBERS',
           sectionWeight: 0
         }
@@ -381,6 +386,11 @@ export default {
 <style lang="scss">
   @import './scss/main.scss';
 
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
     min-height: 200vh;
     background: black;
@@ -393,6 +403,7 @@ export default {
   }
 
   #app {
+    font-family: 'Roboto', sans-serif;
     height: 100vh;
 
     &.vr {

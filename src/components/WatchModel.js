@@ -12,15 +12,11 @@ export default class WatchModel extends THREE.Object3D {
     // eslint-disable-next-line
     console.log('----', CONST.WatchModelPath)
     this.modelLoader.load(CONST.WatchModelPath, (model) => this.onModelLoaded(model))
-
-    // GuiManager.add(params, 'envMap', [ 'LDR', 'HDR', 'RGBM16'])
-    GuiManager.add(this.material, 'roughness', 0, 1)
-    GuiManager.add(this.material, 'metalness', 0, 1)
   }
 
   onModelLoaded (group) {
     this.textureLoader.setPath(CONST.WatchTexturesPath)
-    this.material.roughness = 1
+    this.material.roughness = 0
     this.material.metalness = 1
     this.material.map = this.textureLoader.load(CONST.WatchDiffuseMap)
     // roughness is in G channel, metalness is in B channel
@@ -36,6 +32,9 @@ export default class WatchModel extends THREE.Object3D {
       }
     })
     super.add(group)
+
+    GuiManager.add(this.material, 'roughness', 0, 1)
+    GuiManager.add(this.material, 'metalness', 0, 1)
   }
 
   setEnvironmentMap (envMap) {

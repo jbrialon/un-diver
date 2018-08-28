@@ -1,7 +1,7 @@
 <template>
   <nav class="menu">
     <c-link class="menu__item" :href="''" :label="'Find a boutique'"></c-link>
-    <button class="menu__item menu__item--sound" :class="{'disabled': sound}" type="button" name="sound" @click="toggleSound()">
+    <button class="menu__item menu__item--sound" :class="{'disabled': !sound}" type="button" name="sound" @click="toggleSound()">
       SOUND
     </button>
     <button class="menu__item" type="button">
@@ -48,21 +48,18 @@ export default {
 @import '../../scss/_vars.scss';
 
 .menu {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  height:40px;
-  position: fixed;
-  z-index: $zMenu;
-  top: 4vw;
-  right: 4vw;
-  will-change: opacity,transform;
+  display:flex;
 
   &__item {
     color:$white;
     margin:0 20px;
     font-size:$fs-buttons;
     letter-spacing: $ls-buttons;
+    font-weight:$fw-bold;
+    text-transform:uppercase;
+    &:first-child {
+      margin-left:0;
+    }
     &--vr {
       opacity: .4;
       svg {
@@ -76,8 +73,6 @@ export default {
 
     &--sound {
       position:relative;
-      text-transform:uppercase;
-      font-weight:$fw-bold;
       &.disabled:after {
         width:125%;
       }

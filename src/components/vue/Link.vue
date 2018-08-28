@@ -1,9 +1,7 @@
 <template>
   <a :href="href" class="link">
     {{ label }}
-    <span class="link__top-line">
-
-    </span>
+    <span class="link__top-line"></span>
   </a>
 </template>
 

@@ -1,14 +1,9 @@
 <template>
   <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation}">
       <div id="stage" ref="stage"></div>
-      <div id="logo">
-        <a href="/">
-          <!--<img src="./assets/logo.png" alt="Ulysse Nardin">-->
-        </a>
-      </div>
+      <c-header></c-header>
       <c-sections :items="samples"></c-sections>
       <c-meter></c-meter>
-      <c-menu></c-menu>
       <div id="rotate-device-message">
         Please rotate your device to landscape
       </div>
@@ -30,7 +25,7 @@ import WatchSection from '@/components/sections/WatchSection.js'
 // vue
 import { mapGetters } from 'vuex'
 import Meter from '@/components/vue/Meter.vue'
-import Menu from '@/components/vue/Menu.vue'
+import Header from '@/components/vue/Header.vue'
 import SectionsAnchors from '@/components/vue/SectionsAnchors.vue'
 
 // libs
@@ -41,7 +36,7 @@ import * as THREE from 'three'
 export default {
   name: 'Ulysse-Nardin-App',
   components: {
-    'c-menu': Menu,
+    'c-header': Header,
     'c-meter': Meter,
     'c-sections': SectionsAnchors
   },

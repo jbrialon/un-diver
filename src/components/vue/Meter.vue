@@ -1,9 +1,12 @@
 <template>
-  <div id="meter">{{ meterAmount }}m</div>
+  <div class="meter">
+    {{ meterAmount }}
+    <span class="meter__unit">m</span></div>
 </template>
 
 <script>
 import AnimationLoopManager from '../../utils/AnimationLoopManager'
+import Utils from '../../utils/Utils'
 
 export default {
   name: 'Meter',
@@ -17,7 +20,7 @@ export default {
   },
   methods: {
     updateMeter () {
-      this.meterAmount = Math.round(window.AppScrollPercentage * 300)
+      this.meterAmount = Utils.pad(Math.round(window.AppScrollPercentage * 300), 3)
     }
   }
 }
@@ -26,22 +29,26 @@ export default {
 <style lang="scss" scoped>
 @import '../../scss/_vars.scss';
 
-#meter {
+.meter {
+  position:relative;
   text-align: right;
-  z-index: 1;
+  z-index: $zMeter;
   position: fixed;
   top: 50%;
   right: 4vw;
   height: 40px;
-  display: flex;
-  align-items: center;
   transform: translateY(-50%);
   will-change: opacity,transform;
-
-  font-family: Arial, Helvetica, sans-serif;
   color: $white;
-  font-size: 2em;
-
+  font-size: 40px;
+  font-weight:$fw-light;
+  padding-right:20px;
+  &__unit {
+    position:absolute;
+    font-size:12px;
+    top:4px;
+    right:0;
+  }
   @media screen and (max-width: 480px) {
     transform: translateY(-50%) translateX(-50%);
     top: auto;

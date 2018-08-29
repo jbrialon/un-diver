@@ -1,6 +1,6 @@
 <template>
-  <nav id="sections">
-    <a class="section-title" :class="{active: item.id === currentSectionId}" v-for="item in items" :key="item.id" href="#" @click.stop.prevent="goToSection(item.id)">{{ item.title }}</a>
+  <nav class="sections">
+    <a class="sections__title" :class="{active: item.id === currentSectionId}" v-for="item in items" :key="item.id" href="#" @click.stop.prevent="goToSection(item.id)">{{ item.title }}</a>
   </nav>
 </template>
 
@@ -27,7 +27,7 @@ export default {
 <style lang="scss" scoped>
 @import '../../scss/_vars.scss';
 
-#sections {
+.sections {
   z-index: 1;
   position: fixed;
   top: 50%;
@@ -38,19 +38,17 @@ export default {
     display: none;
   }
 
-  .section-title {
-    font-family: Arial, Helvetica, sans-serif;
+  &__title {
     display: flex;
-    align-items: center;
     color: $white;
-    font-size: 1em;
+    font-weight: $fw-medium;
+    font-size: 16px;
+    z-index:$zSection;
     opacity: 0.2;
-    line-height: 2em;
-    font-weight: normal;
+    line-height: 32px;
     text-decoration: none;
     transition: opacity 0.5s ease-out;
     will-change: opacity;
-
     &.active {
       opacity: 1;
     }

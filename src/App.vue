@@ -29,7 +29,6 @@ import Header from '@/components/vue/Header.vue'
 import SectionsAnchors from '@/components/vue/SectionsAnchors.vue'
 
 // libs
-import {TweenLite} from 'gsap/TweenMax'
 import 'gsap/ScrollToPlugin'
 import * as THREE from 'three'
 

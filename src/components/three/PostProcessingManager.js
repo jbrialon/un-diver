@@ -1,4 +1,4 @@
-import GuiManager from '../utils/GuiManager'
+import GuiManager from '../../utils/GuiManager'
 import THREE from './PostProcessingImports.js'
 
 export default class PostProcessingManager {

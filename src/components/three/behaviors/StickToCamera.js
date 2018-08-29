@@ -1,5 +1,5 @@
-import * as CONST from '../Constants'
-import AnimationLoopManager from '../utils/AnimationLoopManager'
+import * as CONST from '../../../Constants'
+import AnimationLoopManager from '../../../utils/AnimationLoopManager'
 import * as THREE from 'three'
 
 export default class StickToCamera {

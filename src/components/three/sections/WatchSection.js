@@ -2,10 +2,10 @@ import {TweenMax, Power4, Sine} from 'gsap'
 import * as THREE from 'three'
 import Section from '../Section.js'
 import FBXLoader from 'three-fbxloader-offical'
-import CanvasText from '../../utils/CanvasText'
+import CanvasText from '../../../utils/CanvasText'
 // import Utils from '../../utils/Utils'
-import Fader from '../Fader'
-import StickToCamera from '../StickToCamera'
+import Fader from '../behaviors/Fader.js'
+import StickToCamera from '../behaviors/StickToCamera.js'
 
 export default class WatchSection extends Section {
     stepsDistance

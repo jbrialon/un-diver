@@ -1,6 +1,6 @@
 import Section from '../Section.js'
-import Fader from '../Fader.js'
-import CanvasText from '../../utils/CanvasText.js'
+import Fader from '../behaviors/Fader.js'
+import CanvasText from '../../../utils/CanvasText.js'
 
 export default class TitleSection extends Section {
     text = ''

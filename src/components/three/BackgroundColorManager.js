@@ -3,10 +3,10 @@
 * Fades between two colors when
 * camera is moving down to bottom of the scene
 */
-import * as CONST from '../Constants'
+import * as CONST from '../../Constants'
 import * as THREE from 'three'
-import GuiManager from '../utils/GuiManager'
-import AnimationLoopManager from '../utils/AnimationLoopManager'
+import GuiManager from '../../utils/GuiManager'
+import AnimationLoopManager from '../../utils/AnimationLoopManager'
 
 export default class BackgroundColorManager {
   surfaceColor = new THREE.Color(CONST.SeaSurfaceColorCode)

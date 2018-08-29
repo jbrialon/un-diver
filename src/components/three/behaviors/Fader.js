@@ -1,4 +1,4 @@
-import AnimationLoopManager from '../utils/AnimationLoopManager'
+import AnimationLoopManager from '../../../utils/AnimationLoopManager'
 import * as THREE from 'three'
 
 export default class Fader {

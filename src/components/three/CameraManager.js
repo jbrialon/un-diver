@@ -1,10 +1,10 @@
-import * as CONST from '../Constants'
+import * as CONST from '../../Constants'
 import * as THREE from 'three'
 import {TweenMax, Sine} from 'gsap'
-import AnimationLoopManager from '../utils/AnimationLoopManager'
-import GuiManager from '../utils/GuiManager'
+import AnimationLoopManager from '../../utils/AnimationLoopManager'
+import GuiManager from '../../utils/GuiManager'
 
-export default class Camera extends THREE.Object3D {
+export default class CameraManager extends THREE.Object3D {
   vrModeActivated = false
   lastSectionZPosition
   scrollingElement

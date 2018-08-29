@@ -2,12 +2,12 @@
 * Creates the environment
 * add to the scene fishes, rocks etc...
 */
-import * as CONST from '../Constants'
+import * as CONST from '../../Constants'
 import * as THREE from 'three'
 import FBXLoader from 'three-fbxloader-offical'
-import GuiManager from '../utils/GuiManager'
-import Utils from '../utils/Utils'
-import AnimationLoopManager from '../utils/AnimationLoopManager'
+import GuiManager from '../../utils/GuiManager'
+import Utils from '../../utils/Utils'
+import AnimationLoopManager from '../../utils/AnimationLoopManager'
 import Plankton from './Plankton.js'
 
 export default class Environment {

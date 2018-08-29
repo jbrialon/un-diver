@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import AnimationLoopManager from '../utils/AnimationLoopManager'
+import AnimationLoopManager from '../../utils/AnimationLoopManager'
 
 export default class Plankton extends THREE.Object3D {
   spheres = []
@@ -7,7 +7,7 @@ export default class Plankton extends THREE.Object3D {
 
   constructor (maxZPos) {
     super()
-    var spriteMap = new THREE.TextureLoader().load(require('../assets/dust.png'))
+    var spriteMap = new THREE.TextureLoader().load(require('../../assets/dust.png'))
     var material = new THREE.SpriteMaterial({map: spriteMap, fog: true})
     material.blending = THREE.AdditiveBlending
     for (let i = 0; i < 1000; i++) {

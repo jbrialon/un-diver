@@ -14,13 +14,13 @@
 // Three JS
 import * as CONST from '@/Constants'
 import AnimationLoopManager from '@/utils/AnimationLoopManager'
-import PostProcessingManager from '@/components/PostProcessingManager.js'
-import Environment from '@/components/Environment.js'
-import BackgroundColorManager from '@/components/BackgroundColorManager.js'
-import VrRenderer from '@/components/VrRenderer.js'
-import TitleSection from '@/components/sections/TitleSection.js'
-import WatchSection from '@/components/sections/WatchSection.js'
-import Camera from '@/components/Camera.js'
+import PostProcessingManager from '@/components/three/PostProcessingManager.js'
+import Environment from '@/components/three/Environment.js'
+import BackgroundColorManager from '@/components/three/BackgroundColorManager.js'
+import VrRenderer from '@/components/three/VrRenderer.js'
+import TitleSection from '@/components/three/sections/TitleSection.js'
+import WatchSection from '@/components/three/sections/WatchSection.js'
+import CameraManager from '@/components/three/CameraManager.js'
 
 // vue
 import { mapGetters } from 'vuex'
@@ -128,7 +128,7 @@ export default {
     initScene () {
       this.stageSize.set(this.stageDOMElement.clientWidth, this.stageDOMElement.clientHeight)
       this.scene = new THREE.Scene()
-      this.cameraManager = new Camera(this.stageSize)
+      this.cameraManager = new CameraManager(this.stageSize)
       this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })
       this.renderer.setSize(this.stageSize.width, this.stageSize.height)
       this.renderer.autoClear = false

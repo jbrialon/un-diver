@@ -28,6 +28,7 @@ export default class CameraManager extends THREE.Object3D {
     this.scrollingElement = (document.scrollingElement || document.documentElement)
     this.stageSize = stageSize
     this.camera = new THREE.PerspectiveCamera(CONST.CameraFOV, stageSize.width / stageSize.height, CONST.CameraNearPlane, CONST.CameraFarPlane)
+    this.position.z = CONST.CameraDistanceToSection
     this.add(this.camera)
 
     this.handleEvents()

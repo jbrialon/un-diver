@@ -70,9 +70,6 @@ export default {
       ]
     },
     addEnv () {
-      new THREE.CubeTextureLoader().setPath('textures/pisa/').load(['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'], (textureCube) => {
-        this.scene.background = textureCube
-      })
       const hdrUrls = this.genCubeUrls(CONST.HdrEnvTexturePath, '.hdr')
       new THREE.HDRCubeTextureLoader().load(THREE.UnsignedByteType, hdrUrls, (hdrCubeMap) => {
         var pmremGenerator = new THREE.PMREMGenerator(hdrCubeMap)
@@ -90,8 +87,7 @@ export default {
       this.watch = new WatchModel()
       this.watch.setEnvironmentMap(this.hdrCubeRenderTarget.texture)
       this.watch.scale.set(0.02, 0.02, 0.02)
-      this.watch.position.x = -0.45
-      this.watch.rotation.y = -Math.PI / 2
+      this.watch.rotation.y = -Math.PI
 
       let box = new THREE.BoxHelper(this.watch, 0xffff00)
       this.scene.add(box)

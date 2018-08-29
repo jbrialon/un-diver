@@ -1,10 +1,11 @@
 <template>
-  <div class="meter">
+  <div class="meter" v-if="!vrModeActivated">
     {{ meterAmount }}
     <span class="meter__unit">m</span></div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import AnimationLoopManager from '../../utils/AnimationLoopManager'
 import Utils from '../../utils/Utils'
 
@@ -14,6 +15,11 @@ export default {
     return {
       meterAmount: 0
     }
+  },
+  computed: {
+    ...mapGetters([
+      'vrModeActivated'
+    ])
   },
   mounted () {
     AnimationLoopManager.addCallback(this.updateMeter)

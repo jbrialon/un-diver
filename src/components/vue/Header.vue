@@ -1,7 +1,7 @@
 <template>
-  <header class="header">
-    <c-link :href="''" :label="'Diver collection'" class="header__link"></c-link>
-    <a href="/" class="header__logo">
+  <header class="header" :class="{'hidden': vrModeActivated}">
+    <c-link :href="''" :label="'Diver collection'" class="header__link" v-if="!vrModeActivated"></c-link>
+    <a href="/" class="header__logo" v-if="!vrModeActivated">
       <img src="@/assets/logo_un@2x.png" alt="Ulysse Nardin">
     </a>
     <c-menu class="header__menu"></c-menu>
@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Menu from '@/components/vue/Menu.vue'
 import Link from '@/components/vue/Link.vue'
 
@@ -17,6 +18,11 @@ export default {
   components: {
     'c-menu': Menu,
     'c-link': Link
+  },
+  computed: {
+    ...mapGetters([
+      'vrModeActivated'
+    ])
   }
 }
 </script>

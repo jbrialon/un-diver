@@ -52,6 +52,14 @@ export default class CameraManager extends THREE.Object3D {
 
   set vrMode (vrModeActivated) {
     this.vrModeActivated = vrModeActivated
+    if (this.vrModeActivated) {
+      this.cameraWiggleTweenX.kill()
+      this.cameraWiggleTweenY.kill()
+      this.camera.position.set(0, 0, 0)
+    } else {
+      this.setCameraWiggleX()
+      this.setCameraWiggleY()
+    }
   }
 
   get vrMode () {

@@ -1,5 +1,5 @@
 <template>
-  <nav class="sections">
+  <nav class="sections" v-if="!vrModeActivated">
     <a class="sections__title" :class="{active: item.id === currentSectionId}" v-for="item in items" :key="item.id" href="#" @click.stop.prevent="goToSection(item.id)">{{ item.title }}</a>
   </nav>
 </template>
@@ -13,7 +13,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'currentSectionId'
+      'currentSectionId',
+      'vrModeActivated'
     ])
   },
   methods: {

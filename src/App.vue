@@ -365,5 +365,9 @@ export default {
     }
   }
 
-.stats { opacity: 0.4 !important; }
+.stats {
+  opacity: 0.4 !important;
+  bottom: 0;
+  top: auto !important;
+}
 </style>

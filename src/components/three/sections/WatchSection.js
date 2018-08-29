@@ -17,6 +17,7 @@ export default class WatchSection extends Section {
     watch3DModelPath = 'diver_watch_blue_LOW.fbx'
     watch3DModelContainer
     watch3DModel
+    watchGlowMesh
     watch3DModelSize = new THREE.Vector3()
     watchRotation = new THREE.Vector3()
     watchRotationTween
@@ -67,6 +68,15 @@ export default class WatchSection extends Section {
     onWatchModelLoaded (object) {
       // TODO : handle correctly sizing and positioning
       this.watch3DModel = object
+      this.watch3DModel.traverse((child) => {
+        if (child.name === 'case') {
+          this.watchGlowMesh = child.clone()
+          this.watchGlowMesh.material = new THREE.MeshBasicMaterial({color: 0xbbff00})
+          this.watchGlowMesh.material.transparent = true
+          this.watchGlowMesh.material.opacity = (store.state.nightMode) ? 1 : 0
+          child.parent.add(this.watchGlowMesh)
+        }
+      })
       this.watch3DModelContainer = new THREE.Object3D()
       this.watch3DModelContainer.matrixAutoUpdate = false
       this.watch3DModelContainer.add(this.watch3DModel)
@@ -92,7 +102,7 @@ export default class WatchSection extends Section {
         repeat: -1
       })
 
-      this.watchRotationTween = TweenMax.to({}, 0.1, {y: 0})
+      this.watchRotationTween = TweenMax.set(this.watch3DModel.rotation, {y: 0})
 
       Object.assign(
         this.watch3DModel,
@@ -115,7 +125,20 @@ export default class WatchSection extends Section {
       }
 
       if (subtext.textId === 'glowing') {
-        store.commit('setNightMode', !unsticked)
+        this.setNightMode(!unsticked)
+      }
+    }
+
+    /*
+    * Store glow mode in state and turn on phosphorescent components
+    */
+    setNightMode (activated) {
+      store.commit('setNightMode', activated)
+      if (this.watchGlowMesh) {
+        TweenMax.to(this.watchGlowMesh.material, 0.5, {
+          opacity: activated ? 1 : 0,
+          ease: Power4.easeInOut
+        })
       }
     }
 
@@ -147,7 +170,7 @@ export default class WatchSection extends Section {
         if (!leftText) translate *= -1
         textMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(translate, 0, 0))
         textMesh.position.z = subTextZpos
-        textMesh.position.x = leftText ? 75 : -75
+        textMesh.position.x = leftText ? 85 : -85
         textMesh.scale.set(0.5, 0.5, 0.5)
         textMesh.updateMatrix()
         textMesh.updateMatrixWorld()

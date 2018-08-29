@@ -130,8 +130,6 @@ export default {
     initScene () {
       this.stageSize.set(this.stageDOMElement.clientWidth, this.stageDOMElement.clientHeight)
       this.$store.commit('setStageSize', this.stageSize)
-      // eslint-disable-next-line
-      console.log('setStageSize!!')
       this.scene = new THREE.Scene()
       this.cameraManager = new CameraManager(this.stageSize)
       this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })

@@ -7,6 +7,7 @@
       <div id="rotate-device-message">
         Please rotate your device to landscape
       </div>
+      <c-watch-subtexts :subtexts="watchSectionSubtextsData" ref="subtexts"></c-watch-subtexts>
   </div>
 </template>
 
@@ -27,6 +28,7 @@ import { mapGetters } from 'vuex'
 import Meter from '@/components/vue/Meter.vue'
 import Header from '@/components/vue/Header.vue'
 import SectionsAnchors from '@/components/vue/SectionsAnchors.vue'
+import WatchSectionSubTexts from '@/components/vue/WatchSectionSubTexts.vue'
 
 // libs
 // import {TweenMax, Power4} from 'gsap'
@@ -37,7 +39,8 @@ export default {
   components: {
     'c-header': Header,
     'c-meter': Meter,
-    'c-sections': SectionsAnchors
+    'c-sections': SectionsAnchors,
+    'c-watch-subtexts': WatchSectionSubTexts
   },
   data () {
     return {
@@ -57,6 +60,7 @@ export default {
       scrollTween: null,
       sectionsDepthList: [],
       ThreeClock: new THREE.Clock(),
+      watchSectionSubtextsData: [],
       samples: [
         {
           id: 0,
@@ -169,6 +173,13 @@ export default {
         switch (item.type) {
           case 'watch':
             section = new WatchSection(item)
+            this.watchSectionSubtextsData = item.subTexts
+            section.subtextTexture = []
+            // eslint-disable-next-line
+            console.log(this.$refs.subtexts)
+            this.$nextTick(() => {
+              section.subtextsTextures = this.$refs.subtexts.getSubtextsTextures()
+            })
             break
           case 'collection':
             section = new TitleSection(item)

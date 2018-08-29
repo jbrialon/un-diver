@@ -35,7 +35,7 @@ export default class CameraManager extends THREE.Object3D {
     this.setCameraWiggleX()
     this.setCameraWiggleY()
 
-    AnimationLoopManager.addFirstCallback(() => this.updateCamera())
+    AnimationLoopManager.addFirstCallback(this.updateCamera)
 
     GuiManager.add(this, 'resetOrientation').name('Reset Orientation')
   }
@@ -56,7 +56,7 @@ export default class CameraManager extends THREE.Object3D {
     return this.vrModeActivated
   }
 
-  updateCamera () {
+  updateCamera = () => {
     this.position.z += (((-this.scrollingElement.scrollTop * CONST.PageHeightMultiplyer) + CONST.CameraDistanceToSection) - this.position.z) * 0.1
     this.updateCameraRotation()
     window.AppScrollPercentage = (-(this.position.z - CONST.CameraDistanceToSection) / this.lastSectionZPosition)
@@ -77,10 +77,10 @@ export default class CameraManager extends THREE.Object3D {
   }
 
   handleEvents () {
-    window.addEventListener('mousemove', evt => this.onMouseMove(evt), false)
-    window.addEventListener('mouseout', evt => this.onMouseOut(evt), false)
-    window.addEventListener('deviceorientation', evt => this.onDeviceOrientationInit(evt), false)
-    window.addEventListener('compassneedscalibration', evt => this.onCompassNeedsCalibration(evt), false)
+    window.addEventListener('mousemove', this.onMouseMove, false)
+    window.addEventListener('mouseout', this.onMouseOut, false)
+    window.addEventListener('deviceorientation', this.onDeviceOrientationInit, false)
+    window.addEventListener('compassneedscalibration', this.onCompassNeedsCalibration, false)
   }
 
   removeListeners () {
@@ -98,11 +98,11 @@ export default class CameraManager extends THREE.Object3D {
     vec2.y = (vec2.y - maxHeight) / maxHeight
   }
 
-  onMouseOut (e) {
+  onMouseOut = (e) => {
     this.resetOrientation()
   }
 
-  onMouseMove (e) {
+  onMouseMove = (e) => {
     // TODO : handle this for mobile devices
     if (e.target.nodeName === 'CANVAS') {
       this.mousePosition.x = e.clientX
@@ -111,18 +111,18 @@ export default class CameraManager extends THREE.Object3D {
     }
   }
 
-  onDeviceOrientationInit (e) {
+  onDeviceOrientationInit = (e) => {
     this.deviceOrientationToQuaternion(this.deviceOrientationInitialQuat, e)
     this.deviceOrientationInitialQuat = this.deviceOrientationInitialQuat.clone().conjugate()
-    window.addEventListener('deviceorientation', evt => this.onDeviceOrientationChange(evt), false)
+    window.addEventListener('deviceorientation', this.onDeviceOrientationChange, false)
     window.removeEventListener('deviceorientation', this.onDeviceOrientationInit, false)
   }
 
-  onDeviceOrientationChange (e) {
+  onDeviceOrientationChange = (e) => {
     this.deviceOrientation = e
   }
 
-  onCompassNeedsCalibration (e) {
+  onCompassNeedsCalibration = (e) => {
     e.preventDefault()
   }
 

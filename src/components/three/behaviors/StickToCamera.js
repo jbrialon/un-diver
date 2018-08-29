@@ -33,10 +33,10 @@ export default class StickToCamera {
     this.referenceObject3D.parent.add(this.initialObject3D)
     this.initialObject3D.position.copy(this.initialObjectPosition)
 
-    AnimationLoopManager.addCallback(() => this.updatePosition())
+    AnimationLoopManager.addCallback(this.updatePosition)
   }
 
-  updatePosition () {
+  updatePosition = () => {
     // TODO : performance optimization
     let vect = new THREE.Vector3()
     let vectFinal = 0

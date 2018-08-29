@@ -25,10 +25,10 @@ export default class Plankton extends THREE.Object3D {
       this.add(mesh)
       this.spheres.push(mesh)
     }
-    AnimationLoopManager.addCallback(() => this.updatePlankton())
+    AnimationLoopManager.addCallback(this.updatePlankton)
   }
 
-  updatePlankton () {
+  updatePlankton = () => {
     if (this.visible) {
       let timer = 0.00001 * Date.now()
       for (var i = 0, il = this.spheres.length; i < il; i++) {

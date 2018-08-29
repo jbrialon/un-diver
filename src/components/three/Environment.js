@@ -46,7 +46,7 @@ export default class Environment {
     this.scene.add(plankton)
     GuiManager.add(plankton, 'visible').name('Plankton')
 
-    AnimationLoopManager.addCallback(() => this.updateEnvironment())
+    AnimationLoopManager.addCallback(this.updateEnvironment)
   }
 
   onTerrainLoaded (object) {
@@ -121,7 +121,7 @@ export default class Environment {
     model.mixer.clipAction(model.animations[ 0 ]).setDuration(5).play()
   }
 
-  updateEnvironment () {
+  updateEnvironment = () => {
     let delta = this.clock.getDelta()
     this.light.intensity = 1 // - ((window.AppScrollPercentage * 0.5) + 0.25)
     if (this.sharkModel) this.sharkModel.position.x -= 1

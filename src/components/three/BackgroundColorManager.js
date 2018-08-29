@@ -25,10 +25,10 @@ export default class BackgroundColorManager {
   }
 
   init () {
-    AnimationLoopManager.addCallback(() => this.updateBackground())
+    AnimationLoopManager.addCallback(this.updateBackground)
   }
 
-  updateBackground () {
+  updateBackground = () => {
     this.backgroundColor = this.surfaceColor.clone().lerp(this.bottomColor, window.AppScrollPercentage)
     this.renderer.setClearColor(this.backgroundColor, 1)
     this.scene.fog = new THREE.FogExp2(this.backgroundColor.getHex(), this.density)

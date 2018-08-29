@@ -19,6 +19,20 @@ class Utils {
       }
     })
   }
+
+  static pad (n, width, z) {
+    z = z || '0'
+    n = n + ''
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n
+  }
+
+  static removeObjectShininess (object) {
+    object.traverse((child) => {
+      if (child.material && child.material.type === 'MeshPhongMaterial') {
+        child.material.shininess = 0
+      }
+    })
+  }
 }
 
 export default Utils

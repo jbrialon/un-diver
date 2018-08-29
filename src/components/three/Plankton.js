@@ -1,5 +1,8 @@
+/*
+* Adds Plankton-style particles to the scene
+*/
 import * as THREE from 'three'
-import AnimationLoopManager from '../utils/AnimationLoopManager'
+import AnimationLoopManager from '../../utils/AnimationLoopManager'
 
 export default class Plankton extends THREE.Object3D {
   spheres = []
@@ -7,7 +10,7 @@ export default class Plankton extends THREE.Object3D {
 
   constructor (maxZPos) {
     super()
-    var spriteMap = new THREE.TextureLoader().load(require('../assets/dust.png'))
+    var spriteMap = new THREE.TextureLoader().load(require('../../assets/dust.png'))
     var material = new THREE.SpriteMaterial({map: spriteMap, fog: true})
     material.blending = THREE.AdditiveBlending
     for (let i = 0; i < 1000; i++) {
@@ -22,10 +25,10 @@ export default class Plankton extends THREE.Object3D {
       this.add(mesh)
       this.spheres.push(mesh)
     }
-    AnimationLoopManager.addCallback(() => this.updatePlankton())
+    AnimationLoopManager.addCallback(this.updatePlankton)
   }
 
-  updatePlankton () {
+  updatePlankton = () => {
     if (this.visible) {
       let timer = 0.00001 * Date.now()
       for (var i = 0, il = this.spheres.length; i < il; i++) {

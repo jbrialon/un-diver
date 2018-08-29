@@ -1,5 +1,10 @@
-import * as CONST from '../Constants'
-import AnimationLoopManager from '../utils/AnimationLoopManager'
+/*
+* Stick the given object to Camera
+* when object is closer than CONST.CameraDistanceToSection
+* and release it in space when given maxDistance is reached by camera
+*/
+import * as CONST from '../../../Constants'
+import AnimationLoopManager from '../../../utils/AnimationLoopManager'
 import * as THREE from 'three'
 
 export default class StickToCamera {
@@ -28,9 +33,11 @@ export default class StickToCamera {
     this.referenceObject3D.parent.add(this.initialObject3D)
     this.initialObject3D.position.copy(this.initialObjectPosition)
 
-    AnimationLoopManager.addCallback(() => this.updatePosition())
+    AnimationLoopManager.addCallback(this.updatePosition)
   }
-  updatePosition () {
+
+  updatePosition = () => {
+    // TODO : performance optimization
     let vect = new THREE.Vector3()
     let vectFinal = 0
     this.camera.getWorldPosition(vect)
@@ -40,9 +47,9 @@ export default class StickToCamera {
     vectFinal = Math.min(vectFinal, 0)
     this.sticked = vectFinal > this.maxObjectPosition.z && vectFinal < 0
     if (this.stickedCallback && this.sticked && this.sticked !== this.wasSticked) {
-      this.stickedCallback(this.referenceObject3D)
+      this.stickedCallback(this.referenceObject3D, false)
     } else if (this.stickedCallback && !this.sticked && this.sticked !== this.wasSticked) {
-      this.stickedCallback()
+      this.stickedCallback(this.referenceObject3D, true)
     }
     this.wasSticked = this.sticked
     vectFinal += this.initialObjectPosition.z

@@ -1,4 +1,7 @@
-import GuiManager from '../utils/GuiManager'
+/*
+* Adds postprocessing shaders to the scene
+*/
+import GuiManager from '../../utils/GuiManager'
 import THREE from './PostProcessingImports.js'
 
 export default class PostProcessingManager {
@@ -45,7 +48,8 @@ export default class PostProcessingManager {
     GuiManager.add(this, 'visible').name('Post processing')
   }
 
-  resize () {
+  setSize (stageSize) {
+    this.stageSize = stageSize
     this.composerSceneEffects.setSize(this.stageSize.width, this.stageSize.height)
   }
 

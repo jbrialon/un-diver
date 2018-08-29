@@ -2,12 +2,13 @@
 * Creates the environment
 * add to the scene fishes, rocks etc...
 */
-import * as CONST from '../Constants'
+import {TweenMax, Power4} from 'gsap'
+import * as CONST from '../../Constants'
 import * as THREE from 'three'
 import FBXLoader from 'three-fbxloader-offical'
-import GuiManager from '../utils/GuiManager'
-import Utils from '../utils/Utils'
-import AnimationLoopManager from '../utils/AnimationLoopManager'
+import GuiManager from '../../utils/GuiManager'
+import Utils from '../../utils/Utils'
+import AnimationLoopManager from '../../utils/AnimationLoopManager'
 import Plankton from './Plankton.js'
 
 export default class Environment {
@@ -23,16 +24,34 @@ export default class Environment {
   turtleModel
   diverModel
   modelMixers = []
+  ambientLight
+  directionalLight
 
-  constructor (scene, sceneFarDistance) {
+  surfaceColor = new THREE.Color(CONST.SeaSurfaceColorCode)
+  bottomColor = new THREE.Color(CONST.SeaBottomColorCode)
+  backgroundColor = new THREE.Color()
+  backgroundDepthColorDarken = 1
+  backgroundNightColorDarken = 1
+
+  constructor (scene, renderer, sceneFarDistance) {
     this.scene = scene
+    this.renderer = renderer
     this.sceneFarDistance = sceneFarDistance
   }
 
   init () {
-    this.light = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.8)
-    this.light.position.set(0, 2000, -(CONST.SceneDepth * 0.5))
-    this.scene.add(this.light)
+    this.scene.fog = new THREE.FogExp2(this.backgroundColor, CONST.FogDensity)
+
+    this.ambientLight = new THREE.AmbientLight(0xffffff)
+    this.scene.add(this.ambientLight)
+
+    this.directionalLight = new THREE.DirectionalLight(0xffffff)
+    this.directionalLight.position.x = 10
+    this.directionalLight.position.y = 5
+    this.directionalLight.position.z = 2
+    this.directionalLight.position.normalize()
+    this.directionalLight.intensity = 1
+    this.scene.add(this.directionalLight)
 
     let loader = new FBXLoader()
     loader.load(this.terrainModelPath, (object) => this.onTerrainLoaded(object))
@@ -46,18 +65,11 @@ export default class Environment {
     this.scene.add(plankton)
     GuiManager.add(plankton, 'visible').name('Plankton')
 
-    AnimationLoopManager.addCallback(() => this.updateEnvironment())
+    AnimationLoopManager.addCallback(this.updateEnvironment)
   }
 
   onTerrainLoaded (object) {
     this.terrainModel = object
-    Utils.fixFBXMaterials(this.terrainModel)
-    this.terrainModel.traverse(function (child) {
-      if (child.isMesh) {
-        child.castShadow = true
-        child.receiveShadow = true
-      }
-    })
     this.terrainModel.children[2].material.side = THREE.BackSide
     this.terrainModel.position.x = -2922
     this.terrainModel.position.y = 9246
@@ -81,6 +93,7 @@ export default class Environment {
     this.sharkModel.position.x = 750
     this.sharkModel.position.z = -6000
     this.sharkModel.rotateX(THREE.Math.degToRad(45))
+    Utils.removeObjectShininess(this.sharkModel)
     this.scene.add(this.sharkModel)
   }
 
@@ -92,6 +105,7 @@ export default class Environment {
     this.turtleModel.position.z = -3000
     this.turtleModel.rotateX(THREE.Math.degToRad(45))
     this.turtleModel.rotateY(THREE.Math.degToRad(45))
+    Utils.removeObjectShininess(this.turtleModel)
     this.scene.add(this.turtleModel)
   }
 
@@ -100,8 +114,8 @@ export default class Environment {
     this.initAnimal(this.diverModel)
     this.diverModel.position.y = 0
     this.diverModel.position.x = -0
-    this.diverModel.position.z = -1500
-    this.diverModel.rotateZ(THREE.Math.degToRad(60))
+    this.diverModel.lookAt(-100, 100, -250)
+    Utils.removeObjectShininess(this.diverModel)
     this.scene.add(this.diverModel)
   }
 
@@ -121,16 +135,30 @@ export default class Environment {
     model.mixer.clipAction(model.animations[ 0 ]).setDuration(5).play()
   }
 
-  updateEnvironment () {
+  toggleNight (activated) {
+    TweenMax.to(this, 0.5, {ease: Power4.easeOut, backgroundNightColorDarken: activated ? CONST.NightOpacity : 1})
+  }
+
+  updateEnvironment = () => {
     let delta = this.clock.getDelta()
-    this.light.intensity = 1 // - ((window.AppScrollPercentage * 0.5) + 0.25)
     if (this.sharkModel) this.sharkModel.position.x -= 1
     if (this.turtleModel) this.turtleModel.position.x += 0.5
-    if (this.diverModel) this.diverModel.position.z += 0.7
+    if (this.diverModel) {
+      // TODO : keep model axis when moving
+      this.diverModel.position.x -= 0.1
+      this.diverModel.position.y += 0.1
+      this.diverModel.position.z -= 0.7
+    }
     if (this.modelMixers.length > 0) {
       for (var i = 0; i < this.modelMixers.length; i++) {
         this.modelMixers[i].update(delta)
       }
     }
+
+    this.backgroundDepthColorDarken = 1 - (window.AppScrollPercentage * 0.5)
+    this.ambientLight.intensity = this.directionalLight.intensity = this.backgroundNightColorDarken * this.backgroundDepthColorDarken
+    this.backgroundColor = this.surfaceColor.clone().lerp(this.bottomColor, window.AppScrollPercentage).multiplyScalar(this.backgroundNightColorDarken * this.backgroundDepthColorDarken)
+    this.scene.background = this.backgroundColor
+    this.scene.fog.color = this.backgroundColor
   }
 }

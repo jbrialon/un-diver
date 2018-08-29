@@ -1,3 +1,6 @@
+/*
+* Mother Class for all Sections
+*/
 import * as THREE from 'three'
 
 export default class Section extends THREE.Object3D {

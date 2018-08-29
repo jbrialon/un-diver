@@ -70,13 +70,6 @@ export default class Environment {
 
   onTerrainLoaded (object) {
     this.terrainModel = object
-    Utils.fixFBXMaterials(this.terrainModel)
-    this.terrainModel.traverse(function (child) {
-      if (child.isMesh) {
-        child.castShadow = true
-        child.receiveShadow = true
-      }
-    })
     this.terrainModel.children[2].material.side = THREE.BackSide
     this.terrainModel.position.x = -2922
     this.terrainModel.position.y = 9246
@@ -100,6 +93,7 @@ export default class Environment {
     this.sharkModel.position.x = 750
     this.sharkModel.position.z = -6000
     this.sharkModel.rotateX(THREE.Math.degToRad(45))
+    Utils.removeObjectShininess(this.sharkModel)
     this.scene.add(this.sharkModel)
   }
 
@@ -111,6 +105,7 @@ export default class Environment {
     this.turtleModel.position.z = -3000
     this.turtleModel.rotateX(THREE.Math.degToRad(45))
     this.turtleModel.rotateY(THREE.Math.degToRad(45))
+    Utils.removeObjectShininess(this.turtleModel)
     this.scene.add(this.turtleModel)
   }
 
@@ -119,8 +114,8 @@ export default class Environment {
     this.initAnimal(this.diverModel)
     this.diverModel.position.y = 0
     this.diverModel.position.x = -0
-    this.diverModel.position.z = -1500
-    this.diverModel.rotateZ(THREE.Math.degToRad(60))
+    this.diverModel.lookAt(-100, 100, -250)
+    Utils.removeObjectShininess(this.diverModel)
     this.scene.add(this.diverModel)
   }
 
@@ -148,7 +143,12 @@ export default class Environment {
     let delta = this.clock.getDelta()
     if (this.sharkModel) this.sharkModel.position.x -= 1
     if (this.turtleModel) this.turtleModel.position.x += 0.5
-    if (this.diverModel) this.diverModel.position.z += 0.7
+    if (this.diverModel) {
+      // TODO : keep model axis when moving
+      this.diverModel.position.x -= 0.1
+      this.diverModel.position.y += 0.1
+      this.diverModel.position.z -= 0.7
+    }
     if (this.modelMixers.length > 0) {
       for (var i = 0; i < this.modelMixers.length; i++) {
         this.modelMixers[i].update(delta)

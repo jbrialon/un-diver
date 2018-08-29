@@ -1,3 +1,8 @@
+/*
+* Stick the given object to Camera
+* when object is closer than CONST.CameraDistanceToSection
+* and release it in space when given maxDistance is reached by camera
+*/
 import * as CONST from '../../../Constants'
 import AnimationLoopManager from '../../../utils/AnimationLoopManager'
 import * as THREE from 'three'
@@ -30,7 +35,9 @@ export default class StickToCamera {
 
     AnimationLoopManager.addCallback(() => this.updatePosition())
   }
+
   updatePosition () {
+    // TODO : performance optimization
     let vect = new THREE.Vector3()
     let vectFinal = 0
     this.camera.getWorldPosition(vect)

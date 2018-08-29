@@ -1,9 +1,12 @@
+/*
+* Section with the main Watch 3D model
+* and all subtexts
+*/
 import {TweenMax, Power4, Sine} from 'gsap'
 import * as THREE from 'three'
 import Section from '../Section.js'
 import FBXLoader from 'three-fbxloader-offical'
 import CanvasText from '../../../utils/CanvasText'
-// import Utils from '../../utils/Utils'
 import Fader from '../behaviors/Fader.js'
 import StickToCamera from '../behaviors/StickToCamera.js'
 
@@ -63,7 +66,6 @@ export default class WatchSection extends Section {
     onWatchModelLoaded (object) {
       // TODO : handle correctly sizing and positioning
       this.watch3DModel = object
-      // Utils.fixFBXMaterials(this.watch3DModel)
       this.watch3DModelContainer = new THREE.Object3D()
       this.watch3DModelContainer.matrixAutoUpdate = false
       this.watch3DModelContainer.add(this.watch3DModel)

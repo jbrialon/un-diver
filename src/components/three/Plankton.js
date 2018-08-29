@@ -1,3 +1,6 @@
+/*
+* Adds Plankton-style particles to the scene
+*/
 import * as THREE from 'three'
 import AnimationLoopManager from '../../utils/AnimationLoopManager'
 

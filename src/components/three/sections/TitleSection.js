@@ -1,3 +1,6 @@
+/*
+* Section with only a Text inside
+*/
 import Section from '../Section.js'
 import Fader from '../behaviors/Fader.js'
 import CanvasText from '../../../utils/CanvasText.js'

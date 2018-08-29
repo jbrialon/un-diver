@@ -1,3 +1,6 @@
+/*
+* Adds postprocessing shaders to the scene
+*/
 import GuiManager from '../../utils/GuiManager'
 import THREE from './PostProcessingImports.js'
 

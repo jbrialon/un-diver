@@ -1,8 +1,12 @@
+/*
+* Hanldes fake VR rendering
+* Splits the screen in two and renders to cameras
+*/
 import * as THREE from 'three'
 
 export default class VrRenderer {
   stereoCamera = new THREE.StereoCamera()
-  renderer // THREE.WebGLRenderer
+  renderer
 
   constructor (renderer) {
     this.renderer = renderer

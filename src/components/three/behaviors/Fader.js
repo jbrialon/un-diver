@@ -1,3 +1,7 @@
+/*
+* Fades the object material opacity
+* when object is close or far away from Camera
+*/
 import AnimationLoopManager from '../../../utils/AnimationLoopManager'
 import * as THREE from 'three'
 
@@ -17,7 +21,9 @@ export default class Fader {
       AnimationLoopManager.addCallback(() => this.updateFade())
     }
   }
+
   updateFade () {
+    // TODO : performance optimization
     let camVect = new THREE.Vector3()
     let objectVect = new THREE.Vector3()
     this.camera.getWorldPosition(camVect)

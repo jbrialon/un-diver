@@ -1,3 +1,7 @@
+/*
+* Manages Camera creation and positioning in space depending on scroll
+* Handles all mobile events and orients camera accordingly
+*/
 import * as CONST from '../../Constants'
 import * as THREE from 'three'
 import {TweenMax, Sine} from 'gsap'

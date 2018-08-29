@@ -47,7 +47,7 @@ export default class StickToCamera {
     vectFinal = Math.min(vectFinal, 0)
     this.sticked = vectFinal > this.maxObjectPosition.z && vectFinal < 0
     if (this.stickedCallback && this.sticked && this.sticked !== this.wasSticked) {
-      this.stickedCallback(this.referenceObject3D)
+      this.stickedCallback(this.referenceObject3D, false)
     } else if (this.stickedCallback && !this.sticked && this.sticked !== this.wasSticked) {
       this.stickedCallback(this.referenceObject3D, true)
     }

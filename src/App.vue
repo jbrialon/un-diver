@@ -98,7 +98,7 @@ export default {
     },
     ...mapGetters([
       'vrModeActivated',
-      'glowingActivated',
+      'nightModeActivated',
       'currentSectionId',
       'goToSectionId'
     ])
@@ -257,7 +257,7 @@ export default {
     }
   },
   watch: {
-    'glowingActivated' (activated) {
+    'nightModeActivated' (activated) {
       this.envManager.toggleNight(activated)
     },
     'vrModeActivated' (activated) {

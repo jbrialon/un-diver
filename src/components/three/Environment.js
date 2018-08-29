@@ -26,11 +26,12 @@ export default class Environment {
   modelMixers = []
   ambientLight
   directionalLight
-  backgroundColorDarken = 1
 
   surfaceColor = new THREE.Color(CONST.SeaSurfaceColorCode)
   bottomColor = new THREE.Color(CONST.SeaBottomColorCode)
   backgroundColor = new THREE.Color()
+  backgroundDepthColorDarken = 1
+  backgroundNightColorDarken = 1
 
   constructor (scene, renderer, sceneFarDistance) {
     this.scene = scene
@@ -39,8 +40,9 @@ export default class Environment {
   }
 
   init () {
+    this.scene.fog = new THREE.FogExp2(this.backgroundColor, CONST.FogDensity)
+
     this.ambientLight = new THREE.AmbientLight(0xffffff)
-    // this.ambientLight.position.set(0, 2000, -(CONST.SceneDepth * 0.5))
     this.scene.add(this.ambientLight)
 
     this.directionalLight = new THREE.DirectionalLight(0xffffff)
@@ -50,9 +52,6 @@ export default class Environment {
     this.directionalLight.position.normalize()
     this.directionalLight.intensity = 1
     this.scene.add(this.directionalLight)
-
-    let hemiLightHelper = new THREE.DirectionalLightHelper(this.directionalLight, 100)
-    this.scene.add(hemiLightHelper)
 
     let loader = new FBXLoader()
     loader.load(this.terrainModelPath, (object) => this.onTerrainLoaded(object))
@@ -142,9 +141,7 @@ export default class Environment {
   }
 
   toggleNight (activated) {
-    TweenMax.to(this.ambientLight, 0.5, {ease: Power4.easeOut, intensity: activated ? CONST.NightOpacity : 1})
-    TweenMax.to(this.directionalLight, 0.5, {ease: Power4.easeOut, intensity: activated ? CONST.NightOpacity : 1})
-    TweenMax.to(this, 0.5, {ease: Power4.easeOut, backgroundColorDarken: activated ? CONST.NightOpacity : 1})
+    TweenMax.to(this, 0.5, {ease: Power4.easeOut, backgroundNightColorDarken: activated ? CONST.NightOpacity : 1})
   }
 
   updateEnvironment = () => {
@@ -158,8 +155,10 @@ export default class Environment {
       }
     }
 
-    this.backgroundColor = this.surfaceColor.clone().lerp(this.bottomColor, window.AppScrollPercentage).multiplyScalar(this.backgroundColorDarken)
-    this.scene.background = new THREE.Color(this.backgroundColor.getHex())
-    this.scene.fog = new THREE.FogExp2(this.backgroundColor.getHex(), CONST.FogDensity)
+    this.backgroundDepthColorDarken = 1 - (window.AppScrollPercentage * 0.5)
+    this.ambientLight.intensity = this.directionalLight.intensity = this.backgroundNightColorDarken * this.backgroundDepthColorDarken
+    this.backgroundColor = this.surfaceColor.clone().lerp(this.bottomColor, window.AppScrollPercentage).multiplyScalar(this.backgroundNightColorDarken * this.backgroundDepthColorDarken)
+    this.scene.background = this.backgroundColor
+    this.scene.fog.color = this.backgroundColor
   }
 }

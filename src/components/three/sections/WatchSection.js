@@ -105,8 +105,8 @@ export default class WatchSection extends Section {
     */
     onSubtextSticked = (subtext, unsticked) => {
       if (this.watch3DModel) {
-        const duration = unsticked ? 0.8 : 1.5
-        const rotationToGo = unsticked ? (subtext.leftText ? Math.PI * 0.3 : -Math.PI * 0.3) : 0
+        const duration = unsticked ? 1.5 : 0.8
+        const rotationToGo = unsticked ? 0 : (subtext.leftText ? Math.PI * 0.3 : -Math.PI * 0.3)
         this.watchRotationTween.kill()
         this.watchRotationTween = TweenMax.to(this.watch3DModel.rotation, duration, {
           y: rotationToGo,
@@ -115,7 +115,7 @@ export default class WatchSection extends Section {
       }
 
       if (subtext.textId === 'glowing') {
-        store.commit('toggleGlowing')
+        store.commit('setNightMode', !unsticked)
       }
     }
 
@@ -127,7 +127,7 @@ export default class WatchSection extends Section {
       let textIndex = 0
       let subTextZpos = -this.stepsDistance
       this.sectionData.subTexts.forEach(textObject => {
-        const leftText = textIndex % 2 === 0
+        const leftText = textIndex % 2 !== 0
         let textMesh = CanvasText.getTextMesh(textObject.text, {
           fontSize: 50,
           font: '50px Arial, sans-serif',

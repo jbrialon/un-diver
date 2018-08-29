@@ -2,7 +2,7 @@ import * as Stats from 'stats.js'
 // eslint-disable-next-line
 import * as NormalizeRAF from './utils/NormalizeRAF.js'
 import Vue from 'vue'
-import Watch from './Watch.vue'
+import App from './App.vue'
 import store from './store/index.js'
 import i18n from './i18n'
 
@@ -11,7 +11,7 @@ Vue.config.productionTip = false
 new Vue({
   store,
   i18n,
-  render: h => h(Watch)
+  render: h => h(App)
 }).$mount('#app')
 
 function animate () {

@@ -1,12 +1,16 @@
-import * as CONST from '../Constants'
-import GuiManager from '../utils/GuiManager'
-import THREE from '../reflectance/ReflectanceImports'
+import * as CONST from '@/Constants'
+import store from '@/store'
+import {TweenMax, Power4, Sine} from 'gsap'
+import THREE from '@/reflectance/ReflectanceImports'
 
 export default class WatchModel extends THREE.Object3D {
   model
   modelLoader = new THREE.OBJLoader()
   textureLoader = new THREE.TextureLoader()
   material = new THREE.MeshStandardMaterial()
+
+  rotationTween
+  watchGlowMesh
 
   hoursHand
   minutesHand
@@ -28,15 +32,42 @@ export default class WatchModel extends THREE.Object3D {
 
     this.model.traverse((child) => {
       if (child instanceof THREE.Mesh) {
+        if (child.name === 'case') {
+          this.watchGlowMesh = child.clone()
+          this.watchGlowMesh.material = new THREE.MeshBasicMaterial({color: 0xbbff00})
+          this.watchGlowMesh.material.transparent = true
+          this.watchGlowMesh.material.opacity = (store.state.nightMode) ? 1 : 0
+          child.parent.add(this.watchGlowMesh)
+        }
         child.material = this.material
       }
     })
+
+    this.matrixAutoUpdate = false
+    this.model.scale.set(3, 3, 3)
     super.add(this.model)
+    this.matrix.makeRotationY(-Math.PI)
+    this.model.updateMatrix()
+    this.model.updateMatrixWorld()
+
+    TweenMax.fromTo(this.model.position, 3, {x: -3}, {
+      x: 3,
+      yoyo: true,
+      yoyoEase: true,
+      ease: Sine.easeInOut,
+      repeat: -1
+    })
+    TweenMax.fromTo(this.model.position, 5, {x: -3}, {
+      y: 3,
+      yoyo: true,
+      yoyoEase: true,
+      ease: Sine.easeInOut,
+      repeat: -1
+    })
+
+    this.rotationTween = TweenMax.set(this.model.rotation, {y: 0})
 
     this.initHands()
-
-    GuiManager.add(this.material, 'roughness', 0, 1)
-    GuiManager.add(this.material, 'metalness', 0, 1)
   }
 
   initHands () {
@@ -64,6 +95,27 @@ export default class WatchModel extends THREE.Object3D {
     setInterval(this.setHandsRotation, 1000)
   }
 
+  setSubtextRotation (odd, reset) {
+    const duration = reset ? 1.5 : 0.8
+    if (this.model && this.rotationTween) {
+      this.rotationTween.kill()
+      this.rotationTween = TweenMax.to(this.model.rotation, duration, {
+        y: reset ? 0 : (odd ? Math.PI * 0.25 : -Math.PI * 0.25),
+        x: reset ? 0 : Math.PI * 0.1,
+        ease: Power4.easeInOut
+      })
+    }
+  }
+
+  setNightMode (activated) {
+    if (this.watchGlowMesh) {
+      TweenMax.to(this.watchGlowMesh.material, 0.5, {
+        opacity: activated ? 1 : 0,
+        ease: Power4.easeInOut
+      })
+    }
+  }
+
   setHandsRotation = () => {
     let date = new Date()
     let seconds = date.getSeconds()
@@ -75,8 +127,9 @@ export default class WatchModel extends THREE.Object3D {
     this.secondsHand.rotation.z = THREE.Math.degToRad(seconds * 6)
   }
 
-  setEnvironmentMap (envMap) {
-    this.material.envMap = envMap
+  setEnvironmentMap (texture) {
+    this.material.envMap = texture
+    // this.material.envMapIntensity = 4
     this.material.needsUpdate = true
   }
 }

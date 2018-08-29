@@ -9,7 +9,7 @@ import * as CONST from './Constants'
 import GuiManager from './utils/GuiManager'
 import AnimationLoopManager from './utils/AnimationLoopManager'
 import THREE from './reflectance/ReflectanceImports'
-import WatchModel from './components/WatchModel'
+import WatchModel from './components/three/WatchModel'
 
 export default {
   components: {

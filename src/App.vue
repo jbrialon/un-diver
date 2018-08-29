@@ -29,7 +29,6 @@ import Header from '@/components/vue/Header.vue'
 import SectionsAnchors from '@/components/vue/SectionsAnchors.vue'
 
 // libs
-// import {TweenMax, Power4} from 'gsap'
 import * as THREE from 'three'
 
 export default {
@@ -57,6 +56,7 @@ export default {
       scrollTween: null,
       sectionsDepthList: [],
       ThreeClock: new THREE.Clock(),
+      watchSection: null,
       samples: [
         {
           id: 0,
@@ -138,6 +138,12 @@ export default {
       this.renderer.setPixelRatio(
         window.devicePixelRatio || window.webkitDevicePixelRatio || 1
       )
+
+      this.renderer.gammaInput = true
+      this.renderer.gammaOutput = true
+      this.renderer.toneMapping = THREE.ReinhardToneMapping
+      this.renderer.toneMappingExposure = 3
+
       this.vrRenderer = new VrRenderer(this.renderer)
       this.vrRenderer.setSize(this.stageSize.width, this.stageSize.height)
       this.vrRenderer.setEyeSeparation(1.3)
@@ -151,7 +157,12 @@ export default {
     },
     initEnvironment () {
       this.envManager = new Environment(this.scene, this.renderer, this.lastSectionZPosition)
+      this.envManager.addEventListener('environmentmaploaded', this.onEnvironmentMapLoaded)
       this.envManager.init()
+      this.scene.add(this.envManager)
+    },
+    onEnvironmentMapLoaded (event) {
+      this.watchSection.setEnvironmentMap(event.texture)
     },
     initPostProcessing () {
       this.postProcessingManager = new PostProcessingManager(this.renderer, this.scene, this.cameraManager.camera, this.stageSize)
@@ -169,6 +180,7 @@ export default {
         switch (item.type) {
           case 'watch':
             section = new WatchSection(item)
+            this.watchSection = section
             break
           case 'collection':
             section = new TitleSection(item)

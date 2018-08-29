@@ -3,11 +3,10 @@
 * and all subtexts
 */
 import store from '@/store'
-import {TweenMax, Power4, Sine} from 'gsap'
 import * as THREE from 'three'
 import Section from '../Section.js'
-import FBXLoader from 'three-fbxloader-offical'
 import CanvasText from '../../../utils/CanvasText'
+import WatchModel from '@/components/three/WatchModel.js'
 import Fader from '../behaviors/Fader.js'
 import StickToCamera from '../behaviors/StickToCamera.js'
 
@@ -15,7 +14,6 @@ export default class WatchSection extends Section {
     stepsDistance
     subTextsStickToCameraDistance
     watch3DModelPath = 'diver_watch_blue_LOW.fbx'
-    watch3DModelContainer
     watch3DModel
     watchGlowMesh
     watch3DModelSize = new THREE.Vector3()
@@ -32,8 +30,13 @@ export default class WatchSection extends Section {
 
       this.addTitle()
 
-      let loader = new FBXLoader()
-      loader.load(this.watch3DModelPath, (object) => this.onWatchModelLoaded(object))
+      this.watch3DModel = new WatchModel()
+      this.watch3DModel.position.z = -this.stepsDistance
+      this.add(this.watch3DModel)
+      Object.assign(
+        this.watch3DModel,
+        new StickToCamera(this.watch3DModel, this.sectionDepth + this.watch3DModel.position.z)
+      )
 
       this.addSubTexts()
 
@@ -65,64 +68,11 @@ export default class WatchSection extends Section {
       )
     }
 
-    onWatchModelLoaded (object) {
-      // TODO : handle correctly sizing and positioning
-      this.watch3DModel = object
-      this.watch3DModel.traverse((child) => {
-        if (child.name === 'case') {
-          this.watchGlowMesh = child.clone()
-          this.watchGlowMesh.material = new THREE.MeshBasicMaterial({color: 0xbbff00})
-          this.watchGlowMesh.material.transparent = true
-          this.watchGlowMesh.material.opacity = (store.state.nightMode) ? 1 : 0
-          child.parent.add(this.watchGlowMesh)
-        }
-      })
-      this.watch3DModelContainer = new THREE.Object3D()
-      this.watch3DModelContainer.matrixAutoUpdate = false
-      this.watch3DModelContainer.add(this.watch3DModel)
-      let modelScale = 3
-      this.watch3DModel.scale.set(modelScale, modelScale, modelScale)
-      this.watch3DModelContainer.position.z = -this.stepsDistance
-      this.watch3DModel.updateMatrix()
-      this.watch3DModel.updateMatrixWorld()
-      super.add(this.watch3DModelContainer)
-
-      TweenMax.fromTo(this.watch3DModel.position, 3, {x: -3}, {
-        x: 3,
-        yoyo: true,
-        yoyoEase: true,
-        ease: Sine.easeInOut,
-        repeat: -1
-      })
-      TweenMax.fromTo(this.watch3DModel.position, 5, {x: -3}, {
-        y: 3,
-        yoyo: true,
-        yoyoEase: true,
-        ease: Sine.easeInOut,
-        repeat: -1
-      })
-
-      this.watchRotationTween = TweenMax.set(this.watch3DModel.rotation, {y: 0})
-
-      Object.assign(
-        this.watch3DModel,
-        new StickToCamera(this.watch3DModelContainer, this.sectionDepth + this.watch3DModelContainer.position.z)
-      )
-    }
-
     /*
     * When a subtexts is getting sticked / unsticked to camera
     */
     onSubtextSticked = (subtext, unsticked) => {
-      if (this.watch3DModel) {
-        const duration = unsticked ? 1.5 : 0.8
-        this.watchRotationTween.kill()
-        this.watchRotationTween = TweenMax.to(this.watch3DModel.rotation, duration, {
-          y: unsticked ? 0 : (subtext.leftText ? Math.PI * 0.25 : -Math.PI * 0.25),
-          x: unsticked ? 0 : -Math.PI * 0.1,
-          ease: Power4.easeInOut
-        })
-      }
+      this.watch3DModel.setSubtextRotation(subtext.leftText, unsticked)
 
       if (subtext.textId === 'glowing') {
         this.setNightMode(!unsticked)
@@ -134,12 +84,7 @@ export default class WatchSection extends Section {
     */
     setNightMode (activated) {
       store.commit('setNightMode', activated)
-      if (this.watchGlowMesh) {
-        TweenMax.to(this.watchGlowMesh.material, 0.5, {
-          opacity: activated ? 1 : 0,
-          ease: Power4.easeInOut
-        })
-      }
+      this.watch3DModel.setNightMode(activated)
     }
 
     /*
@@ -188,5 +133,9 @@ export default class WatchSection extends Section {
         }
         subTextZpos -= this.stepsDistance
       })
+    }
+
+    setEnvironmentMap (texture) {
+      this.watch3DModel.setEnvironmentMap(texture)
     }
 }

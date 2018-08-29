@@ -19,6 +19,7 @@ import Environment from '@/components/three/Environment.js'
 import VrRenderer from '@/components/three/VrRenderer.js'
 import TitleSection from '@/components/three/sections/TitleSection.js'
 import WatchSection from '@/components/three/sections/WatchSection.js'
+import BoutiqueSection from '@/components/three/sections/BoutiqueSection.js'
 import CameraManager from '@/components/three/CameraManager.js'
 
 // vue
@@ -76,14 +77,16 @@ export default {
         },
         {
           id: 1,
-          title: 'Stain Case',
-          text: 'STAIN CASE',
+          type: 'collection',
+          title: 'Other models',
+          text: 'Other models',
           sectionWeight: 0
         },
         {
           id: 2,
-          title: 'Phosphorescent Needles & Numbers',
-          text: 'PHOSPHORESCENT NEEDLES & NUMBERS',
+          type: 'boutique',
+          title: 'Boutique',
+          text: 'Boutique',
           sectionWeight: 0
         }
       ]
@@ -126,6 +129,9 @@ export default {
     },
     initScene () {
       this.stageSize.set(this.stageDOMElement.clientWidth, this.stageDOMElement.clientHeight)
+      this.$store.commit('setStageSize', this.stageSize)
+      // eslint-disable-next-line
+      console.log('setStageSize!!')
       this.scene = new THREE.Scene()
       this.cameraManager = new CameraManager(this.stageSize)
       this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })
@@ -166,8 +172,11 @@ export default {
           case 'watch':
             section = new WatchSection(item)
             break
-          default:
+          case 'collection':
             section = new TitleSection(item)
+            break
+          case 'boutique':
+            section = new BoutiqueSection(item)
             break
         }
         section.matrix.makeTranslation(0, 0, -currentZPos)

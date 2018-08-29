@@ -70,7 +70,7 @@ export default class WatchSection extends Section {
       this.watch3DModelContainer = new THREE.Object3D()
       this.watch3DModelContainer.matrixAutoUpdate = false
       this.watch3DModelContainer.add(this.watch3DModel)
-      let modelScale = 2
+      let modelScale = 3
       this.watch3DModel.scale.set(modelScale, modelScale, modelScale)
       this.watch3DModelContainer.position.z = -this.stepsDistance
       this.watch3DModel.updateMatrix()
@@ -106,10 +106,10 @@ export default class WatchSection extends Section {
     onSubtextSticked = (subtext, unsticked) => {
       if (this.watch3DModel) {
         const duration = unsticked ? 1.5 : 0.8
-        const rotationToGo = unsticked ? 0 : (subtext.leftText ? Math.PI * 0.3 : -Math.PI * 0.3)
         this.watchRotationTween.kill()
         this.watchRotationTween = TweenMax.to(this.watch3DModel.rotation, duration, {
-          y: rotationToGo,
+          y: unsticked ? 0 : (subtext.leftText ? Math.PI * 0.25 : -Math.PI * 0.25),
+          x: unsticked ? 0 : -Math.PI * 0.1,
           ease: Power4.easeInOut
         })
       }

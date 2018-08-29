@@ -16,3 +16,8 @@ export const CameraFarPlane = 5000
 * WATCH SECTION
 */
 export const NightOpacity = 0.3
+
+/*
+* BOUTIQUE SECTION
+*/
+export const BoutiqueImage = require('./assets/boutique/moscow.jpg')

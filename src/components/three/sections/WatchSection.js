@@ -2,6 +2,7 @@
 * Section with the main Watch 3D model
 * and all subtexts
 */
+import store from '@/store'
 import {TweenMax, Power4, Sine} from 'gsap'
 import * as THREE from 'three'
 import Section from '../Section.js'
@@ -102,15 +103,19 @@ export default class WatchSection extends Section {
     /*
     * When a subtexts is getting sticked / unsticked to camera
     */
-    onSubtextSticked (subtext) {
+    onSubtextSticked = (subtext, unsticked) => {
       if (this.watch3DModel) {
-        const duration = subtext ? 0.8 : 1.5
-        const rotationToGo = subtext ? (subtext.leftText ? Math.PI * 0.3 : -Math.PI * 0.3) : 0
+        const duration = unsticked ? 0.8 : 1.5
+        const rotationToGo = unsticked ? (subtext.leftText ? Math.PI * 0.3 : -Math.PI * 0.3) : 0
         this.watchRotationTween.kill()
         this.watchRotationTween = TweenMax.to(this.watch3DModel.rotation, duration, {
           y: rotationToGo,
           ease: Power4.easeInOut
         })
+      }
+
+      if (subtext.textId === 'glowing') {
+        store.commit('toggleGlowing')
       }
     }
 
@@ -121,9 +126,9 @@ export default class WatchSection extends Section {
     addSubTexts () {
       let textIndex = 0
       let subTextZpos = -this.stepsDistance
-      this.sectionData.subTexts.forEach(text => {
+      this.sectionData.subTexts.forEach(textObject => {
         const leftText = textIndex % 2 === 0
-        let textMesh = CanvasText.getTextMesh(text, {
+        let textMesh = CanvasText.getTextMesh(textObject.text, {
           fontSize: 50,
           font: '50px Arial, sans-serif',
           textAlign: 'left',
@@ -133,6 +138,7 @@ export default class WatchSection extends Section {
           lineHeight: 1
         })
         textMesh.matrixAutoUpdate = false
+        textMesh.textId = textObject.id
         textMesh.leftText = leftText
         const boxSize = new THREE.Vector3()
         textMesh.geometry.computeBoundingBox()
@@ -149,12 +155,14 @@ export default class WatchSection extends Section {
         textIndex++
         Object.assign(
           textMesh,
-          new StickToCamera(textMesh, this.subTextsStickToCameraDistance, (t) => this.onSubtextSticked(t))
+          new StickToCamera(textMesh, this.subTextsStickToCameraDistance, this.onSubtextSticked)
         )
-        Object.assign(
-          textMesh,
-          new Fader(textMesh, 750)
-        )
+        if (textIndex === 0) {
+          Object.assign(
+            textMesh,
+            new Fader(textMesh, 750)
+          )
+        }
         subTextZpos -= this.stepsDistance
       })
     }

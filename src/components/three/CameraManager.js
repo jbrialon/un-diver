@@ -5,6 +5,7 @@
 import * as CONST from '../../Constants'
 import * as THREE from 'three'
 import {TweenMax, Sine} from 'gsap'
+import 'gsap/ScrollToPlugin'
 import AnimationLoopManager from '../../utils/AnimationLoopManager'
 import GuiManager from '../../utils/GuiManager'
 

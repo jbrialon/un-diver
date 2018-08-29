@@ -49,7 +49,7 @@ export default class StickToCamera {
     if (this.stickedCallback && this.sticked && this.sticked !== this.wasSticked) {
       this.stickedCallback(this.referenceObject3D)
     } else if (this.stickedCallback && !this.sticked && this.sticked !== this.wasSticked) {
-      this.stickedCallback()
+      this.stickedCallback(this.referenceObject3D, true)
     }
     this.wasSticked = this.sticked
     vectFinal += this.initialObjectPosition.z

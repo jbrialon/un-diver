@@ -16,7 +16,6 @@ import * as CONST from '@/Constants'
 import AnimationLoopManager from '@/utils/AnimationLoopManager'
 import PostProcessingManager from '@/components/three/PostProcessingManager.js'
 import Environment from '@/components/three/Environment.js'
-import BackgroundColorManager from '@/components/three/BackgroundColorManager.js'
 import VrRenderer from '@/components/three/VrRenderer.js'
 import TitleSection from '@/components/three/sections/TitleSection.js'
 import WatchSection from '@/components/three/sections/WatchSection.js'
@@ -29,7 +28,7 @@ import Header from '@/components/vue/Header.vue'
 import SectionsAnchors from '@/components/vue/SectionsAnchors.vue'
 
 // libs
-import 'gsap/ScrollToPlugin'
+// import {TweenMax, Power4} from 'gsap'
 import * as THREE from 'three'
 
 export default {
@@ -41,6 +40,7 @@ export default {
   },
   data () {
     return {
+      envManager: null,
       scrollingElement: null,
       sceneIsAutoScrolling: false,
       pageHeight: 0,
@@ -67,13 +67,11 @@ export default {
           price: '12,000 CHF',
           sectionWeight: 4,
           subTexts: [
-            'Blue Dial',
-            'Diameter 44mm',
-            'UN-118\nCaliber',
-            'Glowing\ntechnology',
-            'Waterproof\nup to 300m',
-            'Blue Shark stamped\non the Case-Back',
-            '5\'800 CHF'
+            {id: 'bluedial', title: 'model', text: 'Blue Dial'},
+            {id: 'diameter', title: 'Diameter', text: '44mm'},
+            {id: 'caliber', title: 'New', text: 'UN-118'},
+            {id: 'glowing', title: 'Feature', text: 'Glowing'},
+            {id: 'waterproof', title: 'Feature', text: 'Waterproof\nup to 300m'}
           ]
         },
         {
@@ -100,6 +98,7 @@ export default {
     },
     ...mapGetters([
       'vrModeActivated',
+      'glowingActivated',
       'currentSectionId',
       'goToSectionId'
     ])
@@ -147,11 +146,8 @@ export default {
       window.AppScene = this.scene
     },
     initEnvironment () {
-      let bgManager = new BackgroundColorManager(this.renderer, this.scene)
-      bgManager.init()
-
-      let envManager = new Environment(this.scene, this.lastSectionZPosition)
-      envManager.init()
+      this.envManager = new Environment(this.scene, this.renderer, this.lastSectionZPosition)
+      this.envManager.init()
     },
     initPostProcessing () {
       this.postProcessingManager = new PostProcessingManager(this.renderer, this.scene, this.cameraManager.camera, this.stageSize)
@@ -174,7 +170,6 @@ export default {
             section = new TitleSection(item)
             break
         }
-        section.addEventListener('setCurrentSectionId', this.onCurrentSectionIdChange)
         section.matrix.makeTranslation(0, 0, -currentZPos)
         item.zpos = currentZPos
         currentZPos += item.sectionDepth + sectionSlotDepth
@@ -262,6 +257,9 @@ export default {
     }
   },
   watch: {
+    'glowingActivated' (activated) {
+      this.envManager.toggleNight(activated)
+    },
     'vrModeActivated' (activated) {
       this.onResize()
       this.cameraManager.vrMode = activated

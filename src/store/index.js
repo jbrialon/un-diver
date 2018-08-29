@@ -8,6 +8,7 @@ const store = new Vuex.Store({
     cameraDummy: null,
     stageSize: null,
     vrMode: false,
+    glowing: false,
     currentSectionId: undefined,
     goToSectionId: undefined
   },
@@ -26,11 +27,17 @@ const store = new Vuex.Store({
     },
     goToSectionId (state, id) {
       state.goToSectionId = id
+    },
+    toggleGlowing (state) {
+      state.glowing = !state.glowing
     }
   },
   getters: {
     vrModeActivated: state => {
       return state.vrMode
+    },
+    glowingActivated: state => {
+      return state.glowing
     },
     currentSectionId: state => {
       return state.currentSectionId

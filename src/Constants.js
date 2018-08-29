@@ -15,3 +15,4 @@ export const CameraFarPlane = 5000
 /*
 * WATCH SECTION
 */
+export const NightOpacity = 0.2

@@ -2,6 +2,7 @@
 * Creates the environment
 * add to the scene fishes, rocks etc...
 */
+import {TweenMax, Power4} from 'gsap'
 import * as CONST from '../../Constants'
 import * as THREE from 'three'
 import FBXLoader from 'three-fbxloader-offical'
@@ -23,16 +24,35 @@ export default class Environment {
   turtleModel
   diverModel
   modelMixers = []
+  ambientLight
+  directionalLight
+  backgroundColorDarken = 1
 
-  constructor (scene, sceneFarDistance) {
+  surfaceColor = new THREE.Color(CONST.SeaSurfaceColorCode)
+  bottomColor = new THREE.Color(CONST.SeaBottomColorCode)
+  backgroundColor = new THREE.Color()
+
+  constructor (scene, renderer, sceneFarDistance) {
     this.scene = scene
+    this.renderer = renderer
     this.sceneFarDistance = sceneFarDistance
   }
 
   init () {
-    this.light = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.8)
-    this.light.position.set(0, 2000, -(CONST.SceneDepth * 0.5))
-    this.scene.add(this.light)
+    this.ambientLight = new THREE.AmbientLight(0xffffff)
+    // this.ambientLight.position.set(0, 2000, -(CONST.SceneDepth * 0.5))
+    this.scene.add(this.ambientLight)
+
+    this.directionalLight = new THREE.DirectionalLight(0xffffff)
+    this.directionalLight.position.x = 10
+    this.directionalLight.position.y = 5
+    this.directionalLight.position.z = 2
+    this.directionalLight.position.normalize()
+    this.directionalLight.intensity = 1
+    this.scene.add(this.directionalLight)
+
+    let hemiLightHelper = new THREE.DirectionalLightHelper(this.directionalLight, 100)
+    this.scene.add(hemiLightHelper)
 
     let loader = new FBXLoader()
     loader.load(this.terrainModelPath, (object) => this.onTerrainLoaded(object))
@@ -121,9 +141,14 @@ export default class Environment {
     model.mixer.clipAction(model.animations[ 0 ]).setDuration(5).play()
   }
 
+  toggleNight (activated) {
+    TweenMax.to(this.ambientLight, 0.5, {ease: Power4.easeOut, intensity: activated ? CONST.NightOpacity : 1})
+    TweenMax.to(this.directionalLight, 0.5, {ease: Power4.easeOut, intensity: activated ? CONST.NightOpacity : 1})
+    TweenMax.to(this, 0.5, {ease: Power4.easeOut, backgroundColorDarken: activated ? CONST.NightOpacity : 1})
+  }
+
   updateEnvironment = () => {
     let delta = this.clock.getDelta()
-    this.light.intensity = 1 // - ((window.AppScrollPercentage * 0.5) + 0.25)
     if (this.sharkModel) this.sharkModel.position.x -= 1
     if (this.turtleModel) this.turtleModel.position.x += 0.5
     if (this.diverModel) this.diverModel.position.z += 0.7
@@ -132,5 +157,9 @@ export default class Environment {
         this.modelMixers[i].update(delta)
       }
     }
+
+    this.backgroundColor = this.surfaceColor.clone().lerp(this.bottomColor, window.AppScrollPercentage).multiplyScalar(this.backgroundColorDarken)
+    this.scene.background = new THREE.Color(this.backgroundColor.getHex())
+    this.scene.fog = new THREE.FogExp2(this.backgroundColor.getHex(), CONST.FogDensity)
   }
 }

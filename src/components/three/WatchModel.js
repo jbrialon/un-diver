@@ -46,7 +46,6 @@ export default class WatchModel extends THREE.Object3D {
     this.matrixAutoUpdate = false
     this.model.scale.set(3, 3, 3)
     super.add(this.model)
-    this.matrix.makeRotationY(-Math.PI)
     this.model.updateMatrix()
     this.model.updateMatrixWorld()
 
@@ -101,7 +100,7 @@ export default class WatchModel extends THREE.Object3D {
       this.rotationTween.kill()
       this.rotationTween = TweenMax.to(this.model.rotation, duration, {
         y: reset ? 0 : (odd ? Math.PI * 0.25 : -Math.PI * 0.25),
-        x: reset ? 0 : Math.PI * 0.1,
+        x: reset ? 0 : -Math.PI * 0.1,
         ease: Power4.easeInOut
       })
     }

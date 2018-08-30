@@ -57,8 +57,8 @@ export default class Environment extends THREE.Object3D {
     super.add(this.directionalLight)
 
     let guiLightFolder = GuiManager.addFolder('Lights')
-    guiLightFolder.add(this, 'ambientLightFactor', 0, 2).name('Ambient Light')
-    guiLightFolder.add(this, 'directionnalLightFactor', 0, 2).name('Directionnal Light')
+    guiLightFolder.add(this, 'ambientLightFactor', 0, 2).name('Ambient')
+    guiLightFolder.add(this, 'directionnalLightFactor', 0, 2).name('Directionnal')
 
     let loader = new FBXLoader()
     loader.load(CONST.TerrainModelPath, this.onTerrainLoaded)

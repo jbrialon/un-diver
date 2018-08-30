@@ -7,7 +7,6 @@ import {TweenMax, Power4, Sine} from 'gsap'
 import * as THREE from 'three'
 import Section from '@/components/three/Section.js'
 import FBXLoader from 'three-fbxloader-offical'
-import CanvasText from '@/utils/CanvasText'
 import Fader from '@/components/three/behaviors/Fader.js'
 import StickToCamera from '@/components/three/behaviors/StickToCamera.js'
 import HtmlTextureManager from '@/utils/HtmlTextureManager.js'
@@ -46,22 +45,19 @@ export default class WatchSection extends Section {
     * Add the main title for the watch section
     */
     addTitle () {
-      const titleMesh = CanvasText.getTextMesh(this.sectionData.title, {
-        fontSize: 80,
-        font: '80px Arial, sans-serif',
-        textAlign: 'center',
-        verticalAlign: 'middle',
-        color: 'rgba(255,255,255,1)',
-        allowNewLine: true,
-        lineHeight: 1
+      HtmlTextureManager.loadTextureById('watch-section-title', texture => {
+        const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
+        const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
+        const titleMesh = new THREE.Mesh(geometry, material)
+        titleMesh.matrixAutoUpdate = false
+        titleMesh.scale.set(0.125, 0.125, 0.125)
+        titleMesh.updateMatrix()
+        super.add(titleMesh)
+        Object.assign(
+          titleMesh,
+          new Fader(titleMesh, 200)
+        )
       })
-      titleMesh.scale.set(0.5, 0.5, 0.5)
-      super.add(titleMesh)
-
-      Object.assign(
-        titleMesh,
-        new Fader(titleMesh)
-      )
     }
 
     onWatchModelLoaded (object) {
@@ -157,10 +153,7 @@ export default class WatchSection extends Section {
           textMesh.matrixAutoUpdate = false
           textMesh.textId = textObject.id
           textMesh.leftText = leftText
-          const boxSize = new THREE.Vector3()
-          textMesh.geometry.computeBoundingBox()
-          textMesh.geometry.boundingBox.getSize(boxSize)
-          let translate = boxSize.x * 0.5
+          let translate = texture.image.width * 0.5
           if (!leftText) translate *= -1
           textMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(translate, 0, 0))
           textMesh.position.z = subTextZpos
@@ -172,14 +165,9 @@ export default class WatchSection extends Section {
           textIndex++
           Object.assign(
             textMesh,
+            new Fader(textMesh, 750),
             new StickToCamera(textMesh, this.subTextsStickToCameraDistance, this.onSubtextSticked)
           )
-          if (textIndex === 0) {
-            Object.assign(
-              textMesh,
-              new Fader(textMesh, 750)
-            )
-          }
           subTextZpos -= this.stepsDistance
         })
       })

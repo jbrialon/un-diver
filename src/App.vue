@@ -1,5 +1,6 @@
 <template>
   <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation}">
+      <c-watch-section :watch-data="samples[0]" ref="subtexts"></c-watch-section>
       <div id="stage" ref="stage"></div>
       <c-header></c-header>
       <c-sections :items="samples"></c-sections>
@@ -7,7 +8,6 @@
       <div id="rotate-device-message">
         Please rotate your device to landscape
       </div>
-      <c-watch-section :watch-data="samples[0]" ref="subtexts"></c-watch-section>
   </div>
 </template>
 

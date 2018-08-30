@@ -58,9 +58,10 @@ export default {
   top: 0;
 
   &__title {
+    display: inline-block;
     color: $white;
     font-size: $fs-watch-title;
-    font-weight:$fw-medium;
+    font-weight: 300;
   }
 
   &__subtexts {
@@ -84,6 +85,7 @@ export default {
   }
 
   &__details {
+    display: inline-block;
     color: $white;
     &--title {
       font-size: $fs-watch-subtext-text;

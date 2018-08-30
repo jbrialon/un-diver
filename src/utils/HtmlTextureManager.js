@@ -14,8 +14,6 @@ class HtmlTextureManager {
 
   static setCanvasPromise (id, promise) {
     promise.then(canvas => {
-      // eslint-disable-next-line
-      console.log(id, canvas.width, canvas.height)
       let textureItem = HtmlTextureManager.getTextureItem(id)
       textureItem.texture.image = canvas
       textureItem.texture.format = THREE.RGBAFormat
@@ -25,7 +23,10 @@ class HtmlTextureManager {
   }
 
   static handleOnLoad (textureItem) {
-    if (textureItem.texture.image && textureItem.onLoad)textureItem.onLoad(textureItem.texture)
+    if (textureItem.texture.image && textureItem.onLoad) {
+      textureItem.onLoad(textureItem.texture)
+      textureItem.onLoad = null
+    }
   }
 
   static getTextureItem (id) {

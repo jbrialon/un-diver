@@ -90,13 +90,36 @@ export default class WatchModel extends THREE.Object3D {
     setInterval(this.setHandsRotation, 1000)
   }
 
-  setSubtextRotation (odd, reset) {
-    const duration = reset ? 1.5 : 0.8
+  orientWatch (watchOrientation, reset, direction) {
     if (this.model && this.rotationTween) {
+      const duration = reset ? 1.5 : 0.8
+      let xRot = -Math.PI * 0.1
+      let yRot = 0
+      let xPos = 0
       this.rotationTween.kill()
+      switch (watchOrientation) {
+        case 'left':
+          yRot = Math.PI * 0.25
+          break
+        case 'right':
+          yRot = -Math.PI * 0.25
+          break
+        case 'center':
+          yRot = 0
+          xRot = 0
+          xPos = direction ? 0 : -50
+          break
+        default:
+          break
+      }
       this.rotationTween = TweenMax.to(this.model.rotation, duration, {
-        y: reset ? 0 : (odd ? Math.PI * 0.25 : -Math.PI * 0.25),
-        x: reset ? 0 : -Math.PI * 0.1,
+        y: reset ? 0 : yRot,
+        x: reset ? 0 : xRot,
+        ease: Power4.easeInOut
+      })
+
+      TweenMax.to(this.model.position, duration, {
+        x: reset && direction ? 0 : xPos,
         ease: Power4.easeInOut
       })
     }

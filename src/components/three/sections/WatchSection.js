@@ -19,12 +19,13 @@ export default class WatchSection extends Section {
     watch3DModelSize = new THREE.Vector3()
     watchRotation = new THREE.Vector3()
     watchRotationTween
+    currentZPosition
 
     constructor (sectionData) {
       super(sectionData)
-      this.stepsDistance = this.sectionDepth / this.sectionData.subTexts.length
+      this.stepsDistance = this.sectionDepth / (this.sectionData.subTexts.length + 1) // add 1 for last details item
       this.subTextsStickToCameraDistance = this.stepsDistance * 0.5
-      this.stepsDistance = (this.sectionDepth - this.subTextsStickToCameraDistance) / this.sectionData.subTexts.length // recalculate stepsDistance in order to let last subText to unstick at sectionDepth and not after
+      this.stepsDistance = (this.sectionDepth - this.subTextsStickToCameraDistance) / (this.sectionData.subTexts.length + 1) // recalculate stepsDistance in order to let last subText to unstick at sectionDepth and not after
 
       this.addTitle()
 
@@ -37,6 +38,7 @@ export default class WatchSection extends Section {
       )
 
       this.addSubTexts()
+      this.addDetails()
 
       return Object.assign(
         this,
@@ -67,7 +69,7 @@ export default class WatchSection extends Section {
     * When a subtexts is getting sticked / unsticked to camera
     */
     onSubtextSticked = (subtext, unsticked) => {
-      this.watch3DModel.setSubtextRotation(subtext.leftText, unsticked)
+      this.watch3DModel.orientWatch(subtext.watchOrientation, unsticked)
 
       if (subtext.textId === 'glowing') {
         this.setNightMode(!unsticked)
@@ -88,22 +90,22 @@ export default class WatchSection extends Section {
     */
     addSubTexts () {
       let textIndex = 0
-      let subTextZpos = -this.stepsDistance
+      this.currentZPosition = -this.stepsDistance
       this.sectionData.subTexts.forEach(textObject => {
-        const leftText = textIndex % 2 !== 0
-        const textZPos = subTextZpos
-        HtmlTextureManager.loadTextureById('watch-subtext-' + textObject.id, texture => {
+        const watchOrientation = (textIndex % 2 !== 0) ? 'left' : 'right'
+        const textZPos = this.currentZPosition
+        HtmlTextureManager.loadTextureById('watch-section-subtext-' + textObject.id, texture => {
           const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
           const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
           const textMesh = new THREE.Mesh(geometry, material)
           textMesh.matrixAutoUpdate = false
           textMesh.textId = textObject.id
-          textMesh.leftText = leftText
+          textMesh.watchOrientation = watchOrientation
           let translate = texture.image.width * 0.5
-          if (!leftText) translate *= -1
+          if (watchOrientation === 'right') translate *= -1
           textMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(translate, 0, 0))
           textMesh.position.z = textZPos
-          textMesh.position.x = leftText ? 85 : -85
+          textMesh.position.x = (watchOrientation === 'left') ? 85 : -85
           textMesh.scale.set(0.5, 0.5, 0.5)
           textMesh.updateMatrix()
           textMesh.updateMatrixWorld()
@@ -114,8 +116,32 @@ export default class WatchSection extends Section {
             new StickToCamera(textMesh, this.subTextsStickToCameraDistance, this.onSubtextSticked)
           )
         })
-        subTextZpos -= this.stepsDistance
+        this.currentZPosition -= this.stepsDistance
         textIndex++
+      })
+    }
+
+    addDetails () {
+      HtmlTextureManager.loadTextureById('watch-section-details', texture => {
+        const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
+        const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
+        const detailsMesh = new THREE.Mesh(geometry, material)
+        detailsMesh.matrixAutoUpdate = false
+        detailsMesh.textId = 'details'
+        detailsMesh.watchOrientation = 'center'
+        let translate = texture.image.width * 0.5
+        detailsMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(translate, 0, 0))
+        detailsMesh.position.z = this.currentZPosition
+        detailsMesh.position.x = 50
+        detailsMesh.scale.set(0.5, 0.5, 0.5)
+        detailsMesh.updateMatrix()
+        detailsMesh.updateMatrixWorld()
+        super.add(detailsMesh)
+        Object.assign(
+          detailsMesh,
+          new Fader(detailsMesh, 750),
+          new StickToCamera(detailsMesh, this.subTextsStickToCameraDistance, this.onSubtextSticked)
+        )
       })
     }
 

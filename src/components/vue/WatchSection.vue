@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     getSubTextId (id) {
-      return 'watch-subtext-' + id
+      return 'watch-section-subtext-' + id
     }
   }
 }

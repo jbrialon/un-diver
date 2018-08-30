@@ -207,7 +207,7 @@ export default {
       this.postProcessingManager = new PostProcessingManager(this.renderer, this.scene, this.cameraManager.camera, this.stageSize)
     },
     buildSections () {
-      let currentZPos = 0
+      let currentZPos = CONST.InitialCameraDistance
       let sectionsSlotsCount = this.samples.length
       this.samples.forEach(item => {
         sectionsSlotsCount += item.sectionWeight
@@ -244,7 +244,7 @@ export default {
       if (!this.sceneIsAutoScrolling) this.$store.commit('setCurrentSectionId', event.message)
     },
     setPageHeight () {
-      this.pageHeight = (this.lastSectionZPosition - this.firstSectionZPosition) / CONST.PageHeightMultiplyer + this.stageSize.height
+      this.pageHeight = (this.lastSectionZPosition - this.firstSectionZPosition + CONST.InitialCameraDistance) / CONST.PageHeightMultiplyer + this.stageSize.height
       document.body.style.height = this.pageHeight + 'px'
     },
     onResize () {

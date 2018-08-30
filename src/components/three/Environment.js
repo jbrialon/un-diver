@@ -121,9 +121,10 @@ export default class Environment extends THREE.Object3D {
     this.sharkModel = object
     this.initAnimal(this.sharkModel)
     this.sharkModel.position.y = 200
-    this.sharkModel.position.x = 750
-    this.sharkModel.position.z = -6000
-    this.sharkModel.rotateX(THREE.Math.degToRad(45))
+    this.sharkModel.position.x = 500
+    this.sharkModel.position.z = -4500
+    this.sharkModel.rotateX(THREE.Math.degToRad(30))
+    this.sharkModel.rotateY(THREE.Math.degToRad(45))
     Utils.removeObjectShininess(this.sharkModel)
     super.add(this.sharkModel)
   }
@@ -131,9 +132,9 @@ export default class Environment extends THREE.Object3D {
   onTurtleLoaded = (object) => {
     this.turtleModel = object
     this.initAnimal(this.turtleModel)
-    this.turtleModel.position.y = 150
+    this.turtleModel.position.y = -250
     this.turtleModel.position.x = -500
-    this.turtleModel.position.z = -3000
+    this.turtleModel.position.z = -12000
     this.turtleModel.rotateX(THREE.Math.degToRad(45))
     this.turtleModel.rotateY(THREE.Math.degToRad(45))
     Utils.removeObjectShininess(this.turtleModel)
@@ -143,9 +144,10 @@ export default class Environment extends THREE.Object3D {
   onDiverLoaded = (object) => {
     this.diverModel = object
     this.initAnimal(this.diverModel)
+    this.diverModel.lookAt(-100, 100, -250)
     this.diverModel.position.y = 0
     this.diverModel.position.x = -0
-    this.diverModel.lookAt(-100, 100, -250)
+    this.diverModel.position.z = -5000
     Utils.removeObjectShininess(this.diverModel)
     super.add(this.diverModel)
   }
@@ -172,8 +174,16 @@ export default class Environment extends THREE.Object3D {
 
   updateEnvironment = () => {
     let delta = this.clock.getDelta()
-    if (this.sharkModel) this.sharkModel.position.x -= 1
-    if (this.turtleModel) this.turtleModel.position.x += 0.5
+    if (this.sharkModel) {
+      this.sharkModel.position.x -= 0.65
+      this.sharkModel.position.z += 1
+      this.sharkModel.position.y -= 0.15
+    }
+    if (this.turtleModel) {
+      this.turtleModel.position.x += 0.2
+      this.turtleModel.position.z -= 0.2
+      this.turtleModel.position.y += 0.1
+    }
     if (this.diverModel) {
       // TODO : keep model axis when moving
       this.diverModel.position.x -= 0.1

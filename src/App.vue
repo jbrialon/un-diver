@@ -7,7 +7,7 @@
       <div id="rotate-device-message">
         Please rotate your device to landscape
       </div>
-      <c-watch-subtexts :subtexts="watchSectionSubtextsData" ref="subtexts"></c-watch-subtexts>
+      <c-watch-section :watch-data="samples[0]" ref="subtexts"></c-watch-section>
   </div>
 </template>
 
@@ -28,10 +28,9 @@ import { mapGetters } from 'vuex'
 import Meter from '@/components/vue/Meter.vue'
 import Header from '@/components/vue/Header.vue'
 import SectionsAnchors from '@/components/vue/SectionsAnchors.vue'
-import WatchSectionSubTexts from '@/components/vue/WatchSectionSubTexts.vue'
+import WatchSectionVue from '@/components/vue/WatchSection.vue'
 
 // libs
-// import {TweenMax, Power4} from 'gsap'
 import * as THREE from 'three'
 
 export default {
@@ -40,7 +39,7 @@ export default {
     'c-header': Header,
     'c-meter': Meter,
     'c-sections': SectionsAnchors,
-    'c-watch-subtexts': WatchSectionSubTexts
+    'c-watch-section': WatchSectionVue
   },
   data () {
     return {
@@ -66,10 +65,6 @@ export default {
           id: 0,
           type: 'watch',
           title: 'The New Diver',
-          texturePath: require('./assets/watches/3203.png'),
-          infoLink: 'toto.com',
-          buyLink: 'toto.com',
-          price: '12,000 CHF',
           sectionWeight: 4,
           subTexts: [
             {id: 'bluedial', title: 'model', text: 'Blue Dial'},
@@ -77,7 +72,19 @@ export default {
             {id: 'caliber', title: 'New', text: 'UN-118'},
             {id: 'glowing', title: 'Feature', text: 'Glowing'},
             {id: 'waterproof', title: 'Feature', text: 'Waterproof\nup to 300m'}
-          ]
+          ],
+          details: {
+            title: 'Diver Blue Dial',
+            sku: '1183-170-3/93',
+            movementLabel: 'movement',
+            movementText: 'UN-1180 manufacture w. power reserve, small second and date\nUN certificate, Silicium technology',
+            caseLabel: 'case',
+            caseDiameter: 'Diameter 44mm',
+            caseHeight: 'Height 10.75 mm',
+            caseWater: 'Water resistance 300 m',
+            price: '5\'800 CHF',
+            buyLink: 'www.google.com'
+          }
         },
         {
           id: 1,
@@ -174,12 +181,12 @@ export default {
           case 'watch':
             section = new WatchSection(item)
             this.watchSectionSubtextsData = item.subTexts
-            section.subtextTexture = []
-            // eslint-disable-next-line
-            console.log(this.$refs.subtexts)
+            /*
             this.$nextTick(() => {
               section.subtextsTextures = this.$refs.subtexts.getSubtextsTextures()
+              section.addSubTexts()
             })
+            */
             break
           case 'collection':
             section = new TitleSection(item)

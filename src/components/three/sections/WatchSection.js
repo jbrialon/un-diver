@@ -5,11 +5,12 @@
 import store from '@/store'
 import {TweenMax, Power4, Sine} from 'gsap'
 import * as THREE from 'three'
-import Section from '../Section.js'
+import Section from '@/components/three/Section.js'
 import FBXLoader from 'three-fbxloader-offical'
-import CanvasText from '../../../utils/CanvasText'
-import Fader from '../behaviors/Fader.js'
-import StickToCamera from '../behaviors/StickToCamera.js'
+import CanvasText from '@/utils/CanvasText'
+import Fader from '@/components/three/behaviors/Fader.js'
+import StickToCamera from '@/components/three/behaviors/StickToCamera.js'
+import HtmlTextureManager from '@/utils/HtmlTextureManager.js'
 
 export default class WatchSection extends Section {
     stepsDistance
@@ -21,8 +22,6 @@ export default class WatchSection extends Section {
     watch3DModelSize = new THREE.Vector3()
     watchRotation = new THREE.Vector3()
     watchRotationTween
-    infoButton
-    buyButton
 
     constructor (sectionData) {
       super(sectionData)
@@ -151,42 +150,42 @@ export default class WatchSection extends Section {
       let subTextZpos = -this.stepsDistance
       this.sectionData.subTexts.forEach(textObject => {
         const leftText = textIndex % 2 !== 0
-        let textMesh = CanvasText.getTextMesh(textObject.text, {
-          fontSize: 50,
-          font: '50px Arial, sans-serif',
-          textAlign: 'left',
-          verticalAlign: 'middle',
-          color: 'rgba(255,255,255,1)',
-          allowNewLine: true,
-          lineHeight: 1
-        })
-        textMesh.matrixAutoUpdate = false
-        textMesh.textId = textObject.id
-        textMesh.leftText = leftText
-        const boxSize = new THREE.Vector3()
-        textMesh.geometry.computeBoundingBox()
-        textMesh.geometry.boundingBox.getSize(boxSize)
-        let translate = boxSize.x * 0.5
-        if (!leftText) translate *= -1
-        textMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(translate, 0, 0))
-        textMesh.position.z = subTextZpos
-        textMesh.position.x = leftText ? 85 : -85
-        textMesh.scale.set(0.5, 0.5, 0.5)
-        textMesh.updateMatrix()
-        textMesh.updateMatrixWorld()
-        super.add(textMesh)
-        textIndex++
-        Object.assign(
-          textMesh,
-          new StickToCamera(textMesh, this.subTextsStickToCameraDistance, this.onSubtextSticked)
-        )
-        if (textIndex === 0) {
+        HtmlTextureManager.loadTextureById('watch-subtext-' + textObject.id, texture => {
+          const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
+          const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
+          const textMesh = new THREE.Mesh(geometry, material)
+          textMesh.matrixAutoUpdate = false
+          textMesh.textId = textObject.id
+          textMesh.leftText = leftText
+          const boxSize = new THREE.Vector3()
+          textMesh.geometry.computeBoundingBox()
+          textMesh.geometry.boundingBox.getSize(boxSize)
+          let translate = boxSize.x * 0.5
+          if (!leftText) translate *= -1
+          textMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(translate, 0, 0))
+          textMesh.position.z = subTextZpos
+          textMesh.position.x = leftText ? 85 : -85
+          textMesh.scale.set(0.5, 0.5, 0.5)
+          textMesh.updateMatrix()
+          textMesh.updateMatrixWorld()
+          super.add(textMesh)
+          textIndex++
           Object.assign(
             textMesh,
-            new Fader(textMesh, 750)
+            new StickToCamera(textMesh, this.subTextsStickToCameraDistance, this.onSubtextSticked)
           )
-        }
-        subTextZpos -= this.stepsDistance
+          if (textIndex === 0) {
+            Object.assign(
+              textMesh,
+              new Fader(textMesh, 750)
+            )
+          }
+          subTextZpos -= this.stepsDistance
+        })
       })
+    }
+
+    onSubTextTextureLoaded = (texture) => {
+
     }
 }

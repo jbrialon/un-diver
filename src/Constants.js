@@ -18,6 +18,14 @@ export const CameraNearPlane = 1
 export const CameraFarPlane = 5000
 
 /*
+* ENVIRONMENT
+*/
+export const TerrainModelPath = ModelsPath + 'environment.fbx'
+export const SharkModelPath = ModelsPath + 'shark.fbx'
+export const TurtleModelPath = ModelsPath + 'turtle.fbx'
+export const DiverModelPath = ModelsPath + 'diver.fbx'
+
+/*
 * WATCH SECTION
 */
 export const WatchModelPath = ModelsPath + 'watch/model.obj'

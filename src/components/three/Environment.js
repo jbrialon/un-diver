@@ -132,8 +132,8 @@ export default class Environment extends THREE.Object3D {
   onTurtleLoaded = (object) => {
     this.turtleModel = object
     this.initAnimal(this.turtleModel)
-    this.turtleModel.position.y = -250
-    this.turtleModel.position.x = -500
+    this.turtleModel.position.y = -350
+    this.turtleModel.position.x = -300
     this.turtleModel.position.z = -12000
     this.turtleModel.rotateX(THREE.Math.degToRad(45))
     this.turtleModel.rotateY(THREE.Math.degToRad(45))

@@ -56,6 +56,7 @@ export default {
 .watch-section {
   position: fixed;
   top: 0;
+  width: 10000px;
 
   &__title {
     display: inline-block;

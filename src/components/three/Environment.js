@@ -3,20 +3,17 @@
 * add to the scene fishes, rocks etc...
 */
 import {TweenMax, Power4} from 'gsap'
-import * as CONST from '../../Constants'
-import * as THREE from 'three'
+import * as CONST from '@/Constants'
+// TODO : fix those imports, its ugly
+import THREE from '@/reflectance/ReflectanceImports'
 import FBXLoader from 'three-fbxloader-offical'
-import GuiManager from '../../utils/GuiManager'
-import Utils from '../../utils/Utils'
-import AnimationLoopManager from '../../utils/AnimationLoopManager'
-import Plankton from './Plankton.js'
+import GuiManager from '@/utils/GuiManager'
+import Utils from '@/utils/Utils'
+import AnimationLoopManager from '@/utils/AnimationLoopManager'
+// import Plankton from '@/components/three/Plankton.js'
 
-export default class Environment {
+export default class Environment extends THREE.Object3D {
   clock = new THREE.Clock();
-  terrainModelPath = 'environment.fbx'
-  sharkModelPath = 'shark.fbx'
-  turtleModelPath = 'turtle.fbx'
-  diverModelPath = 'diver.fbx'
   scene
   sceneFarDistance
   terrainModel
@@ -32,18 +29,24 @@ export default class Environment {
   backgroundColor = new THREE.Color()
   backgroundDepthColorDarken = 1
   backgroundNightColorDarken = 1
+  ambientLightFactor = 1
+  directionnalLightFactor = 1
+  nightFactor = 1
 
   constructor (scene, renderer, sceneFarDistance) {
+    super()
     this.scene = scene
     this.renderer = renderer
     this.sceneFarDistance = sceneFarDistance
+    Object.assign(this, THREE.EventDispatcher)
+    this.init()
   }
 
   init () {
     this.scene.fog = new THREE.FogExp2(this.backgroundColor, CONST.FogDensity)
 
     this.ambientLight = new THREE.AmbientLight(0xffffff)
-    this.scene.add(this.ambientLight)
+    super.add(this.ambientLight)
 
     this.directionalLight = new THREE.DirectionalLight(0xffffff)
     this.directionalLight.position.x = 10
@@ -51,24 +54,52 @@ export default class Environment {
     this.directionalLight.position.z = 2
     this.directionalLight.position.normalize()
     this.directionalLight.intensity = 1
-    this.scene.add(this.directionalLight)
+    super.add(this.directionalLight)
+
+    let guiLightFolder = GuiManager.addFolder('Lights')
+    guiLightFolder.add(this, 'ambientLightFactor', 0, 2).name('Ambient')
+    guiLightFolder.add(this, 'directionnalLightFactor', 0, 2).name('Directionnal')
 
     let loader = new FBXLoader()
-    loader.load(this.terrainModelPath, (object) => this.onTerrainLoaded(object))
-    loader.load(this.sharkModelPath, (object) => this.onSharkLoaded(object))
-    loader.load(this.turtleModelPath, (object) => this.onTurtleLoaded(object))
-    loader.load(this.diverModelPath, (object) => this.onDiverLoaded(object))
+    loader.load(CONST.TerrainModelPath, this.onTerrainLoaded)
+    loader.load(CONST.SharkModelPath, this.onSharkLoaded)
+    loader.load(CONST.TurtleModelPath, this.onTurtleLoaded)
+    loader.load(CONST.DiverModelPath, this.onDiverLoaded)
+
+    // this.scene.add(new THREE.HemisphereLight(0x443333, 0x222233, 4))
+    // Set up environment map
+    const hdrUrls = this.genEnvironementMapCubeUrls(CONST.HdrEnvTexturePath, '.hdr')
+    new THREE.HDRCubeTextureLoader().load(THREE.UnsignedByteType, hdrUrls, this.onEnvironmentLoaded)
 
     // set up plankton
-    let plankton = new Plankton(this.sceneFarDistance)
-    plankton.visible = false
-    this.scene.add(plankton)
-    GuiManager.add(plankton, 'visible').name('Plankton')
+    // let plankton = new Plankton(this.sceneFarDistance)
+    // plankton.visible = false
+    // super.add(plankton)
+    // GuiManager.add(plankton, 'visible').name('Plankton')
 
     AnimationLoopManager.addCallback(this.updateEnvironment)
   }
 
-  onTerrainLoaded (object) {
+  genEnvironementMapCubeUrls (prefix, postfix) {
+    return [
+      prefix + 'px' + postfix, prefix + 'nx' + postfix,
+      prefix + 'py' + postfix, prefix + 'ny' + postfix,
+      prefix + 'pz' + postfix, prefix + 'nz' + postfix
+    ]
+  }
+
+  onEnvironmentLoaded = (cubeMap) => {
+    let pmremGenerator = new THREE.PMREMGenerator(cubeMap)
+    pmremGenerator.update(this.renderer)
+    let pmremCubeUVPacker = new THREE.PMREMCubeUVPacker(pmremGenerator.cubeLods)
+    pmremCubeUVPacker.update(this.renderer)
+    this.dispatchEvent({type: 'environmentmaploaded', texture: pmremCubeUVPacker.CubeUVRenderTarget.texture})
+    cubeMap.dispose()
+    pmremGenerator.dispose()
+    pmremCubeUVPacker.dispose()
+  }
+
+  onTerrainLoaded = (object) => {
     this.terrainModel = object
     this.terrainModel.children[2].material.side = THREE.BackSide
     this.terrainModel.position.x = -2922
@@ -86,7 +117,7 @@ export default class Environment {
     guiTerrainFolder.add(this.terrainModel.rotation, 'x', 0, Math.PI).name('rotationX')
   }
 
-  onSharkLoaded (object) {
+  onSharkLoaded = (object) => {
     this.sharkModel = object
     this.initAnimal(this.sharkModel)
     this.sharkModel.position.y = 200
@@ -94,10 +125,10 @@ export default class Environment {
     this.sharkModel.position.z = -6000
     this.sharkModel.rotateX(THREE.Math.degToRad(45))
     Utils.removeObjectShininess(this.sharkModel)
-    this.scene.add(this.sharkModel)
+    super.add(this.sharkModel)
   }
 
-  onTurtleLoaded (object) {
+  onTurtleLoaded = (object) => {
     this.turtleModel = object
     this.initAnimal(this.turtleModel)
     this.turtleModel.position.y = 150
@@ -106,17 +137,17 @@ export default class Environment {
     this.turtleModel.rotateX(THREE.Math.degToRad(45))
     this.turtleModel.rotateY(THREE.Math.degToRad(45))
     Utils.removeObjectShininess(this.turtleModel)
-    this.scene.add(this.turtleModel)
+    super.add(this.turtleModel)
   }
 
-  onDiverLoaded (object) {
+  onDiverLoaded = (object) => {
     this.diverModel = object
     this.initAnimal(this.diverModel)
     this.diverModel.position.y = 0
     this.diverModel.position.x = -0
     this.diverModel.lookAt(-100, 100, -250)
     Utils.removeObjectShininess(this.diverModel)
-    this.scene.add(this.diverModel)
+    super.add(this.diverModel)
   }
 
   initAnimal (animalModel) {
@@ -156,8 +187,10 @@ export default class Environment {
     }
 
     this.backgroundDepthColorDarken = 1 - (window.AppScrollPercentage * 0.5)
-    this.ambientLight.intensity = this.directionalLight.intensity = this.backgroundNightColorDarken * this.backgroundDepthColorDarken
-    this.backgroundColor = this.surfaceColor.clone().lerp(this.bottomColor, window.AppScrollPercentage).multiplyScalar(this.backgroundNightColorDarken * this.backgroundDepthColorDarken)
+    this.nightFactor = this.backgroundNightColorDarken * this.backgroundDepthColorDarken
+    this.ambientLight.intensity = this.nightFactor * this.ambientLightFactor
+    this.directionalLight.intensity = this.nightFactor * this.directionnalLightFactor
+    this.backgroundColor = this.surfaceColor.clone().lerp(this.bottomColor, window.AppScrollPercentage).multiplyScalar(this.nightFactor)
     this.scene.background = this.backgroundColor
     this.scene.fog.color = this.backgroundColor
   }

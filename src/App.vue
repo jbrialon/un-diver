@@ -32,6 +32,7 @@ import WatchSectionVue from '@/components/vue/WatchSection.vue'
 
 // libs
 import * as THREE from 'three'
+import GuiManager from '@/utils/GuiManager'
 
 export default {
   name: 'Ulysse-Nardin-App',
@@ -59,6 +60,7 @@ export default {
       scrollTween: null,
       sectionsDepthList: [],
       ThreeClock: new THREE.Clock(),
+      watchSection: null,
       samples: [
         {
           id: 0,
@@ -148,6 +150,11 @@ export default {
       this.renderer.setPixelRatio(
         window.devicePixelRatio || window.webkitDevicePixelRatio || 1
       )
+
+      this.renderer.gammaInput = true
+      this.renderer.gammaOutput = true
+      this.renderer.toneMapping = THREE.LinearToneMapping
+
       this.vrRenderer = new VrRenderer(this.renderer)
       this.vrRenderer.setSize(this.stageSize.width, this.stageSize.height)
       this.vrRenderer.setEyeSeparation(1.3)
@@ -158,10 +165,43 @@ export default {
       window.AppStageSize = this.stageSize
       window.AppRenderer = this.renderer
       window.AppScene = this.scene
+
+      let renderOptionFolder = GuiManager.addFolder('Render Options')
+      let toneMappingOptions = {None: THREE.NoToneMapping, Linear: THREE.LinearToneMapping, Reinhard: THREE.ReinhardToneMapping, Uncharted2: THREE.Uncharted2ToneMapping, Cineon: THREE.CineonToneMapping}
+      let currentToneMapping = {value: 'Linear'}
+      renderOptionFolder.add(currentToneMapping, 'value', Object.keys(toneMappingOptions)).onChange((value) => {
+        this.renderer.toneMapping = toneMappingOptions[value]
+        this.onRendererSettingsChanged()
+      })
+      renderOptionFolder.add(this.renderer, 'toneMappingExposure', 0, 10).name('Exposure').onChange(this.onRendererSettingsChanged)
+      renderOptionFolder.add(this.renderer, 'toneMappingWhitePoint', 0, 2).name('White point').onChange(this.onRendererSettingsChanged)
+      renderOptionFolder.add(this.renderer, 'gammaInput').name('Gamma Input').onChange(this.onRendererSettingsChanged)
+      renderOptionFolder.add(this.renderer, 'gammaOutput').name('Gamma Output').onChange(this.onRendererSettingsChanged)
+      renderOptionFolder.add(this.renderer, 'gammaFactor', 0, 5).name('Gamma Factor').onChange(this.onRendererSettingsChanged)
+    },
+    onRendererSettingsChanged (value) {
+      /* eslint-disable */
+      console.log('-----------------------')
+      console.log('toneMapping', this.renderer.toneMapping)
+      console.log('toneMappingExposure', this.renderer.toneMappingExposure)
+      console.log('toneMappingWhitePoint', this.renderer.toneMappingWhitePoint)
+      console.log('gammaInput', this.renderer.gammaInput)
+      console.log('gammaOutput', this.renderer.gammaOutput)
+      console.log('gammaFactor', this.renderer.gammaFactor)
+      /* eslint-enable */
+      this.scene.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.material.needsUpdate = true
+        }
+      })
     },
     initEnvironment () {
       this.envManager = new Environment(this.scene, this.renderer, this.lastSectionZPosition)
-      this.envManager.init()
+      this.envManager.addEventListener('environmentmaploaded', this.onEnvironmentMapLoaded)
+      this.scene.add(this.envManager)
+    },
+    onEnvironmentMapLoaded (event) {
+      this.watchSection.setEnvironmentMap(event.texture)
     },
     initPostProcessing () {
       this.postProcessingManager = new PostProcessingManager(this.renderer, this.scene, this.cameraManager.camera, this.stageSize)
@@ -179,6 +219,7 @@ export default {
         switch (item.type) {
           case 'watch':
             section = new WatchSection(item)
+            this.watchSection = section
             break
           case 'collection':
             section = new TitleSection(item)
@@ -377,5 +418,8 @@ export default {
   opacity: 0.4 !important;
   bottom: 0;
   top: auto !important;
+}
+.gui {
+  margin-top: 75px;
 }
 </style>

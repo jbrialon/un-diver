@@ -11,6 +11,7 @@
     "canvas-text-wrapper": "^0.10.2",
     "dat.gui": "^0.7.2",
     "gsap": "^2.0.1",
+    "html2canvas": "^1.0.0-alpha.12",
     "raw-loader": "^0.5.1",
     "stats.js": "^0.17.0",
     "three": "^0.95.0",

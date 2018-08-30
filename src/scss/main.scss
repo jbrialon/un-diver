@@ -20,3 +20,13 @@ button {
   color:$white;
   cursor: pointer;
 }
+
+.visuallyhidden {
+  position: absolute!important;
+  clip: rect(0 0 0 0)!important;
+  -webkit-clip-path: polygon(0 0)!important;
+  clip-path: polygon(0 0)!important;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+}

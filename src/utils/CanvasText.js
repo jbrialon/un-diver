@@ -26,13 +26,7 @@ export default class CanvasText {
     ctx.fillStyle = options.color
     TEXTUTIL.CanvasTextWrapper(canvas, text, options)
 
-    const texture = new THREE.Texture(canvas)
-    texture.needsUpdate = true
-    texture.minFilter = THREE.LinearFilter
-    const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
-    const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
-    const mesh = new THREE.Mesh(geometry, material)
-    return mesh
+    return CanvasText.getMesh(canvas)
   }
 
   static getLongestLineInText (textLineArray) {
@@ -40,5 +34,15 @@ export default class CanvasText {
       return (b.length > a.length) ? b : a
     })
     return longestLine
+  }
+
+  static getMesh (canvas) {
+    const texture = new THREE.Texture(canvas)
+    texture.needsUpdate = true
+    texture.minFilter = THREE.LinearFilter
+    const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
+    const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
+    const mesh = new THREE.Mesh(geometry, material)
+    return mesh
   }
 }

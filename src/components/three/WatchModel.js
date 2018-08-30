@@ -10,7 +10,6 @@ export default class WatchModel extends THREE.Object3D {
   material = new THREE.MeshStandardMaterial()
 
   rotationTween
-  watchGlowMesh
 
   hoursHand
   minutesHand
@@ -29,16 +28,12 @@ export default class WatchModel extends THREE.Object3D {
     this.material.metalness = 1
     this.material.map = this.textureLoader.load(CONST.WatchDiffuseMap)
     this.material.metalnessMap = this.material.roughnessMap = this.textureLoader.load(CONST.WatchMetalnessMap)
+    this.material.emissive = new THREE.Color(0xffffff)
+    this.material.emissiveIntensity = 0
+    this.material.emissiveMap = this.textureLoader.load(CONST.WatchEmissiveMap)
 
     this.model.traverse((child) => {
       if (child instanceof THREE.Mesh) {
-        if (child.name === 'case') {
-          this.watchGlowMesh = child.clone()
-          this.watchGlowMesh.material = new THREE.MeshBasicMaterial({color: 0xbbff00})
-          this.watchGlowMesh.material.transparent = true
-          this.watchGlowMesh.material.opacity = (store.state.nightMode) ? 1 : 0
-          child.parent.add(this.watchGlowMesh)
-        }
         child.material = this.material
       }
     })
@@ -67,6 +62,7 @@ export default class WatchModel extends THREE.Object3D {
     this.rotationTween = TweenMax.set(this.model.rotation, {y: 0})
 
     this.initHands()
+    this.setNightMode(store.state.nightMode)
   }
 
   initHands () {
@@ -107,12 +103,14 @@ export default class WatchModel extends THREE.Object3D {
   }
 
   setNightMode (activated) {
-    if (this.watchGlowMesh) {
-      TweenMax.to(this.watchGlowMesh.material, 0.5, {
-        opacity: activated ? 1 : 0,
-        ease: Power4.easeInOut
-      })
-    }
+    TweenMax.to(this.material, 0.5, {
+      envMapIntensity: activated ? 0.2 : 2,
+      ease: Power4.easeInOut
+    })
+    TweenMax.to(this.material, 0.5, {
+      emissiveIntensity: activated ? 1 : 0,
+      ease: Power4.easeInOut
+    })
   }
 
   setHandsRotation = () => {
@@ -121,14 +119,14 @@ export default class WatchModel extends THREE.Object3D {
     let minutes = date.getMinutes()
     let hours = date.getHours()
 
-    this.hoursHand.rotation.z = THREE.Math.degToRad((hours * 30) + (minutes / 2))
-    this.minutesHand.rotation.z = THREE.Math.degToRad(minutes * 6)
-    this.secondsHand.rotation.z = THREE.Math.degToRad(seconds * 6)
+    this.hoursHand.rotation.z = -THREE.Math.degToRad((hours * 30) + (minutes / 2))
+    this.minutesHand.rotation.z = -THREE.Math.degToRad(minutes * 6)
+    this.secondsHand.rotation.z = -THREE.Math.degToRad(seconds * 6)
   }
 
   setEnvironmentMap (texture) {
     this.material.envMap = texture
-    // this.material.envMapIntensity = 4
+    this.material.envMapIntensity = 2
     this.material.needsUpdate = true
   }
 }

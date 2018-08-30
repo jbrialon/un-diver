@@ -10,6 +10,7 @@ export const SeaBottomColorCode = 0x0e293c // environment color at the bottom of
 export const FogDensity = 0.0005 // environment fog density
 export const ModelsPath = 'models/' // 3D models folder
 export const HdrEnvTexturePath = 'textures/environmentmap/' // HDR texture for environment map
+export const NightOpacity = 0.2
 
 /*
 * CAMERA
@@ -33,7 +34,7 @@ export const WatchModelPath = ModelsPath + 'watch/model.obj'
 export const WatchTexturesPath = ModelsPath + 'watch/'
 export const WatchDiffuseMap = 'Watch_A.jpg'
 export const WatchMetalnessMap = 'Watch_RM.png'
-export const NightOpacity = 0.3
+export const WatchEmissiveMap = 'Watch_EM.png'
 
 /*
 * BOUTIQUE SECTION

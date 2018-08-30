@@ -76,7 +76,27 @@ export default class Environment extends THREE.Object3D {
     // plankton.visible = false
     // super.add(plankton)
     // GuiManager.add(plankton, 'visible').name('Plankton')
-
+    /*
+    var video = document.getElementById('video')
+    video.play()
+    var texture = new THREE.VideoTexture(video)
+    texture.minFilter = THREE.LinearFilter
+    texture.magFilter = THREE.LinearFilter
+    texture.format = THREE.RGBFormat
+    let planeGeo = new THREE.PlaneGeometry(640, 360)
+    let material = new THREE.MeshLambertMaterial({color: 0xffffff, map: texture})
+    material.emissive = new THREE.Color(0xffffff)
+    material.emissiveIntensity = 2
+    material.emissiveMap = material.map.clone()
+    material.transparent = true
+    material.blending = THREE.AdditiveBlending
+    let plane = new THREE.Mesh(planeGeo, material)
+    plane.position.y = 250
+    plane.position.x = -500
+    plane.position.z = -19000
+    plane.rotation.y = Math.PI * 0.15
+    super.add(plane)
+    */
     AnimationLoopManager.addCallback(this.updateEnvironment)
   }
 

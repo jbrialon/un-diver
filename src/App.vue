@@ -1,5 +1,6 @@
 <template>
   <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation}">
+      <video id="video" autoplay="autoplay" loop="loop" muted="muted" src="textures/video/jellyfish-animation.mp4"></video>
       <c-watch-section :watch-data="samples[0]" ref="subtexts"></c-watch-section>
       <div id="stage" ref="stage"></div>
       <c-header></c-header>

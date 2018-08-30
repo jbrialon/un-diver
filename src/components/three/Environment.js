@@ -21,6 +21,9 @@ export default class Environment extends THREE.Object3D {
   turtleModel
   diverModel
   modelMixers = []
+  jellyFishVideo
+  jellyFishMaterial
+  jellyFishMesh
   ambientLight
   directionalLight
 
@@ -76,27 +79,9 @@ export default class Environment extends THREE.Object3D {
     // plankton.visible = false
     // super.add(plankton)
     // GuiManager.add(plankton, 'visible').name('Plankton')
-    /*
-    var video = document.getElementById('video')
-    video.play()
-    var texture = new THREE.VideoTexture(video)
-    texture.minFilter = THREE.LinearFilter
-    texture.magFilter = THREE.LinearFilter
-    texture.format = THREE.RGBFormat
-    let planeGeo = new THREE.PlaneGeometry(640, 360)
-    let material = new THREE.MeshLambertMaterial({color: 0xffffff, map: texture})
-    material.emissive = new THREE.Color(0xffffff)
-    material.emissiveIntensity = 2
-    material.emissiveMap = material.map.clone()
-    material.transparent = true
-    material.blending = THREE.AdditiveBlending
-    let plane = new THREE.Mesh(planeGeo, material)
-    plane.position.y = 250
-    plane.position.x = -500
-    plane.position.z = -19000
-    plane.rotation.y = Math.PI * 0.15
-    super.add(plane)
-    */
+
+    this.addJellyFish()
+
     AnimationLoopManager.addCallback(this.updateEnvironment)
   }
 
@@ -172,6 +157,30 @@ export default class Environment extends THREE.Object3D {
     super.add(this.diverModel)
   }
 
+  addJellyFish () {
+    this.jellyFishVideo = document.getElementById('video')
+    this.jellyFishVideo.play()
+    var texture = new THREE.VideoTexture(this.jellyFishVideo)
+    texture.minFilter = THREE.LinearFilter
+    texture.magFilter = THREE.LinearFilter
+    texture.format = THREE.RGBFormat
+    let planeGeo = new THREE.PlaneGeometry(640, 360)
+    this.jellyFishMaterial = new THREE.MeshLambertMaterial({color: 0xffffff, map: texture})
+    this.jellyFishMaterial.emissive = new THREE.Color(0xffffff)
+    this.jellyFishMaterial.emissiveIntensity = 1
+    this.jellyFishMaterial.emissiveMap = this.jellyFishMaterial.map.clone()
+    this.jellyFishMaterial.transparent = true
+    this.jellyFishMaterial.opacity = 1
+    this.jellyFishMaterial.fog = false
+    this.jellyFishMaterial.blending = THREE.AdditiveBlending
+    this.jellyFishMesh = new THREE.Mesh(planeGeo, this.jellyFishMaterial)
+    this.jellyFishMesh.position.y = 0
+    this.jellyFishMesh.position.x = -500
+    this.jellyFishMesh.position.z = -19000
+    this.jellyFishMesh.rotation.y = Math.PI * 0.15
+    super.add(this.jellyFishMesh)
+  }
+
   initAnimal (animalModel) {
     this.initModelAnimation(animalModel)
     animalModel.traverse(function (child) {
@@ -190,6 +199,14 @@ export default class Environment extends THREE.Object3D {
 
   toggleNight (activated) {
     TweenMax.to(this, 0.5, {ease: Power4.easeOut, backgroundNightColorDarken: activated ? CONST.NightOpacity : 1})
+    TweenMax.to(this.jellyFishMaterial, 0.5, {ease: Power4.easeOut, opacity: activated ? 1 : 0})
+    activated ? this.jellyFishVideo.play() : this.jellyFishVideo.pause()
+    if (activated) {
+      this.jellyFishMesh.position.y = 0
+      this.jellyFishVideo.play()
+    } else {
+      this.jellyFishVideo.pause()
+    }
   }
 
   updateEnvironment = () => {
@@ -210,6 +227,7 @@ export default class Environment extends THREE.Object3D {
       this.diverModel.position.y += 0.1
       this.diverModel.position.z -= 0.7
     }
+    this.jellyFishMesh.position.y += 0.5
     if (this.modelMixers.length > 0) {
       for (var i = 0; i < this.modelMixers.length; i++) {
         this.modelMixers[i].update(delta)

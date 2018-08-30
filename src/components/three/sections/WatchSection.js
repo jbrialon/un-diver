@@ -146,6 +146,7 @@ export default class WatchSection extends Section {
       let subTextZpos = -this.stepsDistance
       this.sectionData.subTexts.forEach(textObject => {
         const leftText = textIndex % 2 !== 0
+        const textZPos = subTextZpos
         HtmlTextureManager.loadTextureById('watch-subtext-' + textObject.id, texture => {
           const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
           const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
@@ -156,20 +157,20 @@ export default class WatchSection extends Section {
           let translate = texture.image.width * 0.5
           if (!leftText) translate *= -1
           textMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(translate, 0, 0))
-          textMesh.position.z = subTextZpos
+          textMesh.position.z = textZPos
           textMesh.position.x = leftText ? 85 : -85
           textMesh.scale.set(0.5, 0.5, 0.5)
           textMesh.updateMatrix()
           textMesh.updateMatrixWorld()
           super.add(textMesh)
-          textIndex++
           Object.assign(
             textMesh,
             new Fader(textMesh, 750),
             new StickToCamera(textMesh, this.subTextsStickToCameraDistance, this.onSubtextSticked)
           )
-          subTextZpos -= this.stepsDistance
         })
+        subTextZpos -= this.stepsDistance
+        textIndex++
       })
     }
 

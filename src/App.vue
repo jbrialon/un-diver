@@ -59,7 +59,6 @@ export default {
       scrollTween: null,
       sectionsDepthList: [],
       ThreeClock: new THREE.Clock(),
-      watchSectionSubtextsData: [],
       samples: [
         {
           id: 0,
@@ -180,13 +179,6 @@ export default {
         switch (item.type) {
           case 'watch':
             section = new WatchSection(item)
-            this.watchSectionSubtextsData = item.subTexts
-            /*
-            this.$nextTick(() => {
-              section.subtextsTextures = this.$refs.subtexts.getSubtextsTextures()
-              section.addSubTexts()
-            })
-            */
             break
           case 'collection':
             section = new TitleSection(item)

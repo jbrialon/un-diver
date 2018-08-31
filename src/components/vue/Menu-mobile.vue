@@ -1,7 +1,15 @@
 <template>
-  <nav class="menu-mobile">
-
-  </nav>
+  <transition name="fade">
+    <div class="menu-mobile" v-if="menuMobileActivated">
+      <div class="menu-mobile__center">
+        <h2 class="menu-mobile__title">
+          Diver Experience
+        </h2>
+        <c-link class="menu-mobile__item" :href="''" :label="'diver collection'"></c-link>
+        <c-link class="menu-mobile__item" :href="''" :label="'find a boutique'"></c-link>
+      </div>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -9,7 +17,7 @@ import { mapGetters } from 'vuex'
 import Link from '@/components/vue/Link.vue'
 
 export default {
-  name: 'Menu',
+  name: 'Menu-Mobile',
   data () {
     return {
       sound: true
@@ -20,25 +28,52 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'vrModeActivated'
+      'menuMobileActivated'
     ])
   },
   methods: {
     toggleSound () {
       this.sound = !this.sound
-    },
-    toggleVrMode () {
-      this.$store.commit('toggleVrMode')
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '../../scss/_vars.scss';
+@import '@/scss/_vars.scss';
 
 .menu-mobile {
-  display:flex;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:$white;
+  z-index:$zMenuMobile;
+  width:100vw;
+  height:100vh;
 
+  &__title {
+    font-size:40px;
+    font-weight:$fw-medium;
+    color:$darkblue;
+    margin-bottom:60px;
+  }
+  &__center {
+    display:flex;
+    text-align: center;
+    margin:auto;
+    flex-direction: column;
+    margin-top:105px;
+    max-width:60vw;
+  }
+
+  &__item {
+    color:$darkblue;
+    margin-bottom:25px;
+    &:last-child {
+      margin-bottom:0;
+    }
+  }
 }
 </style>

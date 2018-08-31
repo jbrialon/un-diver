@@ -1,0 +1,10 @@
+// ------------------------------------------------------------------------------------------
+// Default Fade
+// ------------------------------------------------------------------------------------------
+.fade-enter-active, .fade-leave-active {
+  opacity:1;
+  transition: opacity 500ms ease-out;
+}
+.fade-enter, .fade-leave-active {
+  opacity: 0
+}

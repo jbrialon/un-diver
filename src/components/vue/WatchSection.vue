@@ -40,8 +40,6 @@ export default {
       required: true
     }
   },
-  mounted () {
-  },
   methods: {
     getSubTextId (id) {
       return 'watch-section-subtext-' + id

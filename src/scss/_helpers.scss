@@ -13,3 +13,9 @@
   width: 1px;
   height: 1px;
 }
+
+.hide-for-mobile {
+  @include small-only {
+    display:none !important;
+  }
+}

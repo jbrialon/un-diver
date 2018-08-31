@@ -3,6 +3,7 @@
       <c-watch-section :watch-data="samples[0]" ref="subtexts"></c-watch-section>
       <div id="stage" ref="stage"></div>
       <c-header></c-header>
+      <c-menu-mobile></c-menu-mobile>
       <c-sections :items="samples"></c-sections>
       <c-meter></c-meter>
       <div id="rotate-device-message">
@@ -29,6 +30,7 @@ import Meter from '@/components/vue/Meter.vue'
 import Header from '@/components/vue/Header.vue'
 import SectionsAnchors from '@/components/vue/SectionsAnchors.vue'
 import WatchSectionVue from '@/components/vue/WatchSection.vue'
+import MenuMobile from '@/components/vue/Menu-mobile.vue'
 
 // libs
 import * as THREE from 'three'
@@ -40,7 +42,8 @@ export default {
     'c-header': Header,
     'c-meter': Meter,
     'c-sections': SectionsAnchors,
-    'c-watch-section': WatchSectionVue
+    'c-watch-section': WatchSectionVue,
+    'c-menu-mobile': MenuMobile
   },
   data () {
     return {
@@ -361,7 +364,6 @@ export default {
   #app {
     font-family: 'Roboto', sans-serif;
     height: 100vh;
-
     &.vr {
       #logo, #menu-about, #menu-help, #sections {
         display: none;
@@ -371,10 +373,6 @@ export default {
         #rotate-device-message {
           display: block;
         }
-      }
-
-      #menu-vr {
-        opacity: 1;
       }
     }
 

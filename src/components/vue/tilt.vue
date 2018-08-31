@@ -37,6 +37,10 @@ export default {
 @import '@/scss/_vars.scss';
 
 .tilt {
-
+  position:absolute;
+  z-index:999;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
 }
 </style>

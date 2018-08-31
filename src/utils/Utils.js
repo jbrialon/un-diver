@@ -26,6 +26,10 @@ class Utils {
     return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n
   }
 
+  static isMobile () {
+    return window.matchMedia('(max-width: 768px)').matches
+  }
+
   static removeObjectShininess (object) {
     object.traverse((child) => {
       if (child.material && child.material.type === 'MeshPhongMaterial') {

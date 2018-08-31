@@ -24,12 +24,14 @@ import { mapGetters } from 'vuex'
 import Link from '@/components/vue/Link.vue'
 import iconVr from '@/components/icon/icon-vr.vue'
 
+import Utils from '@/utils/Utils'
+
 export default {
   name: 'Menu',
   data () {
     return {
       sound: true,
-      isMobile: window.matchMedia('(max-width: 768px)').matches
+      isMobile: Utils.isMobile()
     }
   },
   components: {

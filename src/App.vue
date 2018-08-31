@@ -7,6 +7,8 @@
       <c-menu-mobile></c-menu-mobile>
       <c-sections :items="samples"></c-sections>
       <c-meter></c-meter>
+      <!-- <c-tilt></c-tilt> -->
+      <c-social-networks></c-social-networks>
       <div id="rotate-device-message">
         Please rotate your device to landscape
       </div>
@@ -33,6 +35,8 @@ import SectionsAnchors from '@/components/vue/SectionsAnchors.vue'
 import WatchSectionVue from '@/components/vue/WatchSection.vue'
 import MenuMobile from '@/components/vue/Menu-mobile.vue'
 import OtherModelsSectionVue from '@/components/vue/OtherModelsSection.vue'
+import socialNetworks from '@/components/vue/social-networks.vue'
+import Tilt from '@/components/vue/tilt.vue'
 
 // libs
 import * as THREE from 'three'
@@ -46,7 +50,9 @@ export default {
     'c-sections': SectionsAnchors,
     'c-watch-section': WatchSectionVue,
     'c-menu-mobile': MenuMobile,
-    'c-other-models-section': OtherModelsSectionVue
+    'c-other-models-section': OtherModelsSectionVue,
+    'c-social-networks': socialNetworks,
+    'c-tilt': Tilt
   },
   data () {
     return {

@@ -28,6 +28,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/scss/_vars.scss';
+@import '@/scss/_mixins.scss';
 
 .sections {
   z-index: 1;
@@ -36,7 +37,7 @@ export default {
   left: 4vw;
   transform: translateY(-50%);
 
-  @media screen and (max-width: 480px) {
+  @include small-only {
     display: none;
   }
 

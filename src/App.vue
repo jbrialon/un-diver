@@ -370,6 +370,7 @@ export default {
 
 <style lang="scss">
   @import '@/scss/main.scss';
+  @import '@/scss/_mixins.scss';
 
   html {
     -webkit-font-smoothing: antialiased;
@@ -450,7 +451,7 @@ export default {
 }
 .gui {
   margin-top: 75px;
-  @media screen and (max-width: 480px) {
+  @include small-only {
       display: none;
   }
 }

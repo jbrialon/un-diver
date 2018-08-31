@@ -59,11 +59,5 @@ export default {
       display:none;
     }
   }
-
-  @media screen and (max-width: 480px) {
-    &__menu, &__link {
-      display: none;
-    }
-  }
 }
 </style>

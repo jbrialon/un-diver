@@ -10,6 +10,7 @@ import FBXLoader from 'three-fbxloader-offical'
 import GuiManager from '@/utils/GuiManager'
 import Utils from '@/utils/Utils'
 import AnimationLoopManager from '@/utils/AnimationLoopManager'
+import FishManager from '@/components/three/fishes/FishManager.js'
 // import Plankton from '@/components/three/Plankton.js'
 
 export default class Environment extends THREE.Object3D {
@@ -21,6 +22,7 @@ export default class Environment extends THREE.Object3D {
   turtleModel
   diverModel
   modelMixers = []
+  fishManager
   ambientLight
   directionalLight
 
@@ -77,6 +79,9 @@ export default class Environment extends THREE.Object3D {
     // super.add(plankton)
     // GuiManager.add(plankton, 'visible').name('Plankton')
 
+    this.fishManager = new FishManager()
+    this.add(this.fishManager)
+
     AnimationLoopManager.addCallback(this.updateEnvironment)
   }
 
@@ -101,7 +106,7 @@ export default class Environment extends THREE.Object3D {
 
   onTerrainLoaded = (object) => {
     this.terrainModel = object
-    this.terrainModel.children[2].material.side = THREE.BackSide
+    // this.terrainModel.children[2].material.side = THREE.BackSide
     this.terrainModel.position.x = -2922
     this.terrainModel.position.y = 9246
     this.terrainModel.position.z = 19676
@@ -201,7 +206,10 @@ export default class Environment extends THREE.Object3D {
     this.ambientLight.intensity = this.nightFactor * this.ambientLightFactor
     this.directionalLight.intensity = this.nightFactor * this.directionnalLightFactor
     this.backgroundColor = this.surfaceColor.clone().lerp(this.bottomColor, window.AppScrollPercentage).multiplyScalar(this.nightFactor)
+    this.ambientLight.color = this.backgroundColor
+    // this.directionalLight.color = this.backgroundColor
     this.scene.background = this.backgroundColor
     this.scene.fog.color = this.backgroundColor
+    this.fishManager.updateFishes()
   }
 }

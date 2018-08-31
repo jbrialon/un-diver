@@ -1,6 +1,7 @@
 <template>
   <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation}">
       <c-watch-section :watch-data="samples[0]" ref="subtexts"></c-watch-section>
+      <c-other-models-section :models-data="samples[1].watches"></c-other-models-section>
       <div id="stage" ref="stage"></div>
       <c-header></c-header>
       <c-sections :items="samples"></c-sections>
@@ -18,8 +19,8 @@ import AnimationLoopManager from '@/utils/AnimationLoopManager'
 import PostProcessingManager from '@/components/three/PostProcessingManager.js'
 import Environment from '@/components/three/Environment.js'
 import VrRenderer from '@/components/three/VrRenderer.js'
-import TitleSection from '@/components/three/sections/TitleSection.js'
 import WatchSection from '@/components/three/sections/WatchSection.js'
+import OtherModelsSection from '@/components/three/sections/OtherModelsSection.js'
 import BoutiqueSection from '@/components/three/sections/BoutiqueSection.js'
 import CameraManager from '@/components/three/CameraManager.js'
 
@@ -29,6 +30,7 @@ import Meter from '@/components/vue/Meter.vue'
 import Header from '@/components/vue/Header.vue'
 import SectionsAnchors from '@/components/vue/SectionsAnchors.vue'
 import WatchSectionVue from '@/components/vue/WatchSection.vue'
+import OtherModelsSectionVue from '@/components/vue/OtherModelsSection.vue'
 
 // libs
 import * as THREE from 'three'
@@ -40,7 +42,8 @@ export default {
     'c-header': Header,
     'c-meter': Meter,
     'c-sections': SectionsAnchors,
-    'c-watch-section': WatchSectionVue
+    'c-watch-section': WatchSectionVue,
+    'c-other-models-section': OtherModelsSectionVue
   },
   data () {
     return {
@@ -60,7 +63,7 @@ export default {
       scrollTween: null,
       sectionsDepthList: [],
       ThreeClock: new THREE.Clock(),
-      watchSection: null,
+      sections: [],
       samples: [
         {
           id: 0,
@@ -89,10 +92,32 @@ export default {
         },
         {
           id: 1,
-          type: 'collection',
+          type: 'other-models',
           title: 'Other models',
-          text: 'Other models',
-          sectionWeight: 0
+          sectionWeight: 0,
+          watches: [
+            {
+              id: 'black',
+              title: 'Black dial',
+              description: 'Rubber\n44 mm',
+              price: '5\'800 CHF',
+              buyLink: 'www.google.com'
+            },
+            {
+              id: 'gold',
+              title: 'Gold Black dial',
+              description: 'Rubber\n44 mm',
+              price: '7\'900 CHF',
+              buyLink: 'www.google.com'
+            },
+            {
+              id: 'white',
+              title: 'Great White',
+              description: 'Rubber\n44 mm',
+              price: '8\'900 CHF',
+              buyLink: 'www.google.com'
+            }
+          ]
         },
         {
           id: 2,
@@ -221,19 +246,20 @@ export default {
             section = new WatchSection(item)
             this.watchSection = section
             break
-          case 'collection':
-            section = new TitleSection(item)
+          case 'other-models':
+            section = new OtherModelsSection(item)
             break
           case 'boutique':
             section = new BoutiqueSection(item)
             break
         }
-        section.matrix.makeTranslation(0, 0, -currentZPos)
+        section.matrix.multiply(new THREE.Matrix4().makeTranslation(0, 0, -currentZPos))
         item.zpos = currentZPos
         currentZPos += item.sectionDepth + sectionSlotDepth
         this.sectionsDepthList.push({id: item.id, start: -item.zpos + sectionSlotDepth, end: -currentZPos})
         this.scene.add(section)
         this.lastSectionZPosition = item.zpos
+        this.sections.push(section)
       })
       this.firstSectionZPosition = this.samples[0].zpos
 
@@ -254,6 +280,9 @@ export default {
       this.cameraManager.setSize(this.stageSize)
       this.postProcessingManager.setSize(this.stageSize)
       this.setPageHeight()
+      this.sections.forEach(section => {
+        section.resize()
+      })
     },
     onScreenOrientationChange (e) {
       this.screenOrientation = window.orientation || 0
@@ -325,7 +354,7 @@ export default {
       document.body.className = activated ? 'vr' : ''
     },
     'goToSectionId' (id) {
-      let scrollVal = Math.floor(this.zPosToScrollTop((this.samples[id].zpos - CONST.CameraDistanceToSection)))
+      let scrollVal = Math.floor(this.zPosToScrollTop((this.samples[id].zpos)))
       this.sceneIsAutoScrolling = true
       this.$store.commit('setCurrentSectionId', id)
       this.cameraManager.scrollTo(scrollVal, () => {
@@ -421,5 +450,8 @@ export default {
 }
 .gui {
   margin-top: 75px;
+  @media screen and (max-width: 480px) {
+      display: none;
+  }
 }
 </style>

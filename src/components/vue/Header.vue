@@ -51,5 +51,11 @@ export default {
   &__menu {
     margin-left:auto;
   }
+
+  @media screen and (max-width: 480px) {
+    &__menu, &__link {
+      display: none;
+    }
+  }
 }
 </style>

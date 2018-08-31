@@ -10,7 +10,8 @@ const store = new Vuex.Store({
     vrMode: false,
     nightMode: false,
     currentSectionId: undefined,
-    goToSectionId: undefined
+    goToSectionId: undefined,
+    viewportSizeAtCameraFocus: undefined
   },
   mutations: {
     toggleVrMode (state) {
@@ -30,6 +31,9 @@ const store = new Vuex.Store({
     },
     setNightMode (state, active) {
       state.nightMode = active
+    },
+    setViewportSizeAtCameraFocus (state, object) {
+      state.viewportSizeAtCameraFocus = object
     }
   },
   getters: {
@@ -44,6 +48,9 @@ const store = new Vuex.Store({
     },
     goToSectionId: state => {
       return state.goToSectionId
+    },
+    viewportSizeAtCameraFocus: state => {
+      return state.viewportSizeAtCameraFocus
     }
   }
 })

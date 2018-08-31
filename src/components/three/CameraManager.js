@@ -2,6 +2,7 @@
 * Manages Camera creation and positioning in space depending on scroll
 * Handles all mobile events and orients camera accordingly
 */
+import store from '@/store'
 import * as CONST from '../../Constants'
 import * as THREE from 'three'
 import {TweenMax, Sine} from 'gsap'
@@ -24,6 +25,8 @@ export default class CameraManager extends THREE.Object3D {
   mousePosition = new THREE.Vector2()
   deviceOrientationInitialQuat = new THREE.Quaternion()
 
+  vewportSizeAtCameraFocus = new THREE.Vector2()
+
   constructor (stageSize) {
     super()
     this.scrollingElement = (document.scrollingElement || document.documentElement)
@@ -40,6 +43,19 @@ export default class CameraManager extends THREE.Object3D {
     AnimationLoopManager.addFirstCallback(this.updateCamera)
 
     GuiManager.add(this, 'resetOrientation').name('Reset Orientation')
+
+    this.setVisibleViewPortSizeAtCameraFocus(CONST.CameraDistanceToSection, this.camera)
+  }
+
+  setVisibleViewPortSizeAtCameraFocus (depth, camera) {
+    const cameraOffset = camera.position.z
+    if (depth < cameraOffset) depth -= cameraOffset
+    else depth += cameraOffset
+    const vFOV = camera.fov * Math.PI / 180
+    this.vewportSizeAtCameraFocus.height = 2 * Math.tan(vFOV / 2) * Math.abs(depth)
+    this.vewportSizeAtCameraFocus.width = this.vewportSizeAtCameraFocus.height * camera.aspect
+
+    store.commit('setViewportSizeAtCameraFocus', this.vewportSizeAtCameraFocus)
   }
 
   set lastSectionZPosition (lastSectionZPosition) {
@@ -185,5 +201,6 @@ export default class CameraManager extends THREE.Object3D {
     this.stageSize = stageSize
     this.camera.aspect = this.stageSize.width / this.stageSize.height
     this.camera.updateProjectionMatrix()
+    this.setVisibleViewPortSizeAtCameraFocus(CONST.CameraDistanceToSection, this.camera)
   }
 }

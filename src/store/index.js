@@ -11,7 +11,8 @@ const store = new Vuex.Store({
     nightMode: false,
     currentSectionId: undefined,
     goToSectionId: undefined,
-    menuMobile: false
+    menuMobile: false,
+    viewportSizeAtCameraFocus: undefined
   },
   mutations: {
     toggleVrMode (state) {
@@ -34,6 +35,9 @@ const store = new Vuex.Store({
     },
     toggleMenuMobile (state) {
       state.menuMobile = !state.menuMobile
+    },
+    setViewportSizeAtCameraFocus (state, object) {
+      state.viewportSizeAtCameraFocus = object
     }
   },
   getters: {
@@ -51,6 +55,9 @@ const store = new Vuex.Store({
     },
     menuMobileActivated: state => {
       return state.menuMobile
+    },
+    viewportSizeAtCameraFocus: state => {
+      return state.viewportSizeAtCameraFocus
     }
   }
 })

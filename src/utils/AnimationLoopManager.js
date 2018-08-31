@@ -3,6 +3,8 @@
 * Adds render function in an pile
 * Then used by renderer with 'setAnimationLoop' function
 */
+import * as Stats from 'stats.js'
+
 class AnimationLoopManager {
   constructor (enforcer) {
     throw new Error('Cannot construct singleton')
@@ -22,6 +24,7 @@ class AnimationLoopManager {
 
   static renderLoop () {
     AnimationLoopManager.callbacks.forEach(callback => callback())
+    AnimationLoopManager.stats.update()
   }
 
   static cleartLoop () {
@@ -30,5 +33,11 @@ class AnimationLoopManager {
 }
 
 AnimationLoopManager.callbacks = []
+AnimationLoopManager.stats = {update: () => {}}
+if (process.env.NODE_ENV === 'development') {
+  AnimationLoopManager.stats = new Stats()
+  AnimationLoopManager.stats.domElement.className = 'stats'
+  document.body.appendChild(AnimationLoopManager.stats.dom)
+}
 
 export default AnimationLoopManager

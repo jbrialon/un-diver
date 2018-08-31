@@ -17,6 +17,10 @@ export default class Section extends THREE.Object3D {
     // this.addDebugCube()
   }
 
+  resize () {
+    // handled in childs
+  }
+
   addDebugCube () {
     const material = new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide})
     const geometry = new THREE.CubeGeometry(100, 100, this.sectionDepth, material)

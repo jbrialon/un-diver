@@ -340,7 +340,7 @@ export default {
 </script>
 
 <style lang="scss">
-  @import './scss/main.scss';
+  @import '@/scss/main.scss';
 
   html {
     -webkit-font-smoothing: antialiased;

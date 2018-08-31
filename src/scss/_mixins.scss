@@ -3,3 +3,53 @@
       -ms-transform: $property;
           transform: $property;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// Custom Sass Mixins
+// --------------------
+// This file contains custom Sass mixins and functions. It will be included
+// in any files that import the "base" partial. To use a mixin from this
+// file, add this line to the top of your .scss file:
+//   @import "base";
+// Then to use a mixin for a particular rule, add this inside the ruleset's
+// curly brackets:
+//   @include mix-in-name;
+////////////////////////////////////////////////////////////////////////////////
+
+@mixin media-query($media-query) {
+  @if $media-query == small {
+    @media only screen and (max-width:$medium - 1) { @content; }
+  }
+
+  @if $media-query == ipad {
+    @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) { @content; }
+  }
+
+  @if $media-query == medium {
+    @media only screen and (min-width:$medium) { @content; }
+  }
+
+  @if $media-query == medium-only {
+    @media only screen and (min-width:$medium) and (max-width: $wide - 1) { @content; }
+  }
+
+  @if $media-query == wide {
+    @media only screen and (min-width:$wide) { @content; }
+  }
+
+  @if $media-query == huge {
+    @media only screen and (min-width:$huge) { @content; }
+  }
+
+  @if $media-query == maxwidth {
+    @media only screen and (min-width:$maxwidth) { @content; }
+  }
+}
+
+@mixin small-only { @include media-query(small) { @content }; }
+@mixin ipad { @include media-query(ipad) { @content }; }
+@mixin medium { @include media-query(medium) { @content }; }
+@mixin medium-only { @include media-query(medium-only) { @content }; }
+@mixin wide { @include media-query(wide) { @content }; }
+@mixin huge { @include media-query(huge) { @content }; }
+@mixin max-width { @include media-query(maxwidth) { @content }; }

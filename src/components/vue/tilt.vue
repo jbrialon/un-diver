@@ -1,6 +1,6 @@
 <template>
   <div class="tilt">
-    <img ref="image" src="../../assets/parralax.jpg">
+    <img ref="image" src="@/assets/parralax.jpg">
   </div>
 </template>
 
@@ -34,12 +34,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../scss/_vars.scss';
+@import '@/scss/_vars.scss';
 
 .tilt {
-  position:absolute;
-  z-index:10;
-  top:20%;
-  left:20%;
+
 }
 </style>

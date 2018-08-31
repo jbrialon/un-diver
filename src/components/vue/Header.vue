@@ -28,7 +28,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../scss/_vars.scss';
+@import '@/scss/_vars.scss';
+@import '@/scss/_mixins.scss';
 
 .header {
   position:relative;
@@ -47,9 +48,16 @@ export default {
     transform:translateX(-50%);
     margin:auto;
   }
-
+  &__link {
+    @include small-only {
+      display:none;
+    }
+  }
   &__menu {
     margin-left:auto;
+    @include small-only {
+      display:none;
+    }
   }
 }
 </style>

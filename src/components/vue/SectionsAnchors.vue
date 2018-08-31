@@ -6,6 +6,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+
 export default {
   name: 'SectionsAnchors',
   props: {
@@ -26,7 +27,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../scss/_vars.scss';
+@import '@/scss/_vars.scss';
 
 .sections {
   z-index: 1;

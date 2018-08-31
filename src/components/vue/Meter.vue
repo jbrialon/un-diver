@@ -6,8 +6,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import AnimationLoopManager from '../../utils/AnimationLoopManager'
-import Utils from '../../utils/Utils'
+import AnimationLoopManager from '@/utils/AnimationLoopManager'
+import Utils from '@/utils/Utils'
 
 export default {
   name: 'Meter',
@@ -33,7 +33,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../scss/_vars.scss';
+@import '@/scss/_vars.scss';
+@import '@/scss/_mixins.scss';
 
 .meter {
   position:relative;
@@ -55,7 +56,7 @@ export default {
     top:4px;
     right:0;
   }
-  @media screen and (max-width: 480px) {
+  @include small-only {
     transform: translateY(-50%) translateX(-50%);
     top: auto;
     right: auto;

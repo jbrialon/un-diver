@@ -48,7 +48,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../scss/_vars.scss';
+@import '@/scss/_vars.scss';
 
 .menu {
   display:flex;

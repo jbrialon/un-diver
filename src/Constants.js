@@ -26,6 +26,8 @@ export const TerrainModelPath = ModelsPath + 'environment.fbx'
 export const SharkModelPath = ModelsPath + 'shark.fbx'
 export const TurtleModelPath = ModelsPath + 'turtle.fbx'
 export const DiverModelPath = ModelsPath + 'diver.fbx'
+export const FishModelPath = ModelsPath + '/fish/fish.obj'
+export const FishTexture = ModelsPath + '/fish/fish.png'
 
 /*
 * WATCH SECTION

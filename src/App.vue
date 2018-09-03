@@ -1,5 +1,6 @@
 <template>
   <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation}">
+      <c-intro></c-intro>
       <c-watch-section :watch-data="samples[0]" ref="subtexts"></c-watch-section>
       <c-other-models-section :models-data="samples[1].watches"></c-other-models-section>
       <div id="stage" ref="stage"></div>
@@ -7,7 +8,6 @@
       <c-menu-mobile></c-menu-mobile>
       <c-sections :items="samples"></c-sections>
       <c-meter></c-meter>
-      <!-- <c-tilt></c-tilt> -->
       <c-social-networks></c-social-networks>
       <div id="rotate-device-message">
         Please rotate your device to landscape
@@ -36,7 +36,7 @@ import WatchSectionVue from '@/components/vue/WatchSection.vue'
 import MenuMobile from '@/components/vue/Menu-mobile.vue'
 import OtherModelsSectionVue from '@/components/vue/OtherModelsSection.vue'
 import socialNetworks from '@/components/vue/social-networks.vue'
-import Tilt from '@/components/vue/tilt.vue'
+import Intro from '@/components/vue/Intro/Intro.vue'
 
 // libs
 import * as THREE from 'three'
@@ -52,7 +52,7 @@ export default {
     'c-menu-mobile': MenuMobile,
     'c-other-models-section': OtherModelsSectionVue,
     'c-social-networks': socialNetworks,
-    'c-tilt': Tilt
+    'c-intro': Intro
   },
   data () {
     return {
@@ -153,16 +153,16 @@ export default {
     ])
   },
   mounted () {
-    this.stageDOMElement = this.$refs.stage
-    this.initScene()
-    this.buildSections()
-    this.initEnvironment()
-    this.initPostProcessing()
-    this.handelEvents()
-    this.onResize()
-    AnimationLoopManager.addCallback(this.checkCurrentSection)
-    AnimationLoopManager.addLastCallback(this.render3D)
-    this.renderer.setAnimationLoop(AnimationLoopManager.renderLoop)
+    // this.stageDOMElement = this.$refs.stage
+    // this.initScene()
+    // this.buildSections()
+    // this.initEnvironment()
+    // this.initPostProcessing()
+    // this.handelEvents()
+    // this.onResize()
+    // AnimationLoopManager.addCallback(this.checkCurrentSection)
+    // AnimationLoopManager.addLastCallback(this.render3D)
+    // this.renderer.setAnimationLoop(AnimationLoopManager.renderLoop)
   },
   methods: {
     handelEvents () {
@@ -398,7 +398,9 @@ export default {
   }
 
   #app {
+    position:relative;
     font-family: 'Roboto', sans-serif;
+    width:100vw;
     height: 100vh;
     &.vr {
       #logo, #menu-about, #menu-help, #sections {

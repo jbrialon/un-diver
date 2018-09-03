@@ -11,7 +11,7 @@
       <c-link v-if="!vrModeActivated" :href="''" :label="'Diver collection'" class="header__link"></c-link>
     </transition>
     <a href="/" class="header__logo" v-if="!menuMobileActivated">
-      <img src="@/assets/logo_un@2x.png" alt="Ulysse Nardin">
+      <img src="@/assets/logo_un.png" alt="Ulysse Nardin">
     </a>
     <c-menu class="header__menu"></c-menu>
     <button class="header__button-vr" type="button" name="button" @click="toggleVrMode()" :class="{'active': vrModeActivated}">

@@ -1,11 +1,11 @@
 <template>
   <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation}">
-      <c-watch-section :watch-data="samples[0]" ref="subtexts"></c-watch-section>
-      <c-other-models-section :models-data="samples[1].watches"></c-other-models-section>
+      <c-watch-section :watch-data="sectionsData[0]"></c-watch-section>
+      <c-other-models-section :models-data="sectionsData[1].watches"></c-other-models-section>
       <div id="stage" ref="stage"></div>
       <c-header></c-header>
       <c-menu-mobile></c-menu-mobile>
-      <c-sections :items="samples"></c-sections>
+      <c-sections :items="sectionsData"></c-sections>
       <c-meter></c-meter>
       <!-- <c-tilt></c-tilt> -->
       <c-social-networks></c-social-networks>
@@ -73,18 +73,24 @@ export default {
       sectionsDepthList: [],
       ThreeClock: new THREE.Clock(),
       sections: [],
-      samples: [
+      sectionsData: [
         {
           id: 0,
           type: 'watch',
           title: 'The New Diver',
-          sectionWeight: 4,
-          subTexts: [
-            {id: 'bluedial', title: 'model', text: 'Blue Dial'},
-            {id: 'diameter', title: 'Diameter', text: '44mm'},
-            {id: 'caliber', title: 'New', text: 'UN-118'},
-            {id: 'glowing', title: 'Feature', text: 'Glowing'},
-            {id: 'waterproof', title: 'Feature', text: 'Waterproof\nup to 300m'}
+          sectionWeight: 6,
+          intro: [
+            'A diving watch collection',
+            'crafted to withstand up to',
+            'three hundred meters of',
+            'potentially deadly water pressure'
+          ],
+          features: [
+            {id: 'bluedial', text: 'Inverted, concave bezel\nwith domed sapphire glass', weight: 0},
+            {id: 'diameter', text: '42 and 44 mm diameters\nSturdy, blue rubber guards protect the crown', weight: 0},
+            {id: 'caliber', text: 'UN-118 movement - silicium technology\nVisible through the open back', weight: 0},
+            {id: 'glowing', text: 'Superluminova makes the hours and minutes visible at great depths', weight: 4},
+            {id: 'waterproof', text: 'Waterproof\nup to 300m', weight: 0}
           ],
           details: {
             title: 'Diver Blue Dial',
@@ -242,12 +248,12 @@ export default {
     },
     buildSections () {
       let currentZPos = CONST.InitialCameraDistance
-      let sectionsSlotsCount = this.samples.length
-      this.samples.forEach(item => {
+      let sectionsSlotsCount = this.sectionsData.length
+      this.sectionsData.forEach(item => {
         sectionsSlotsCount += item.sectionWeight
       })
       let sectionSlotDepth = CONST.SceneDepth / sectionsSlotsCount
-      this.samples.forEach(item => {
+      this.sectionsData.forEach(item => {
         item.sectionDepth = sectionSlotDepth * item.sectionWeight
         let section
         switch (item.type) {
@@ -270,7 +276,7 @@ export default {
         this.lastSectionZPosition = item.zpos
         this.sections.push(section)
       })
-      this.firstSectionZPosition = this.samples[0].zpos
+      this.firstSectionZPosition = this.sectionsData[0].zpos
 
       this.cameraManager.lastSectionZPosition = this.lastSectionZPosition
       this.setPageHeight()
@@ -366,7 +372,7 @@ export default {
       document.body.className = activated ? 'vr' : ''
     },
     'goToSectionId' (id) {
-      let scrollVal = Math.floor(this.zPosToScrollTop((this.samples[id].zpos)))
+      let scrollVal = Math.floor(this.zPosToScrollTop((this.sectionsData[id].zpos)))
       this.sceneIsAutoScrolling = true
       this.$store.commit('setCurrentSectionId', id)
       this.cameraManager.scrollTo(scrollVal, () => {

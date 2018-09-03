@@ -1,6 +1,6 @@
 <template>
   <div class="tilt">
-    <img ref="image" src="@/assets/parralax.jpg">
+    <img ref="image" :src="src">
   </div>
 </template>
 
@@ -9,6 +9,12 @@ import { TweenMax, Power1 } from 'gsap'
 
 export default {
   name: 'tilt',
+  props: {
+    src: {
+      type: String,
+      required: true
+    }
+  },
   methods: {
     tilt (event) {
       let posX = event.pageX
@@ -37,10 +43,9 @@ export default {
 @import '@/scss/_vars.scss';
 
 .tilt {
-  position:absolute;
-  z-index:999;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
+  img {
+    display:block;
+    width:100%;
+  }
 }
 </style>

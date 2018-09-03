@@ -107,11 +107,10 @@ export default class Environment extends THREE.Object3D {
   onTerrainLoaded = (object) => {
     this.terrainModel = object
     // this.terrainModel.children[2].material.side = THREE.BackSide
-    this.terrainModel.position.x = -2922
-    this.terrainModel.position.y = 9246
-    this.terrainModel.position.z = 19676
-    this.terrainModel.scale.x = object.scale.y = object.scale.z = 10
-    this.terrainModel.rotateX(THREE.Math.degToRad(85))
+    this.terrainModel.position.x = -386
+    this.terrainModel.position.y = 1372
+    this.terrainModel.position.z = -this.sceneFarDistance - 500
+    this.terrainModel.rotateX(THREE.Math.degToRad(90))
     this.terrainModel.name = 'Terrain'
     this.scene.add(this.terrainModel)
 

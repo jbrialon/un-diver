@@ -330,11 +330,14 @@ export default {
           obj.geometry = undefined
         }
         if (obj.material) {
-          if (obj.material.map) {
+          if (obj.material.map && obj.material.map.dispose) {
             obj.material.map.dispose()
-            obj.material.map = undefined
           }
-          obj.material.dispose()
+          if (obj.material.dispose) {
+            obj.material.dispose()
+          }
+
+          obj.material.map = undefined
           obj.material = undefined
         }
       }

@@ -5,7 +5,7 @@ import * as CONST from '@/Constants'
 import Boid from '@/components/three/fishes/Boid.js'
 
 export default class FishManager extends THREE.Object3D {
-  BIRTH_PLACE = new THREE.Vector3(300, 300, 0)
+  BIRTH_PLACE = new THREE.Vector3(600, 300, 0)
   NUM_FISH = 100
   fishes = []
   boids = []
@@ -35,16 +35,17 @@ export default class FishManager extends THREE.Object3D {
       this.boids[i] = new Boid()
       let boid = this.boids[i]
 
-      boid.setAvoidWalls(true)
-      boid.setWorldSize(store.state.stageSize.width, store.state.stageSize.height, 1000)
-      boid.setWorldOrigin(this.BIRTH_PLACE)
+      boid.setWorldSize(store.state.stageSize.width * 2, store.state.stageSize.height * 2, 50)
 
-      boid.position.x = Math.random() * store.state.stageSize.width
-      boid.position.y = Math.random() * store.state.stageSize.height
-      boid.position.z = -Math.random() * store.state.stageSize.height
+      boid.position.x = Math.random() * 50
+      boid.position.y = Math.random() * 50
+      boid.position.z = -Math.random() * 50
       boid.velocity.x = Math.random() * 2 - 1
       boid.velocity.y = Math.random() * 2 - 1
       boid.velocity.z = Math.random() * 2 - 1
+
+      boid.setGoal(window.AppCameraDummy.position)
+      boid.setGoalOffset(new THREE.Vector3(0, 0, -100))
 
       fishModel.scale.x = 0.4
       fishModel.scale.y = 0.4
@@ -61,8 +62,10 @@ export default class FishManager extends THREE.Object3D {
   }
 
   updateFishes () {
+    // this.BIRTH_PLACE.z = window.AppCameraDummy.position.z
     for (var i = 0, imax = this.fishes.length; i < imax; i++) {
       let boid = this.boids[i]
+      boid.setWorldOrigin(this.BIRTH_PLACE)
       boid.run(this.boids)
 
       let fish = this.fishes[i]

@@ -1,23 +1,25 @@
 <template>
-  <header class="header" :class="{'hidden': vrModeActivated}">
-    <transition name="fade">
-      <button class="header__burger" :class="{'active': menuMobileActivated}" type="button" name="button" @click="toggleMenuMobile()" v-if="!vrModeActivated">
-        <span class="header__burger-line"></span>
-        <span class="header__burger-line"></span>
-        <span class="header__burger-line"></span>
+  <transition name="fade">
+    <header v-if="uiActivated" class="header" :class="{'hidden': vrModeActivated}">
+      <transition name="fade">
+        <button class="header__burger" :class="{'active': menuMobileActivated}" type="button" name="button" @click="toggleMenuMobile()" v-if="!vrModeActivated">
+          <span class="header__burger-line"></span>
+          <span class="header__burger-line"></span>
+          <span class="header__burger-line"></span>
+        </button>
+      </transition>
+      <transition name="fade">
+        <c-link v-if="!vrModeActivated" :href="''" :label="'Diver collection'" class="header__link"></c-link>
+      </transition>
+      <a href="/" class="header__logo" v-if="!menuMobileActivated">
+        <img src="@/assets/logo_un.png" alt="Ulysse Nardin">
+      </a>
+      <c-menu class="header__menu"></c-menu>
+      <button class="header__button-vr" type="button" name="button" @click="toggleVrMode()" :class="{'active': vrModeActivated}">
+        <icon-vr></icon-vr>
       </button>
-    </transition>
-    <transition name="fade">
-      <c-link v-if="!vrModeActivated" :href="''" :label="'Diver collection'" class="header__link"></c-link>
-    </transition>
-    <a href="/" class="header__logo" v-if="!menuMobileActivated">
-      <img src="@/assets/logo_un.png" alt="Ulysse Nardin">
-    </a>
-    <c-menu class="header__menu"></c-menu>
-    <button class="header__button-vr" type="button" name="button" @click="toggleVrMode()" :class="{'active': vrModeActivated}">
-      <icon-vr></icon-vr>
-    </button>
-  </header>
+    </header>
+  </transition>
 </template>
 
 <script>
@@ -49,7 +51,8 @@ export default {
   computed: {
     ...mapGetters([
       'vrModeActivated',
-      'menuMobileActivated'
+      'menuMobileActivated',
+      'uiActivated'
     ])
   }
 }
@@ -145,6 +148,9 @@ export default {
     left:50%;
     transform:translateX(-50%);
     margin:auto;
+    img {
+      height:32px;
+    }
   }
   &__link {
     @include small-only {

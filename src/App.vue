@@ -35,7 +35,7 @@ import SectionsAnchors from '@/components/vue/SectionsAnchors.vue'
 import WatchSectionVue from '@/components/vue/WatchSection.vue'
 import MenuMobile from '@/components/vue/Menu-mobile.vue'
 import OtherModelsSectionVue from '@/components/vue/OtherModelsSection.vue'
-import socialNetworks from '@/components/vue/social-networks.vue'
+import SocialNetworks from '@/components/vue/SocialNetworks.vue'
 import Intro from '@/components/vue/Intro/Intro.vue'
 
 // libs
@@ -51,7 +51,7 @@ export default {
     'c-watch-section': WatchSectionVue,
     'c-menu-mobile': MenuMobile,
     'c-other-models-section': OtherModelsSectionVue,
-    'c-social-networks': socialNetworks,
+    'c-social-networks': SocialNetworks,
     'c-intro': Intro
   },
   data () {

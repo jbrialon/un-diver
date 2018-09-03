@@ -11,6 +11,19 @@
         </defs>
         <image xlink:href="@/assets/bg.jpg" width="1920px" height="1080px" />
       </svg>
+      <div ref="loader" class="intro__loader">
+        <div class="circle">
+          <svg class="circleFill" width="104" height="104" viewBox="0 0 104 104">
+            <circle cx="52" cy="52" r="48" stroke="#B5966B" stroke-width="3" fill="none" stroke-dashoffset="50"></circle>
+          </svg>
+          <svg class="circleTrack" width="104" height="104" viewBox="0 0 104 104">
+            <circle cx="52" cy="52" r="48" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="3" fill="none"></circle>
+          </svg>
+        </div>
+        <div class="intro__loader-number">
+          00%
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -22,18 +35,22 @@ export default {
   name: 'intro',
   data () {
     return {
-      tl: new TimelineMax({delay: 3, onComplete: this.restart})
+      tl: new TimelineMax()
     }
   },
   methods: {
-    restart () {
+    showUI () {
+      this.$store.commit('toggleUI')
     }
   },
   mounted () {
     this.tl.pause()
+    this.tl.set(this.$refs.loader, {xPercent: -50, yPercent: -50, left: '50%', top: '50%'})
     this.tl.to(this.$refs.logo, 3, {autoAlpha: 1, ease: Power1.easeOut})
     this.tl.to(this.$refs.logo, 2, {autoAlpha: 0, ease: Power1.easeOut})
-    this.tl.to(this.$refs.mask, 3, {attr: {r: 1200}, ease: Power1.easeOut})
+    this.tl.to(this.$refs.mask, 3, {attr: {r: 1100}, onComplete: this.showUI})
+    this.tl.to(this.$refs.loader, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=2.5')
+    this.tl.to(this.$refs.loader, 2, {xPercent: -50, yPercent: -50, left: '50%', top: '85%', ease: Power1.easeOut})
     this.tl.play()
   }
 }
@@ -77,6 +94,38 @@ export default {
     position: absolute;
     width: 0;
     height: 0;
+  }
+  &__loader {
+    position:absolute;
+    opacity:0;
+    &-number {
+      position:absolute;
+      top:50%;
+      left:50%;
+      font-size:30px;
+      color:$white;
+      font-weight:$fw-medium;
+      transform:translate(-50%, -50%);
+    }
+    .circle {
+      position: relative;
+      width: 104px;
+      height: 104px;
+      svg {
+        position:absolute;
+        top:0;
+      }
+    }
+    .circleFill {
+      z-index: 1;
+      stroke-dasharray: 322;
+      stroke-dashoffset: 322;
+      transition: all 3s;
+      transform: rotate(-90deg);
+    }
+    .circleTrack {
+      z-index: 0;
+    }
   }
 }
 </style>

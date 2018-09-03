@@ -11,6 +11,23 @@
     <transition name="fade">
       <button v-if="displayButton" class="menu__item menu__item--lang" type="button">
         FR
+        <ul>
+          <li>
+            <a href="#" hreflang="en">EN</a>
+          </li>
+          <li>
+            <a href="#" hreflang="zh-hans">CN</a>
+          </li>
+          <li>
+            <a href="#" hreflang="ru">RU</a>
+          </li>
+          <li>
+            <a href="#" hreflang="ja">JP</a>
+          </li>
+          <li>
+            <a href="#" hreflang="fr">FR</a>
+          </li>
+        </ul>
       </button>
     </transition>
     <button class="menu__item menu__item--vr hide-for-mobile" type="button" @click="toggleVrMode()" :class="{'active': vrModeActivated}">
@@ -91,7 +108,54 @@ export default {
         }
       }
     }
+    &--lang {
+      position:relative;
+      padding-right:15px;
+      &:after {
+        position:absolute;
+        content:'';
+        right:0;
+        top:18px;
+        width:8px;
+        height:5px;
+        background:url('../../assets/arrow-white.png');
+        @include small-only {
+          top:4px;
+          background:url('../../assets/arrow-blue.png');
+        }
+      }
+      &:active,
+      &:hover {
+        ul {
+          height:90px;
+        }
+      }
+      ul {
+        position:absolute;
+        background:$darkblue;
+        margin-top:5px;
+        left:-10px;
+        height:0;
+        overflow:hidden;
+        transition:height 300ms ease-out;
+        li {
+          margin-bottom:2px;
+          padding-left:10px;
+          padding-right:8px;
+          &:first-child {
+            margin-top:10px;
+          }
+          &:last-child {
+            margin-bottom:10px;
+          }
+          a {
+            color:$white;
+            text-decoration:none;
 
+          }
+        }
+      }
+    }
     &--sound {
       position:relative;
       &.disabled:after {

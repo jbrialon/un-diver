@@ -3,12 +3,13 @@
 * Handles all mobile events and orients camera accordingly
 */
 import store from '@/store'
-import * as CONST from '../../Constants'
+import * as CONST from '@/Constants'
 import * as THREE from 'three'
 import {TweenMax, Sine} from 'gsap'
 import 'gsap/ScrollToPlugin'
-import AnimationLoopManager from '../../utils/AnimationLoopManager'
-import GuiManager from '../../utils/GuiManager'
+import AnimationLoopManager from '@/utils/AnimationLoopManager'
+import Utils from '@/utils/Utils'
+import GuiManager from '@/utils/GuiManager'
 
 export default class CameraManager extends THREE.Object3D {
   vrModeActivated = false
@@ -85,7 +86,7 @@ export default class CameraManager extends THREE.Object3D {
   updateCamera = () => {
     this.position.z += (((-this.scrollingElement.scrollTop * CONST.PageHeightMultiplyer) + CONST.CameraDistanceToSection) - this.position.z) * 0.1
     this.updateCameraRotation()
-    window.AppScrollPercentage = (-(this.position.z - CONST.CameraDistanceToSection) / this.lastSectionZPosition)
+    window.AppScrollPercentage = Utils.clamp((-(this.position.z - CONST.CameraDistanceToSection) / this.lastSectionZPosition), 0, 1)
     if (this.vrModeActivated) {
       this.camera.quaternion.copy(this.cameraRotationQuaternion)
     } else {

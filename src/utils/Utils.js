@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import _ from 'lodash'
 
 class Utils {
   constructor (enforcer) {
@@ -40,6 +41,20 @@ class Utils {
 
   static clamp (number, min, max) {
     return Math.max(min, Math.min(number, max))
+  }
+
+  /*
+  * Loops on every passed items and calculates
+  * item depth depending on item weight property
+  */
+  static computeChildDepths (item, parentDepth) {
+    let slotDepth = parentDepth / _.sum(_.map(item, 'weight'))
+    _.forOwn(item, (child, name) => {
+      if (child.weight !== undefined) {
+        child.depth = slotDepth * child.weight
+      }
+      if (!_.isString(child)) Utils.computeChildDepths(child, child.depth || parentDepth)
+    })
   }
 }
 

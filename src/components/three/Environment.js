@@ -16,7 +16,6 @@ import FishManager from '@/components/three/fishes/FishManager.js'
 export default class Environment extends THREE.Object3D {
   clock = new THREE.Clock();
   scene
-  sceneFarDistance
   terrainModel
   sharkModel
   turtleModel
@@ -35,11 +34,10 @@ export default class Environment extends THREE.Object3D {
   directionnalLightFactor = 1
   nightFactor = 1
 
-  constructor (scene, renderer, sceneFarDistance) {
+  constructor (scene, renderer) {
     super()
     this.scene = scene
     this.renderer = renderer
-    this.sceneFarDistance = sceneFarDistance
     Object.assign(this, THREE.EventDispatcher)
     this.init()
   }
@@ -74,7 +72,7 @@ export default class Environment extends THREE.Object3D {
     new THREE.HDRCubeTextureLoader().load(THREE.UnsignedByteType, hdrUrls, this.onEnvironmentLoaded)
 
     // set up plankton
-    // let plankton = new Plankton(this.sceneFarDistance)
+    // let plankton = new Plankton(CONST.SceneDepth)
     // plankton.visible = false
     // super.add(plankton)
     // GuiManager.add(plankton, 'visible').name('Plankton')
@@ -109,7 +107,7 @@ export default class Environment extends THREE.Object3D {
     // this.terrainModel.children[2].material.side = THREE.BackSide
     this.terrainModel.position.x = -386
     this.terrainModel.position.y = 1372
-    this.terrainModel.position.z = -this.sceneFarDistance - 500
+    this.terrainModel.position.z = -CONST.SceneDepth - 500
     this.terrainModel.rotateX(THREE.Math.degToRad(90))
     this.terrainModel.name = 'Terrain'
     this.scene.add(this.terrainModel)

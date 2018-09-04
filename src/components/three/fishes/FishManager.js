@@ -45,7 +45,7 @@ export default class FishManager extends THREE.Object3D {
       boid.velocity.z = Math.random() * 2 - 1
 
       boid.setGoal(window.AppCameraDummy.position)
-      boid.setGoalOffset(new THREE.Vector3(0, 0, -100))
+      boid.setGoalOffset(new THREE.Vector3(25, 15, -150))
 
       fishModel.scale.x = 0.4
       fishModel.scale.y = 0.4

@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    start3dExperience: true,
     cameraDummy: null,
     stageSize: null,
     vrMode: false,
@@ -15,6 +16,9 @@ const store = new Vuex.Store({
     viewportSizeAtCameraFocus: undefined
   },
   mutations: {
+    start3dExperience (state) {
+      state.start3dExperience = true
+    },
     toggleVrMode (state) {
       state.vrMode = !state.vrMode
     },
@@ -41,6 +45,9 @@ const store = new Vuex.Store({
     }
   },
   getters: {
+    start3dExperience: state => {
+      return state.start3dExperience
+    },
     vrModeActivated: state => {
       return state.vrMode
     },

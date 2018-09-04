@@ -1,11 +1,11 @@
 <template>
   <div class="watch-section">
-    <div v-html-to-texture="'watch-section-title'" class="watch-section__title">{{ watchData.title }}</div>
+    <div v-for="item in watchData.intro.items" :key="item.id" v-html-to-texture="getIntroId(item.id)" class="watch-section__intro">{{ item.text }}</div>
 
-    <div class="watch-section__subtexts">
-      <div class="watch-section__subtexts--container" v-html-to-texture="getSubTextId(item.id)" v-for="item in watchData.subTexts" :key="item.id">
-        <div class="watch-section__subtexts--title">{{ item.title }}</div>
-        <div class="watch-section__subtexts--text">{{ item.text }}</div>
+    <div class="watch-section__features">
+      <div class="watch-section__features--container" v-html-to-texture="getFeatureId(item.id)" v-for="item in watchData.features.items" :key="item.id">
+        <div v-if="item.title" class="watch-section__features--title">{{ item.title }}</div>
+        <div class="watch-section__features--text">{{ item.text }}</div>
       </div>
     </div>
 
@@ -19,10 +19,9 @@
       <div class="watch-section__details--caseHeight">{{ watchData.details.caseHeight }}</div>
       <div class="watch-section__details--caseWater">{{ watchData.details.caseWater }}</div>
       <div class="watch-section__details--price">{{ watchData.details.price }}</div>
-      <div>
-        <c-link :href="''" :label="'buy in boutique'" class="header__link"></c-link>
-      </div>
     </div>
+
+    <c-link v-html-to-texture="'watch-section-details-button'" :href="''" :label="'dive to the other models'" class="header__link"></c-link>
   </div>
 </template>
 
@@ -41,8 +40,11 @@ export default {
     }
   },
   methods: {
-    getSubTextId (id) {
-      return 'watch-section-subtext-' + id
+    getFeatureId (id) {
+      return 'watch-section-feature-' + id
+    },
+    getIntroId (id) {
+      return 'watch-section-intro-' + id
     }
   }
 }
@@ -54,28 +56,30 @@ export default {
 .watch-section {
   position: fixed;
   top: 0;
-  width: 10000px;
+  width: 200vw;
 
-  &__title {
+  &__intro {
     display: inline-block;
     color: $white;
     font-size: $fs-watch-title;
+    line-height: initial;
     font-weight: 300;
+    text-align: center;
   }
 
-  &__subtexts {
+  &__features {
     &--container {
       display: inline-block;
     }
     &--title {
       text-transform: uppercase;
-      font-size: $fs-watch-subtext-title;
+      font-size: $fs-watch-feature-title;
       font-weight:$fw-light;
       color: $gold;
       line-height: 2em;
     }
     &--text {
-      font-size: $fs-watch-subtext-text;
+      font-size: $fs-watch-feature-text;
       font-weight: $fw-medium;
       color: $white;
       white-space: pre;
@@ -87,7 +91,7 @@ export default {
     display: inline-block;
     color: $white;
     &--title {
-      font-size: $fs-watch-subtext-text;
+      font-size: $fs-watch-feature-text;
       font-weight: $fw-medium;
     }
     &--sku {

@@ -1,7 +1,7 @@
 <template>
   <div class="slider">
     <div class="slider__container">
-      <vueper-slides class="no-shadow" :fade="true" :bullets="false" :touchable="isMobile">
+      <vueper-slides class="no-shadow" :fade="true" :bullets="false" :touchable="isMobile" fixed-height="570px">
         <vueper-slide :key="1">
           <div slot="slideContent">
             <div class="slider__slide slider__slide--left">
@@ -151,10 +151,9 @@ export default {
     }
     &--center {
       justify-content: center;
-      padding:60px 0 30px 0;
       flex-direction: column;
       .text {
-        margin:20px auto 0 auto;
+        margin: 20px auto;
         position:relative;
         top:auto;
         text-align:center;

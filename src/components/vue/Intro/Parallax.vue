@@ -19,6 +19,7 @@ export default {
     }, {
       rotationY: 22,
       rotationX: 4,
+      yoyo: true,
       ease: Power2.easeInOut,
       repeat: -1
     })

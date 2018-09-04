@@ -30,6 +30,7 @@
           <div slot="slideContent">
             <div class="slider__slide slider__slide--center">
               <Parallax class="slider__parallax"></Parallax>
+              <icon-mouse class="slider__mouse-icon"></icon-mouse>
               <p class="text">
                 To dive, use scroll & rotation to explore
               </p>
@@ -47,6 +48,7 @@ import 'vueperslides/dist/vueperslides.min.css'
 
 import Tilt from '@/components/vue/Intro/Tilt.vue'
 import Parallax from '@/components/vue/Intro/Parallax.vue'
+import iconMouse from '@/components/icon/icon-mouse.vue'
 
 import Utils from '@/utils/Utils'
 
@@ -63,7 +65,8 @@ export default {
     Tilt,
     VueperSlides,
     VueperSlide,
-    Parallax
+    Parallax,
+    iconMouse
   }
 }
 </script>
@@ -95,6 +98,9 @@ export default {
   }
   &__parallax {
     margin:auto;
+  }
+  &__mouse-icon {
+    margin:20px auto 0 auto;
   }
   &__container {
     position:relative;
@@ -145,9 +151,10 @@ export default {
     }
     &--center {
       justify-content: center;
+      padding:60px 0 30px 0;
       flex-direction: column;
       .text {
-        margin:40px auto 0 auto;
+        margin:20px auto 0 auto;
         position:relative;
         top:auto;
         text-align:center;

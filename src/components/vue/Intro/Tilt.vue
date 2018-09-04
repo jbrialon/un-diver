@@ -1,14 +1,20 @@
 <template>
   <div class="tilt">
-    <img ref="image" src="@/assets/parralax.jpg">
+    <img ref="image" :src="src">
   </div>
 </template>
 
 <script>
-import { TweenMax, Power1 } from 'gsap'
+import { TweenMax, Power2 } from 'gsap'
 
 export default {
   name: 'tilt',
+  props: {
+    src: {
+      type: String,
+      required: true
+    }
+  },
   methods: {
     tilt (event) {
       let posX = event.pageX
@@ -18,7 +24,7 @@ export default {
       TweenMax.to(this.$refs.image, 0.6, {
         rotationY: left / 100,
         rotationX: top / 100,
-        ease: Power1.easeOut,
+        ease: Power2.easeOut,
         transformPerspective: 400,
         transformOrigin: 'center'
       })
@@ -37,10 +43,9 @@ export default {
 @import '@/scss/_vars.scss';
 
 .tilt {
-  position:absolute;
-  z-index:999;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
+  img {
+    display:block;
+    width:100%;
+  }
 }
 </style>

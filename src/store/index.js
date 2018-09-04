@@ -13,7 +13,8 @@ const store = new Vuex.Store({
     currentSectionId: undefined,
     goToSectionId: undefined,
     menuMobile: false,
-    viewportSizeAtCameraFocus: undefined
+    viewportSizeAtCameraFocus: undefined,
+    showUI: false
   },
   mutations: {
     start3dExperience (state) {
@@ -40,6 +41,9 @@ const store = new Vuex.Store({
     toggleMenuMobile (state) {
       state.menuMobile = !state.menuMobile
     },
+    toggleUI (state) {
+      state.showUI = !state.showUI
+    },
     setViewportSizeAtCameraFocus (state, object) {
       state.viewportSizeAtCameraFocus = object
     }
@@ -62,6 +66,9 @@ const store = new Vuex.Store({
     },
     menuMobileActivated: state => {
       return state.menuMobile
+    },
+    uiActivated: state => {
+      return state.showUI
     },
     viewportSizeAtCameraFocus: state => {
       return state.viewportSizeAtCameraFocus

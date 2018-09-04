@@ -60,10 +60,11 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'menuMobileActivated'
+      'menuMobileActivated',
+      'uiActivated'
     ]),
     show () {
-      return (this.isMobile && this.menuMobileActivated) || !this.isMobile
+      return (this.isMobile && this.menuMobileActivated) || (!this.isMobile && this.uiActivated)
     }
   }
 }

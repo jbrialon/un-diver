@@ -2,12 +2,12 @@
   <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation, started: start3dExperience}">
       <c-watch-section v-if="sectionsData" :watch-data="sectionsData[0]"></c-watch-section>
       <c-other-models-section v-if="sectionsData" :models-data="sectionsData[1].watches"></c-other-models-section>
+      <!-- <c-intro></c-intro> -->
       <div id="stage" ref="stage"></div>
       <c-header></c-header>
       <c-menu-mobile></c-menu-mobile>
       <c-sections v-if="sectionsData" :items="sectionsData"></c-sections>
       <c-meter></c-meter>
-      <!-- <c-tilt></c-tilt> -->
       <c-social-networks></c-social-networks>
       <div id="rotate-device-message">
         Please rotate your device to landscape
@@ -36,8 +36,8 @@ import SectionsAnchors from '@/components/vue/SectionsAnchors.vue'
 import WatchSectionVue from '@/components/vue/WatchSection.vue'
 import MenuMobile from '@/components/vue/Menu-mobile.vue'
 import OtherModelsSectionVue from '@/components/vue/OtherModelsSection.vue'
-import socialNetworks from '@/components/vue/social-networks.vue'
-import Tilt from '@/components/vue/tilt.vue'
+import SocialNetworks from '@/components/vue/SocialNetworks.vue'
+import Intro from '@/components/vue/Intro/Intro.vue'
 
 // libs
 import * as THREE from 'three'
@@ -133,8 +133,8 @@ export default {
     'c-watch-section': WatchSectionVue,
     'c-menu-mobile': MenuMobile,
     'c-other-models-section': OtherModelsSectionVue,
-    'c-social-networks': socialNetworks,
-    'c-tilt': Tilt
+    'c-social-networks': SocialNetworks,
+    'c-intro': Intro
   },
   data () {
     return {
@@ -429,7 +429,9 @@ export default {
   }
 
   #app {
+    position:relative;
     font-family: 'Roboto', sans-serif;
+    width:100vw;
     height: 100vh;
     overflow: hidden;
     &.started {

@@ -29,8 +29,8 @@
 </template>
 
 <script>
-import Loader from '@/components/vue/Intro/loader.vue'
-import Slider from '@/components/vue/Intro/slider.vue'
+import Loader from '@/components/vue/Intro/Loader.vue'
+import Slider from '@/components/vue/Intro/Slider.vue'
 import { TimelineMax, Power1, Power2 } from 'gsap'
 
 export default {
@@ -54,7 +54,7 @@ export default {
     this.tl.set(this.$refs.loader.$el, {xPercent: -50, yPercent: -50, left: '50%', top: '50%'})
     this.tl.to(this.$refs.logo, 3, {autoAlpha: 1, ease: Power1.easeOut})
     this.tl.to(this.$refs.logo, 2, {autoAlpha: 0, ease: Power1.easeOut})
-    this.tl.to(this.$refs.mask, 3, {attr: {r: 1100}, onComplete: this.showUI})
+    this.tl.to(this.$refs.mask, 1.7, {attr: {r: 1100}, onComplete: this.showUI, ease: Power2.easeIn})
     this.tl.to(this.$refs.loader.$el, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=2.5')
     this.tl.to(this.$refs.loader.$el, 1.5, {xPercent: -50, yPercent: -50, left: '50%', top: '85%', ease: Power2.easeInOut})
     this.tl.to(this.$refs.paragraph, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=1')

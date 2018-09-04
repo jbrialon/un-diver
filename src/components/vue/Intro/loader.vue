@@ -58,7 +58,7 @@ export default {
     },
     repeat () {
       this.tlRepeat.fromTo(this.$refs.borderOne, 1.5, {attr: {r: 48, 'stroke-opacity': 0.4}, ease: Power2.easeOut}, {attr: {r: 74, 'stroke-opacity': 0}, ease: Power2.easeOut})
-      this.tlRepeat.fromTo(this.$refs.borderTwo, 1.5, {attr: {r: 48, 'stroke-opacity': 0.4}, ease: Power2.easeOut}, {attr: {r: 116, 'stroke-opacity': 0}, ease: Power2.easeOut}, '-=1')
+      this.tlRepeat.fromTo(this.$refs.borderTwo, 2, {attr: {r: 48, 'stroke-opacity': 0.4}, ease: Power2.easeOut}, {attr: {r: 116, 'stroke-opacity': 0}, ease: Power2.easeOut}, '-=1')
     }
   },
   computed: {

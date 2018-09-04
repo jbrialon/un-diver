@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { TweenMax, Power1 } from 'gsap'
+import { TweenMax, Power2 } from 'gsap'
 
 export default {
   name: 'tilt',
@@ -24,7 +24,7 @@ export default {
       TweenMax.to(this.$refs.image, 0.6, {
         rotationY: left / 100,
         rotationX: top / 100,
-        ease: Power1.easeOut,
+        ease: Power2.easeOut,
         transformPerspective: 400,
         transformOrigin: 'center'
       })

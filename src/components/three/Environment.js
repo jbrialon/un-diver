@@ -86,8 +86,8 @@ export default class Environment extends THREE.Object3D {
   genEnvironementMapCubeUrls (prefix, postfix) {
     return [
       prefix + 'px' + postfix, prefix + 'nx' + postfix,
-      prefix + 'py' + postfix, prefix + 'ny' + postfix,
-      prefix + 'pz' + postfix, prefix + 'nz' + postfix
+      prefix + 'pz' + postfix, prefix + 'ny' + postfix,
+      prefix + 'py' + postfix, prefix + 'nz' + postfix
     ]
   }
 

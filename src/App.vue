@@ -68,7 +68,7 @@ const database = [
         {id: 'bluedial', text: 'Inverted, concave bezel\nwith domed sapphire glass', weight: 1},
         {id: 'diameter', text: '42 and 44 mm diameters\nSturdy, blue rubber guards protect the crown', weight: 1},
         {id: 'caliber', text: 'UN-118 movement - silicium technology\nVisible through the open back', weight: 1},
-        {id: 'glowing', text: 'Superluminova makes the hours and minutes visible at great depths', weight: 4},
+        {id: 'glowing', text: 'Superluminova makes the hours and minutes\nvisible at great depths', weight: 4},
         {id: 'waterproof', text: 'Waterproof\nup to 300m', weight: 1}
       ]
     },

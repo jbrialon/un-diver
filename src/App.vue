@@ -2,7 +2,7 @@
   <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation, started: start3dExperience}">
       <c-watch-section v-if="sectionsData" :watch-data="sectionsData[0]"></c-watch-section>
       <c-other-models-section v-if="sectionsData" :models-data="sectionsData[1].watches"></c-other-models-section>
-      <!-- <c-intro></c-intro> -->
+      <c-intro></c-intro>
       <div id="stage" ref="stage"></div>
       <c-header></c-header>
       <c-menu-mobile></c-menu-mobile>
@@ -418,8 +418,11 @@ export default {
   }
 
   body {
+    position:relative;
+    width:100vw;
     min-height: 100vh;
     background: black;
+    overflow-x: hidden;
 
     &.vr {
       .stats, .gui {

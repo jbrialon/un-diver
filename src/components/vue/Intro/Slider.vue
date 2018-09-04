@@ -26,7 +26,7 @@
             </div>
           </div>
         </vueper-slide>
-        <vueper-slide :key="2">
+        <vueper-slide :key="3">
           <div slot="slideContent">
             <div class="slider__slide slider__slide--center">
               <Parallax class="slider__parallax"></Parallax>

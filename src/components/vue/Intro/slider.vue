@@ -17,7 +17,7 @@
             <div class="slider__slide slider__slide--text-right">
               <tilt class="image" :src="image2"></tilt>
               <p class="text">
-                <span class="border-bottom">Ulysse Nardin</span>, watchmaker of the oceans, is proud to announce its partnership with free diver and photographer <span class="border-bottom">Buyle</span>
+                <span class="border-bottom">Ulysse Nardin</span> has created the Diver, a robust, functional sports watch, water resistant to <span class="border-bottom">300</span> <span class="border-bottom">meters</span>
               </p>
             </div>
           </div>

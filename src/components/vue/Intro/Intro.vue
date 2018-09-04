@@ -12,8 +12,6 @@
         </defs>
         <image xlink:href="@/assets/bg.jpg" width="1920px" height="1080px" />
       </svg>
-      <!-- Loaded -->
-      <c-loader ref="loader"></c-loader>
       <!-- Intro Paragraph -->
       <div ref="paragraph" class="intro__paragraph">
         <h2 class="border-bottom">
@@ -24,6 +22,8 @@
         </p>
       </div>
       <c-slider ref="slider"></c-slider>
+      <!-- Loaded -->
+      <c-loader ref="loader"></c-loader>
     </div>
   </div>
 </template>
@@ -31,7 +31,7 @@
 <script>
 import Loader from '@/components/vue/Intro/loader.vue'
 import Slider from '@/components/vue/Intro/slider.vue'
-import { TimelineMax, Power1 } from 'gsap'
+import { TimelineMax, Power1, Power2 } from 'gsap'
 
 export default {
   name: 'intro',
@@ -56,7 +56,7 @@ export default {
     this.tl.to(this.$refs.logo, 2, {autoAlpha: 0, ease: Power1.easeOut})
     this.tl.to(this.$refs.mask, 3, {attr: {r: 1100}, onComplete: this.showUI})
     this.tl.to(this.$refs.loader.$el, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=2.5')
-    this.tl.to(this.$refs.loader.$el, 2, {xPercent: -50, yPercent: -50, left: '50%', top: '85%', ease: Power1.easeOut})
+    this.tl.to(this.$refs.loader.$el, 1.5, {xPercent: -50, yPercent: -50, left: '50%', top: '85%', ease: Power2.easeInOut})
     this.tl.to(this.$refs.paragraph, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=1')
     this.tl.to(this.$refs.paragraph, 1, {autoAlpha: 0, ease: Power1.easeOut})
     this.tl.to(this.$refs.slider.$el, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=1')

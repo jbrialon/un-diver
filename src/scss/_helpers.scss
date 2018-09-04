@@ -31,5 +31,8 @@
     bottom: 4px;
     left: 0;
     z-index: -1;
+    @include small-only {
+      height: 10px;
+    }
   }
 }

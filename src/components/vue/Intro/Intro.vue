@@ -67,6 +67,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/scss/_vars.scss';
+@import '@/scss/_mixins.scss';
 
 .intro {
   position:fixed;
@@ -113,10 +114,20 @@ export default {
     color:$white;
     max-width:530px;
     opacity:0;
+    @include small-only {
+      width:90vw;
+    }
     h2 {
       font-size:70px;
       font-weight:$fw-medium;
       margin-bottom:40px;
+      line-height:82px;
+      @include small-only {
+        display:inline-block;
+        font-size:40px;
+        margin-bottom:20px;
+        line-height:47px;
+      }
     }
     p {
       font-size:20px;

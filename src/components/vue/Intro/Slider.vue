@@ -73,6 +73,7 @@ export default {
 
 <style lang="scss">
 @import '@/scss/_vars.scss';
+@import '@/scss/_mixins.scss';
 
 .slider {
   position:absolute;
@@ -91,10 +92,21 @@ export default {
     line-height:47px;
     text-align:left;
     z-index:1;
+    @include small-only {
+      position:relative;
+      top:auto;
+      font-size: 24px;
+      margin-top:20px;
+      line-height:27px;
+      text-align:center;
+    }
   }
   .image {
     width:60%;
     z-index:-1;
+    @include small-only {
+      width:100%;
+    }
   }
   &__parallax {
     margin:auto;
@@ -115,6 +127,9 @@ export default {
       border-radius:50%;
       width:33px;
       height:33px;
+      @include small-only {
+        top:32vh;
+      }
       svg {
         position:absolute;
         top:50%;
@@ -125,9 +140,15 @@ export default {
       }
       &--prev {
         left:115px;
+        @include small-only {
+          left:15px;
+        }
       }
       &--next {
         right:115px;
+        @include small-only {
+          right:15px;
+        }
       }
     }
   }
@@ -135,18 +156,37 @@ export default {
   &__slide {
     display:flex;
     width:60vw;
+    @include small-only {
+      width:80vw;
+    }
     &--left {
       justify-content:flex-end;
+      @include small-only {
+        justify-content: flex-start;
+        flex-direction: column-reverse;
+      }
       .text {
         left:0;
         right:40%;
+        @include small-only {
+          right:auto;
+          left:auto;
+        }
       }
     }
     &--right {
       justify-content: flex-start;
+      @include small-only {
+        justify-content: flex-start;
+        flex-direction: column;
+      }
       .text {
         right:0;
         left:55%;
+        @include small-only {
+          right:auto;
+          left:auto;
+        }
       }
     }
     &--center {

@@ -1,42 +1,45 @@
 <template>
-  <div class="intro">
-    <div class="intro__container">
-      <!-- LOGO -->
-      <img ref="logo" src="@/assets/logo_un.png" alt="Ulysse Nardin" class="intro__logo">
-      <!-- SVG markup for the mask -->
-      <svg class="intro__background" width="1920" height="1080" viewBox="0 0 1920 1080" preserveAspectRatio="xMinYMin slice">
-        <defs>
-          <mask id="mask" x="0" y="0" width="1920" height="1080" >
-            <circle ref="mask" cx="960" cy="540" r="0" style="stroke:none; fill: #ffffff"/>
-          </mask>
-        </defs>
-        <image xlink:href="@/assets/bg.jpg" width="1920px" height="1080px" />
-      </svg>
-      <!-- Intro Paragraph -->
-      <div ref="paragraph" class="intro__paragraph">
-        <h2 class="border-bottom">
-          Diver Experience
-        </h2>
-        <p>
-          Ulysse Nardin, watchmaker of the oceans, is proud to announce its partnership with free diver and photographer Buyle
-        </p>
+  <transition name="fade-intro" v-on:after-leave="afterLeave">
+    <div class="intro" v-if="show">
+      <div class="intro__container">
+        <!-- LOGO -->
+        <img ref="logo" src="@/assets/logo_un.png" alt="Ulysse Nardin" class="intro__logo">
+        <!-- SVG markup for the mask -->
+        <svg class="intro__background" width="1920" height="1080" viewBox="0 0 1920 1080" preserveAspectRatio="xMinYMin slice">
+          <defs>
+            <mask id="mask" x="0" y="0" width="1920" height="1080" >
+              <circle ref="mask" cx="960" cy="540" r="0" style="stroke:none; fill: #ffffff"/>
+            </mask>
+          </defs>
+          <image xlink:href="@/assets/bg.jpg" width="1920px" height="1080px" />
+        </svg>
+        <!-- Intro Paragraph -->
+        <div ref="paragraph" class="intro__paragraph">
+          <h2 class="border-bottom">
+            Diver Experience
+          </h2>
+          <p>
+            Ulysse Nardin, watchmaker of the oceans, is proud to announce its partnership with free diver and photographer Buyle
+          </p>
+        </div>
+        <c-slider ref="slider"></c-slider>
+        <!-- Loaded -->
+        <c-loader ref="loader" class="intro__loader" @click.native="next()"></c-loader>
       </div>
-      <c-slider ref="slider"></c-slider>
-      <!-- Loaded -->
-      <c-loader ref="loader"></c-loader>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
 import Loader from '@/components/vue/Intro/Loader.vue'
 import Slider from '@/components/vue/Intro/Slider.vue'
-import { TimelineMax, Power1, Power2 } from 'gsap'
+import { TweenMax, TimelineMax, Power1, Power2 } from 'gsap'
 
 export default {
   name: 'intro',
   data () {
     return {
+      show: true,
       tl: new TimelineMax()
     }
   },
@@ -47,6 +50,16 @@ export default {
   methods: {
     showUI () {
       this.$store.commit('toggleUI')
+    },
+    next () {
+      TweenMax.to(this.$refs.slider.$el, 2, {autoAlpha: 0, ease: Power1.easeOut})
+      TweenMax.to(this.$refs.loader.$el, 1.5, {xPercent: -50, yPercent: -50, left: '50%', top: '50%', onComplete: this.leaveIntro, ease: Power2.easeInOut})
+    },
+    leaveIntro () {
+      this.show = false
+    },
+    afterLeave () {
+      this.$store.commit('start3dExperience')
     }
   },
   mounted () {
@@ -55,7 +68,7 @@ export default {
     this.tl.to(this.$refs.logo, 3, {autoAlpha: 1, ease: Power1.easeOut})
     this.tl.to(this.$refs.logo, 2, {autoAlpha: 0, ease: Power1.easeOut})
     this.tl.to(this.$refs.mask, 1.7, {attr: {r: 1100}, onComplete: this.showUI, ease: Power2.easeIn})
-    this.tl.to(this.$refs.loader.$el, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=2.5')
+    this.tl.to(this.$refs.loader.$el, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=1.7')
     this.tl.to(this.$refs.loader.$el, 1.5, {xPercent: -50, yPercent: -50, left: '50%', top: '85%', ease: Power2.easeInOut})
     this.tl.to(this.$refs.paragraph, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=1')
     this.tl.to(this.$refs.paragraph, 1, {autoAlpha: 0, ease: Power1.easeOut})
@@ -133,6 +146,9 @@ export default {
       font-size:20px;
       line-height:24px;
     }
+  }
+  &__loader {
+    cursor:pointer;
   }
 }
 </style>

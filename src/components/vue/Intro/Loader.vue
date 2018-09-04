@@ -4,7 +4,8 @@
       <svg class="circleGradient" width="236" height="236" viewBox="0 0 236 236">
           <defs>
             <radialGradient id="gradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-              <stop offset="0%" stop-color="rgb(181, 150, 107)" stop-opacity="0.4" />
+              <stop offset="0%" stop-color="rgb(181, 150, 107)" stop-opacity="0.2" />
+              <stop offset="80%" stop-color="rgb(181, 150, 107)" stop-opacity="0" />
               <stop offset="100%" stop-color="rgb(181, 150, 107)" stop-opacity="0" />
             </radialGradient>
           </defs>
@@ -29,32 +30,38 @@
         <circle cx="118" cy="118" r="48" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="3" fill="none"></circle>
       </svg>
     </div>
-    <div class="loader__number">
+    <div ref="number" class="loader__number">
       {{ padPercent }}%
     </div>
-    <button class="loader__button" type="button" name="button" @click="load()"></button>
+    <div ref="text" class="loader__text">
+      Start diving
+    </div>
   </div>
 </template>
 
 <script>
-import { TimelineMax, Power2 } from 'gsap'
+import { mapGetters } from 'vuex'
+import { TweenMax, TimelineMax, Power2 } from 'gsap'
 import Utils from '@/utils/Utils'
 
 export default {
   name: 'loader',
   data () {
     return {
-      percent: 0,
+      test: true,
       tl: new TimelineMax(),
       tlRepeat: new TimelineMax({repeat: -1})
     }
   },
   methods: {
-    load () {
-      this.percent = 1
-      this.tl.delay(2)
-      this.tl.to(this.$refs.background, 1, {attr: {r: 48}, ease: Power2.easeOut})
-      this.tl.to(this.$refs.gradient, 1, {attr: {'fill-opacity': 1}, ease: Power2.easeOut, onComplete: this.repeat}, '-=1')
+    animate () {
+      TweenMax.to(this.$refs.number, 1.5, {autoAlpha: 0, ease: Power2.easeOut})
+      TweenMax.to(this.$refs.text, 1.5, {autoAlpha: 1, ease: Power2.easeOut})
+
+      this.tl.to(this.$refs.background, 1, {attr: {r: 48}, ease: Power2.easeOut}, 2)
+      this.tl.to(this.$refs.gradient, 1, {attr: {'fill-opacity': 1}, ease: Power2.easeOut}, '-=1')
+      this.tl.to(this.$refs.borderOne, 1.5, {attr: {r: 74, 'stroke-opacity': 0.4}, ease: Power2.easeOut}, '-=0.5')
+      this.tl.to(this.$refs.borderTwo, 1.5, {attr: {r: 116, 'stroke-opacity': 0.2}, ease: Power2.easeOut}, '-=0.5')
     },
     repeat () {
       this.tlRepeat.fromTo(this.$refs.borderOne, 1.5, {attr: {r: 48, 'stroke-opacity': 0.4}, ease: Power2.easeOut}, {attr: {r: 74, 'stroke-opacity': 0}, ease: Power2.easeOut})
@@ -62,15 +69,29 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'loadingPercent',
+      'uiActivated'
+    ]),
+    animateLoader () {
+      return this.loadingPercent === 1 && this.uiActivated
+    },
     strokeDashoffset () {
       let circumference = 2 * Math.PI * 48
-      let offset = circumference * this.percent
+      let offset = circumference * this.loadingPercent
       return {
         strokeDasharray: `${offset}, ${circumference}`
       }
     },
     padPercent () {
-      return Math.floor(Utils.pad(this.percent * 100, 2))
+      return Utils.pad(this.loadingPercent * 100, 2)
+    }
+  },
+  watch: {
+    animateLoader () {
+      if (this.animateLoader) {
+        this.animate()
+      }
     }
   }
 }
@@ -102,6 +123,20 @@ export default {
     border-radius:50%;
     cursor:pointer;
     z-index:2;
+  }
+  &__text {
+    position:absolute;
+    opacity:0;
+    top:48%;
+    left:50%;
+    font-size:20px;
+    line-height:24px;
+    width:96px;
+    text-align:center;
+    color:$white;
+    font-weight:$fw-medium;
+    transform:translate(-50%, -50%);
+
   }
   .circle {
     position: relative;

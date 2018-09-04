@@ -1,17 +1,18 @@
 <template>
-  <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation}">
-      <c-watch-section :watch-data="sectionsData[0]"></c-watch-section>
-      <c-other-models-section :models-data="sectionsData[1].watches"></c-other-models-section>
+  <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation, started: start3dExperience}">
+      <c-watch-section v-if="sectionsData" :watch-data="sectionsData[0]"></c-watch-section>
+      <c-other-models-section v-if="sectionsData" :models-data="sectionsData[1].watches"></c-other-models-section>
       <div id="stage" ref="stage"></div>
       <c-header></c-header>
       <c-menu-mobile></c-menu-mobile>
-      <c-sections :items="sectionsData"></c-sections>
+      <c-sections v-if="sectionsData" :items="sectionsData"></c-sections>
       <c-meter></c-meter>
       <!-- <c-tilt></c-tilt> -->
       <c-social-networks></c-social-networks>
       <div id="rotate-device-message">
         Please rotate your device to landscape
       </div>
+      <button v-if="!start3dExperience" @click="start()" id="startBtn">START EXPERIENCE</button>
   </div>
 </template>
 
@@ -41,6 +42,87 @@ import Tilt from '@/components/vue/tilt.vue'
 // libs
 import * as THREE from 'three'
 import GuiManager from '@/utils/GuiManager'
+import Utils from '@/utils/Utils'
+
+const database = [
+  {
+    id: 0,
+    type: 'watch',
+    title: 'The New Diver',
+    weight: 11,
+    intro: {
+      weight: 3,
+      items: [
+        {id: 0, text: 'A diving watch collection', weight: 1},
+        {id: 1, text: 'crafted to withstand up to', weight: 1},
+        {id: 2, text: 'three hundred meters of', weight: 1},
+        {id: 3, text: 'potentially deadly water pressure', weight: 1}
+      ]
+    },
+    watchModel: {
+      weight: 1
+    },
+    features: {
+      weight: 7,
+      items: [
+        {id: 'bluedial', text: 'Inverted, concave bezel\nwith domed sapphire glass', weight: 1},
+        {id: 'diameter', text: '42 and 44 mm diameters\nSturdy, blue rubber guards protect the crown', weight: 1},
+        {id: 'caliber', text: 'UN-118 movement - silicium technology\nVisible through the open back', weight: 1},
+        {id: 'glowing', text: 'Superluminova makes the hours and minutes visible at great depths', weight: 4},
+        {id: 'waterproof', text: 'Waterproof\nup to 300m', weight: 1}
+      ]
+    },
+    details: {
+      weight: 1,
+      title: 'Diver Blue Dial',
+      sku: '1183-170-3/93',
+      movementLabel: 'movement',
+      movementText: 'UN-1180 manufacture w. power reserve, small second and date\nUN certificate, Silicium technology',
+      caseLabel: 'case',
+      caseDiameter: 'Diameter 44mm',
+      caseHeight: 'Height 10.75 mm',
+      caseWater: 'Water resistance 300 m',
+      price: '5\'800 CHF',
+      buyLink: 'www.google.com'
+    }
+  },
+  {
+    id: 1,
+    type: 'other-models',
+    title: 'Other models',
+    weight: 2,
+    watches: [
+      {
+        id: 'black',
+        title: 'Black dial',
+        description: 'Rubber\n44 mm',
+        price: '5\'800 CHF',
+        buyLink: 'www.google.com'
+      },
+      {
+        id: 'gold',
+        title: 'Gold Black dial',
+        description: 'Rubber\n44 mm',
+        price: '7\'900 CHF',
+        buyLink: 'www.google.com'
+      },
+      {
+        id: 'white',
+        title: 'Great White',
+        description: 'Rubber\n44 mm',
+        price: '8\'900 CHF',
+        buyLink: 'www.google.com'
+      }
+    ]
+  },
+  {
+    id: 2,
+    type: 'boutique',
+    title: 'Boutique',
+    text: 'Boutique',
+    weight: 0
+  }
+]
 
 export default {
   name: 'Ulysse-Nardin-App',
@@ -66,82 +148,14 @@ export default {
       cameraManager: null,
       renderer: null,
       firstSectionZPosition: 0,
-      lastSectionZPosition: 0,
       postProcessingManager: null,
       screenOrientation: window.orientation || 0,
       scrollTween: null,
+      sectionMargin: 0,
       sectionsDepthList: [],
       ThreeClock: new THREE.Clock(),
       sections: [],
-      sectionsData: [
-        {
-          id: 0,
-          type: 'watch',
-          title: 'The New Diver',
-          sectionWeight: 6,
-          intro: [
-            'A diving watch collection',
-            'crafted to withstand up to',
-            'three hundred meters of',
-            'potentially deadly water pressure'
-          ],
-          features: [
-            {id: 'bluedial', text: 'Inverted, concave bezel\nwith domed sapphire glass', weight: 0},
-            {id: 'diameter', text: '42 and 44 mm diameters\nSturdy, blue rubber guards protect the crown', weight: 0},
-            {id: 'caliber', text: 'UN-118 movement - silicium technology\nVisible through the open back', weight: 0},
-            {id: 'glowing', text: 'Superluminova makes the hours and minutes visible at great depths', weight: 4},
-            {id: 'waterproof', text: 'Waterproof\nup to 300m', weight: 0}
-          ],
-          details: {
-            title: 'Diver Blue Dial',
-            sku: '1183-170-3/93',
-            movementLabel: 'movement',
-            movementText: 'UN-1180 manufacture w. power reserve, small second and date\nUN certificate, Silicium technology',
-            caseLabel: 'case',
-            caseDiameter: 'Diameter 44mm',
-            caseHeight: 'Height 10.75 mm',
-            caseWater: 'Water resistance 300 m',
-            price: '5\'800 CHF',
-            buyLink: 'www.google.com'
-          }
-        },
-        {
-          id: 1,
-          type: 'other-models',
-          title: 'Other models',
-          sectionWeight: 0,
-          watches: [
-            {
-              id: 'black',
-              title: 'Black dial',
-              description: 'Rubber\n44 mm',
-              price: '5\'800 CHF',
-              buyLink: 'www.google.com'
-            },
-            {
-              id: 'gold',
-              title: 'Gold Black dial',
-              description: 'Rubber\n44 mm',
-              price: '7\'900 CHF',
-              buyLink: 'www.google.com'
-            },
-            {
-              id: 'white',
-              title: 'Great White',
-              description: 'Rubber\n44 mm',
-              price: '8\'900 CHF',
-              buyLink: 'www.google.com'
-            }
-          ]
-        },
-        {
-          id: 2,
-          type: 'boutique',
-          title: 'Boutique',
-          text: 'Boutique',
-          sectionWeight: 0
-        }
-      ]
+      sectionsData: null
     }
   },
   computed: {
@@ -152,6 +166,7 @@ export default {
       return this.screenOrientation === 0
     },
     ...mapGetters([
+      'start3dExperience',
       'vrModeActivated',
       'nightModeActivated',
       'currentSectionId',
@@ -159,6 +174,11 @@ export default {
     ])
   },
   mounted () {
+    this.sectionMargin = CONST.SceneDepth * CONST.SectionsMargin
+    const sceneDepthWithoutMargins = CONST.SceneDepth - (this.sectionMargin * (database.length - 1))
+    Utils.computeChildDepths(database, sceneDepthWithoutMargins)
+    this.sectionsData = database
+
     this.stageDOMElement = this.$refs.stage
     this.initScene()
     this.buildSections()
@@ -236,7 +256,7 @@ export default {
       })
     },
     initEnvironment () {
-      this.envManager = new Environment(this.scene, this.renderer, this.lastSectionZPosition)
+      this.envManager = new Environment(this.scene, this.renderer)
       this.envManager.addEventListener('environmentmaploaded', this.onEnvironmentMapLoaded)
       this.scene.add(this.envManager)
     },
@@ -247,14 +267,8 @@ export default {
       this.postProcessingManager = new PostProcessingManager(this.renderer, this.scene, this.cameraManager.camera, this.stageSize)
     },
     buildSections () {
-      let currentZPos = CONST.InitialCameraDistance
-      let sectionsSlotsCount = this.sectionsData.length
+      let currentZPos = 0
       this.sectionsData.forEach(item => {
-        sectionsSlotsCount += item.sectionWeight
-      })
-      let sectionSlotDepth = CONST.SceneDepth / sectionsSlotsCount
-      this.sectionsData.forEach(item => {
-        item.sectionDepth = sectionSlotDepth * item.sectionWeight
         let section
         switch (item.type) {
           case 'watch':
@@ -270,22 +284,22 @@ export default {
         }
         section.matrix.multiply(new THREE.Matrix4().makeTranslation(0, 0, -currentZPos))
         item.zpos = currentZPos
-        currentZPos += item.sectionDepth + sectionSlotDepth
-        this.sectionsDepthList.push({id: item.id, start: -item.zpos + sectionSlotDepth, end: -currentZPos})
+        currentZPos += item.depth
+        currentZPos += this.sectionMargin
+        this.sectionsDepthList.push({id: item.id, start: -item.zpos + this.sectionMargin, end: -currentZPos})
         this.scene.add(section)
-        this.lastSectionZPosition = item.zpos
         this.sections.push(section)
       })
       this.firstSectionZPosition = this.sectionsData[0].zpos
-
-      this.cameraManager.lastSectionZPosition = this.lastSectionZPosition
-      this.setPageHeight()
+      this.initPageHeight()
     },
     onCurrentSectionIdChange (event) {
       if (!this.sceneIsAutoScrolling) this.$store.commit('setCurrentSectionId', event.message)
     },
+    initPageHeight () {
+      this.pageHeight = (CONST.SceneDepth - this.firstSectionZPosition) / CONST.PageHeightMultiplyer + this.stageSize.height
+    },
     setPageHeight () {
-      this.pageHeight = (this.lastSectionZPosition - this.firstSectionZPosition + CONST.InitialCameraDistance) / CONST.PageHeightMultiplyer + this.stageSize.height
       document.body.style.height = this.pageHeight + 'px'
     },
     onResize () {
@@ -294,7 +308,8 @@ export default {
       this.vrRenderer.setSize(this.stageSize.width, this.stageSize.height)
       this.cameraManager.setSize(this.stageSize)
       this.postProcessingManager.setSize(this.stageSize)
-      this.setPageHeight()
+      this.initPageHeight()
+      if (this.start3dExperience) this.setPageHeight()
       this.sections.forEach(section => {
         section.resize()
       })
@@ -315,7 +330,7 @@ export default {
       }
     },
     zPosToScrollTop (zPos) {
-      return (zPos / this.lastSectionZPosition) * (this.pageHeight - this.stageSize.height)
+      return (zPos / CONST.SceneDepth) * (this.pageHeight - this.stageSize.height)
     },
     render3D () {
       this.renderer.clear()
@@ -359,9 +374,16 @@ export default {
       this.renderer.forceContextLoss()
       this.renderer.context = undefined
       this.renderer.domElement = undefined
+    },
+    start () {
+      this.$store.commit('start3dExperience')
     }
   },
   watch: {
+    'start3dExperience' (activated) {
+      this.setPageHeight()
+      this.cameraManager.startExperience()
+    },
     'nightModeActivated' (activated) {
       this.envManager.toggleNight(activated)
     },
@@ -396,7 +418,7 @@ export default {
   }
 
   body {
-    min-height: 200vh;
+    min-height: 100vh;
     background: black;
 
     &.vr {
@@ -409,6 +431,10 @@ export default {
   #app {
     font-family: 'Roboto', sans-serif;
     height: 100vh;
+    overflow: hidden;
+    &.started {
+      overflow: auto;
+    }
     &.vr {
       #logo, #menu-about, #menu-help, #sections {
         display: none;
@@ -454,6 +480,16 @@ export default {
       left: 50%;
       text-align: center;
       transform :translate3d(-50%, -50%, 0);
+    }
+
+    #startBtn {
+      position: fixed;
+      background: $white;
+      color: $black;
+      font-size: 3em;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%);
     }
   }
 

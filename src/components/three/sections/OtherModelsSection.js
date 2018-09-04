@@ -41,14 +41,14 @@ export default class OtherModelsSection extends Section {
     let zPos = 0
     let meshBoundingBox = new THREE.Vector3()
     let viewportSize = store.state.viewportSizeAtCameraFocus
-    let itemPadding = (viewportSize.width * this.sectionWidth) / (this.modelsMesh.length - 1)
     let itemIndex = 0
     let isPortrait = viewportSize.width < viewportSize.height
+    let itemPadding = isPortrait ? 0 : (viewportSize.width * this.sectionWidth) / (this.modelsMesh.length - 1)
     this.modelsMesh.forEach(modelMesh => {
       modelMesh.geometry.computeBoundingBox()
       modelMesh.geometry.boundingBox.getSize(meshBoundingBox)
-      xPos = isPortrait ? 0 : itemPadding * itemIndex
-      zPos = isPortrait ? -2000 * itemIndex : 0
+      xPos = (itemIndex % 2 === 0) ? -itemPadding : itemPadding
+      zPos = -(this.depth / (this.modelsMesh.length - 1)) * itemIndex
       this.modelScaleFactor = isPortrait ? 0.25 : 0.7
       modelMesh.position.set(xPos, 0, zPos)
       modelMesh.scale.set(this.modelScaleFactor, this.modelScaleFactor, this.modelScaleFactor)

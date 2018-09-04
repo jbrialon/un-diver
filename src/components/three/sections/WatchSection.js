@@ -11,7 +11,6 @@ import StickToCamera from '@/components/three/behaviors/StickToCamera.js'
 import HtmlTextureManager from '@/utils/HtmlTextureManager.js'
 
 export default class WatchSection extends Section {
-    stepsDistance
     featuresStickToCameraDistance
     watch3DModelPath = 'diver_watch_blue_LOW.fbx'
     watch3DModel
@@ -23,9 +22,6 @@ export default class WatchSection extends Section {
 
     constructor (sectionData) {
       super(sectionData)
-      this.stepsDistance = this.sectionDepth / (this.sectionData.features.length + this.sectionData.intro.length + 2) // add 1 for watch model and last details item
-      this.featuresStickToCameraDistance = this.stepsDistance * 0.5
-      this.stepsDistance = (this.sectionDepth - this.featuresStickToCameraDistance) / (this.sectionData.features.length + this.sectionData.intro.length + 2) // recalculate stepsDistance in order to let last feature to unstick at sectionDepth and not after
 
       this.addIntroTexts()
       this.addWatchModel()
@@ -43,10 +39,8 @@ export default class WatchSection extends Section {
     */
     addIntroTexts () {
       let introIndex = 0
-      this.sectionData.intro.forEach(introText => {
+      this.sectionData.intro.items.forEach(introText => {
         const textZPos = this.currentZPosition
-        // eslint-disable-next-line
-        console.log(introText)
         HtmlTextureManager.loadTextureById('watch-section-intro-' + introIndex, texture => {
           const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
           const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
@@ -61,7 +55,7 @@ export default class WatchSection extends Section {
             new Fader(introMesh, 200)
           )
         })
-        this.currentZPosition -= this.stepsDistance
+        this.currentZPosition -= introText.depth
         introIndex++
       })
     }
@@ -75,9 +69,9 @@ export default class WatchSection extends Section {
       this.add(this.watch3DModel)
       Object.assign(
         this.watch3DModel,
-        new StickToCamera(this.watch3DModel, this.sectionDepth + this.watch3DModel.position.z)
+        new StickToCamera(this.watch3DModel, this.depth + this.watch3DModel.position.z)
       )
-      this.currentZPosition -= this.stepsDistance
+      this.currentZPosition -= this.sectionData.watchModel.depth
     }
 
     /*
@@ -105,16 +99,9 @@ export default class WatchSection extends Section {
     */
     addFeatures () {
       let featureIndex = 0
-      let featuresSlotsCount = 0
-      this.sectionData.features.forEach(item => {
-        featuresSlotsCount += 1 + item.weight
-      })
-      let featuresDepth = this.stepsDistance * this.sectionData.features.length
-      this.stepsDistance = featuresDepth / featuresSlotsCount
-      this.sectionData.features.forEach(featureObject => {
+      this.sectionData.features.items.forEach(featureObject => {
         const watchOrientation = (featureIndex % 2 !== 0) ? 'left' : 'right'
-        const featureDepth = (this.stepsDistance * featureObject.weight)
-        const textZPos = this.currentZPosition - (featureDepth * 0.5)
+        const textZPos = this.currentZPosition - (featureObject.depth * 0.5)
         HtmlTextureManager.loadTextureById('watch-section-feature-' + featureObject.id, texture => {
           const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
           const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
@@ -134,10 +121,10 @@ export default class WatchSection extends Section {
           Object.assign(
             textMesh,
             new Fader(textMesh, 750),
-            new StickToCamera(textMesh, this.featuresStickToCameraDistance, this.onFeatureSticked)
+            new StickToCamera(textMesh, (featureObject.depth * 0.375), this.onFeatureSticked)
           )
         })
-        this.currentZPosition -= this.stepsDistance + featureDepth
+        this.currentZPosition -= featureObject.depth
         featureIndex++
       })
     }
@@ -152,7 +139,7 @@ export default class WatchSection extends Section {
         detailsMesh.watchOrientation = 'center'
         let translate = texture.image.width * 0.5
         detailsMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(translate, 0, 0))
-        detailsMesh.position.z = this.currentZPosition
+        detailsMesh.position.z = this.currentZPosition - (this.sectionData.details.depth * 0.5)
         detailsMesh.position.x = 50
         detailsMesh.scale.set(0.5, 0.5, 0.5)
         detailsMesh.updateMatrix()
@@ -161,7 +148,7 @@ export default class WatchSection extends Section {
         Object.assign(
           detailsMesh,
           new Fader(detailsMesh, 750),
-          new StickToCamera(detailsMesh, this.featuresStickToCameraDistance, this.onFeatureSticked)
+          new StickToCamera(detailsMesh, this.sectionData.details.depth * 0.5, this.onFeatureSticked)
         )
       })
     }

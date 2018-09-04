@@ -1,10 +1,10 @@
 <template>
   <div class="watch-section">
-    <div v-for="(item, index) in watchData.intro" :key="index" v-html-to-texture="getIntroId(index)" class="watch-section__intro">{{ item }}</div>
+    <div v-for="item in watchData.intro.items" :key="item.id" v-html-to-texture="getIntroId(item.id)" class="watch-section__intro">{{ item.text }}</div>
 
     <div class="watch-section__features">
-      <div class="watch-section__features--container" v-html-to-texture="getFeatureId(item.id)" v-for="item in watchData.features" :key="item.id">
-        <div class="watch-section__features--title">{{ item.title }}</div>
+      <div class="watch-section__features--container" v-html-to-texture="getFeatureId(item.id)" v-for="item in watchData.features.items" :key="item.id">
+        <div v-if="item.title" class="watch-section__features--title">{{ item.title }}</div>
         <div class="watch-section__features--text">{{ item.text }}</div>
       </div>
     </div>
@@ -19,10 +19,9 @@
       <div class="watch-section__details--caseHeight">{{ watchData.details.caseHeight }}</div>
       <div class="watch-section__details--caseWater">{{ watchData.details.caseWater }}</div>
       <div class="watch-section__details--price">{{ watchData.details.price }}</div>
-      <div>
-        <c-link :href="''" :label="'buy in boutique'" class="header__link"></c-link>
-      </div>
     </div>
+
+    <c-link v-html-to-texture="'watch-section-details-button'" :href="''" :label="'dive to the other models'" class="header__link"></c-link>
   </div>
 </template>
 
@@ -44,8 +43,8 @@ export default {
     getFeatureId (id) {
       return 'watch-section-feature-' + id
     },
-    getIntroId (index) {
-      return 'watch-section-intro-' + index
+    getIntroId (id) {
+      return 'watch-section-intro-' + id
     }
   }
 }

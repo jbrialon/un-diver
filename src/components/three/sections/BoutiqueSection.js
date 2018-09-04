@@ -40,6 +40,7 @@ export default class BoutiqueSection extends Section {
       scaleDiff = 1 / scaleDiff
       scaleDiff += this.extraScale
       this.mesh.scale.set(scaleDiff, scaleDiff, scaleDiff)
+      this.mesh.position.set(0, 0, -this.depth)
       this.mesh.updateMatrix()
     }
   }

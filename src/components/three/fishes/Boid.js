@@ -9,10 +9,10 @@ export default class Fish {
   _height
   _depth
   _goal
+  _goalOffset = new THREE.Vector3()
   _neighborhoodRadius = 10
-  _maxSpeed = 0.7
+  _maxSpeed = 2
   _maxSteerForce = 0.05
-  _avoidWalls = false
 
   worldOrigin = new THREE.Vector3()
 
@@ -27,12 +27,12 @@ export default class Fish {
     this._goal = target
   }
 
-  setWorldOrigin (originVector) {
-    this.worldOrigin = originVector
+  setGoalOffset (target) {
+    this._goalOffset = target
   }
 
-  setAvoidWalls (value) {
-    this._avoidWalls = value
+  setWorldOrigin (originVector) {
+    this.worldOrigin = originVector
   }
 
   setWorldSize (width, height, depth) {
@@ -42,48 +42,15 @@ export default class Fish {
   }
 
   run (boids) {
-    if (this._avoidWalls) {
-      this.vector.set(this.worldOrigin.x - this._width, this.position.y, this.position.z)
-      this.vector = this.avoid(this.vector)
-      this.vector.multiplyScalar(5)
-      this._acceleration.add(this.vector)
-      
-      this.vector.set(this.worldOrigin.x + this._width, this.position.y, this.position.z)
-      this.vector = this.avoid(this.vector)
-      this.vector.multiplyScalar(5)
-      this._acceleration.add(this.vector)
-
-      this.vector.set(this.position.x, this.worldOrigin.y - this._height, this.position.z)
-      this.vector = this.avoid(this.vector)
-      this.vector.multiplyScalar(5)
-      this._acceleration.add(this.vector)
-
-      this.vector.set(this.position.x, this.worldOrigin.y + this._height, this.position.z)
-      this.vector = this.avoid(this.vector)
-      this.vector.multiplyScalar(5)
-      this._acceleration.add(this.vector)
-
-      this.vector.set(this.position.x, this.position.y, this.worldOrigin.z - this._depth)
-      this.vector = this.avoid(this.vector)
-      this.vector.multiplyScalar(5)
-      this._acceleration.add(this.vector)
-
-      this.vector.set(this.position.x, this.position.y, this.worldOrigin.z + this._depth)
-      this.vector = this.avoid(this.vector)
-      this.vector.multiplyScalar(5)
-      this._acceleration.add(this.vector)
-    }
-
-     if (Math.random() > 0.2) {
+    if (Math.random() > 0.2) {
       this.flock(boids)
     }
-
-     this.move()
+    this.move()
   }
 
   flock (boids) {
     if (this._goal) {
-      this._acceleration.add(this.reach(this._goal, 0.005))
+      this._acceleration.add(this.reach(this._goal.clone().add(this._goalOffset), Math.random() * 0.002))
     }
 
     this._acceleration.add(this.alignment(boids))
@@ -143,6 +110,13 @@ export default class Fish {
     var steer = new THREE.Vector3()
     steer.subVectors(target, this.position)
     steer.multiplyScalar(amount)
+
+    var distance = this.position.distanceTo(target)
+    if (distance > 300) {
+      this._maxSpeed = this._maxSpeed * 10
+    } else {
+      this._maxSpeed = 0.7
+    }
 
     return steer
   }

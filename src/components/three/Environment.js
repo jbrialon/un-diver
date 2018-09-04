@@ -16,7 +16,6 @@ import FishManager from '@/components/three/fishes/FishManager.js'
 export default class Environment extends THREE.Object3D {
   clock = new THREE.Clock();
   scene
-  sceneFarDistance
   terrainModel
   sharkModel
   turtleModel
@@ -35,11 +34,10 @@ export default class Environment extends THREE.Object3D {
   directionnalLightFactor = 1
   nightFactor = 1
 
-  constructor (scene, renderer, sceneFarDistance) {
+  constructor (scene, renderer) {
     super()
     this.scene = scene
     this.renderer = renderer
-    this.sceneFarDistance = sceneFarDistance
     Object.assign(this, THREE.EventDispatcher)
     this.init()
   }
@@ -66,7 +64,6 @@ export default class Environment extends THREE.Object3D {
     loader.load(CONST.TerrainModelPath, this.onTerrainLoaded)
     loader.load(CONST.SharkModelPath, this.onSharkLoaded)
     loader.load(CONST.TurtleModelPath, this.onTurtleLoaded)
-    loader.load(CONST.DiverModelPath, this.onDiverLoaded)
 
     // this.scene.add(new THREE.HemisphereLight(0x443333, 0x222233, 4))
     // Set up environment map
@@ -74,7 +71,7 @@ export default class Environment extends THREE.Object3D {
     new THREE.HDRCubeTextureLoader().load(THREE.UnsignedByteType, hdrUrls, this.onEnvironmentLoaded)
 
     // set up plankton
-    // let plankton = new Plankton(this.sceneFarDistance)
+    // let plankton = new Plankton(CONST.SceneDepth)
     // plankton.visible = false
     // super.add(plankton)
     // GuiManager.add(plankton, 'visible').name('Plankton')
@@ -88,8 +85,8 @@ export default class Environment extends THREE.Object3D {
   genEnvironementMapCubeUrls (prefix, postfix) {
     return [
       prefix + 'px' + postfix, prefix + 'nx' + postfix,
-      prefix + 'py' + postfix, prefix + 'ny' + postfix,
-      prefix + 'pz' + postfix, prefix + 'nz' + postfix
+      prefix + 'pz' + postfix, prefix + 'ny' + postfix,
+      prefix + 'py' + postfix, prefix + 'nz' + postfix
     ]
   }
 
@@ -107,11 +104,10 @@ export default class Environment extends THREE.Object3D {
   onTerrainLoaded = (object) => {
     this.terrainModel = object
     // this.terrainModel.children[2].material.side = THREE.BackSide
-    this.terrainModel.position.x = -2922
-    this.terrainModel.position.y = 9246
-    this.terrainModel.position.z = 19676
-    this.terrainModel.scale.x = object.scale.y = object.scale.z = 10
-    this.terrainModel.rotateX(THREE.Math.degToRad(85))
+    this.terrainModel.position.x = -386
+    this.terrainModel.position.y = 1372
+    this.terrainModel.position.z = -CONST.SceneDepth - 500
+    this.terrainModel.rotateX(THREE.Math.degToRad(90))
     this.terrainModel.name = 'Terrain'
     this.scene.add(this.terrainModel)
 
@@ -127,7 +123,7 @@ export default class Environment extends THREE.Object3D {
     this.initAnimal(this.sharkModel)
     this.sharkModel.position.y = 200
     this.sharkModel.position.x = 500
-    this.sharkModel.position.z = -4500
+    this.sharkModel.position.z = -5500
     this.sharkModel.rotateX(THREE.Math.degToRad(30))
     this.sharkModel.rotateY(THREE.Math.degToRad(45))
     Utils.removeObjectShininess(this.sharkModel)
@@ -144,17 +140,6 @@ export default class Environment extends THREE.Object3D {
     this.turtleModel.rotateY(THREE.Math.degToRad(45))
     Utils.removeObjectShininess(this.turtleModel)
     super.add(this.turtleModel)
-  }
-
-  onDiverLoaded = (object) => {
-    this.diverModel = object
-    this.initAnimal(this.diverModel)
-    this.diverModel.lookAt(-100, 100, -250)
-    this.diverModel.position.y = 0
-    this.diverModel.position.x = -0
-    this.diverModel.position.z = -5000
-    Utils.removeObjectShininess(this.diverModel)
-    super.add(this.diverModel)
   }
 
   initAnimal (animalModel) {
@@ -188,12 +173,6 @@ export default class Environment extends THREE.Object3D {
       this.turtleModel.position.x += 0.2
       this.turtleModel.position.z -= 0.2
       this.turtleModel.position.y += 0.1
-    }
-    if (this.diverModel) {
-      // TODO : keep model axis when moving
-      this.diverModel.position.x -= 0.1
-      this.diverModel.position.y += 0.1
-      this.diverModel.position.z -= 0.7
     }
     if (this.modelMixers.length > 0) {
       for (var i = 0; i < this.modelMixers.length; i++) {

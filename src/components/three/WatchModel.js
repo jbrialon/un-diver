@@ -1,6 +1,6 @@
 import * as CONST from '@/Constants'
 import store from '@/store'
-import {TweenMax, Power4, Sine} from 'gsap'
+import {TweenMax, Power4, Sine, Linear} from 'gsap'
 import THREE from '@/reflectance/ReflectanceImports'
 
 export default class WatchModel extends THREE.Object3D {
@@ -88,6 +88,11 @@ export default class WatchModel extends THREE.Object3D {
     this.secondsHand.translateY(-secondsOffset)
     this.setHandsRotation()
     setInterval(this.setHandsRotation, 1000)
+    TweenMax.to(this.secondsHand.rotation, 60, {
+      z: -Math.PI * 2,
+      repeat: -1,
+      ease: Linear.easeNone
+    })
   }
 
   orientWatch (watchOrientation, reset, direction) {
@@ -138,13 +143,11 @@ export default class WatchModel extends THREE.Object3D {
 
   setHandsRotation = () => {
     let date = new Date()
-    let seconds = date.getSeconds()
     let minutes = date.getMinutes()
     let hours = date.getHours()
 
     this.hoursHand.rotation.z = -THREE.Math.degToRad((hours * 30) + (minutes / 2))
     this.minutesHand.rotation.z = -THREE.Math.degToRad(minutes * 6)
-    this.secondsHand.rotation.z = -THREE.Math.degToRad(seconds * 6)
   }
 
   setEnvironmentMap (texture) {

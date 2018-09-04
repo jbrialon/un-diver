@@ -3,16 +3,17 @@
 * Handles all mobile events and orients camera accordingly
 */
 import store from '@/store'
-import * as CONST from '../../Constants'
+import * as CONST from '@/Constants'
 import * as THREE from 'three'
-import {TweenMax, Sine} from 'gsap'
+import {TweenMax, Sine, Power4} from 'gsap'
 import 'gsap/ScrollToPlugin'
-import AnimationLoopManager from '../../utils/AnimationLoopManager'
-import GuiManager from '../../utils/GuiManager'
+import AnimationLoopManager from '@/utils/AnimationLoopManager'
+import Utils from '@/utils/Utils'
+import GuiManager from '@/utils/GuiManager'
 
 export default class CameraManager extends THREE.Object3D {
+  autonomous = false
   vrModeActivated = false
-  lastSectionZPosition
   scrollingElement
   stageSize
   camera
@@ -32,7 +33,10 @@ export default class CameraManager extends THREE.Object3D {
     this.scrollingElement = (document.scrollingElement || document.documentElement)
     this.stageSize = stageSize
     this.camera = new THREE.PerspectiveCamera(CONST.CameraFOV, stageSize.width / stageSize.height, CONST.CameraNearPlane, CONST.CameraFarPlane)
-    this.position.z = CONST.CameraDistanceToSection
+    this.setVisibleViewPortSizeAtCameraFocus(CONST.CameraDistanceToSection, this.camera)
+    this.updateCamera()
+    this.position.z = CONST.InitialCameraDistance
+    if (store.state.start3dExperience) this.startExperience()
     this.add(this.camera)
 
     this.handleEvents()
@@ -40,11 +44,7 @@ export default class CameraManager extends THREE.Object3D {
     this.setCameraWiggleX()
     this.setCameraWiggleY()
 
-    AnimationLoopManager.addFirstCallback(this.updateCamera)
-
     GuiManager.add(this, 'resetOrientation').name('Reset Orientation')
-
-    this.setVisibleViewPortSizeAtCameraFocus(CONST.CameraDistanceToSection, this.camera)
   }
 
   setVisibleViewPortSizeAtCameraFocus (depth, camera) {
@@ -58,12 +58,14 @@ export default class CameraManager extends THREE.Object3D {
     store.commit('setViewportSizeAtCameraFocus', this.vewportSizeAtCameraFocus)
   }
 
-  set lastSectionZPosition (lastSectionZPosition) {
-    this.lastSectionZPosition = lastSectionZPosition
-  }
-
-  get lastSectionZPosition () {
-    return this.lastSectionZPosition
+  startExperience () {
+    TweenMax.to(this.position, 2, {
+      z: CONST.CameraDistanceToSection,
+      ease: Power4.easeInOut,
+      onComplete: () => {
+        AnimationLoopManager.addFirstCallback(this.updateCamera)
+      }
+    })
   }
 
   set vrMode (vrModeActivated) {
@@ -85,11 +87,11 @@ export default class CameraManager extends THREE.Object3D {
   updateCamera = () => {
     this.position.z += (((-this.scrollingElement.scrollTop * CONST.PageHeightMultiplyer) + CONST.CameraDistanceToSection) - this.position.z) * 0.1
     this.updateCameraRotation()
-    window.AppScrollPercentage = (-(this.position.z - CONST.CameraDistanceToSection) / this.lastSectionZPosition)
+    window.AppScrollPercentage = Utils.clamp((-(this.position.z - CONST.CameraDistanceToSection) / CONST.SceneDepth), 0, 1)
     if (this.vrModeActivated) {
       this.camera.quaternion.copy(this.cameraRotationQuaternion)
     } else {
-      this.camera.quaternion.slerp(this.cameraRotationQuaternion, 0.1)
+      this.camera.quaternion.slerp(this.cameraRotationQuaternion, CONST.CameraRotationEaseFactor)
     }
   }
 
@@ -122,6 +124,7 @@ export default class CameraManager extends THREE.Object3D {
     let maxHeight = this.stageSize.height >> 1
     vec2.x = (vec2.x - maxWidth) / maxWidth
     vec2.y = (vec2.y - maxHeight) / maxHeight
+    vec2.multiplyScalar(CONST.CameraRotationRestrictFactor)
   }
 
   onMouseOut = (e) => {

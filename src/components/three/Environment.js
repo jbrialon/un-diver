@@ -64,7 +64,6 @@ export default class Environment extends THREE.Object3D {
     loader.load(CONST.TerrainModelPath, this.onTerrainLoaded)
     loader.load(CONST.SharkModelPath, this.onSharkLoaded)
     loader.load(CONST.TurtleModelPath, this.onTurtleLoaded)
-    loader.load(CONST.DiverModelPath, this.onDiverLoaded)
 
     // this.scene.add(new THREE.HemisphereLight(0x443333, 0x222233, 4))
     // Set up environment map
@@ -124,7 +123,7 @@ export default class Environment extends THREE.Object3D {
     this.initAnimal(this.sharkModel)
     this.sharkModel.position.y = 200
     this.sharkModel.position.x = 500
-    this.sharkModel.position.z = -4500
+    this.sharkModel.position.z = -5500
     this.sharkModel.rotateX(THREE.Math.degToRad(30))
     this.sharkModel.rotateY(THREE.Math.degToRad(45))
     Utils.removeObjectShininess(this.sharkModel)
@@ -141,17 +140,6 @@ export default class Environment extends THREE.Object3D {
     this.turtleModel.rotateY(THREE.Math.degToRad(45))
     Utils.removeObjectShininess(this.turtleModel)
     super.add(this.turtleModel)
-  }
-
-  onDiverLoaded = (object) => {
-    this.diverModel = object
-    this.initAnimal(this.diverModel)
-    this.diverModel.lookAt(-100, 100, -250)
-    this.diverModel.position.y = 0
-    this.diverModel.position.x = -0
-    this.diverModel.position.z = -5000
-    Utils.removeObjectShininess(this.diverModel)
-    super.add(this.diverModel)
   }
 
   initAnimal (animalModel) {
@@ -185,12 +173,6 @@ export default class Environment extends THREE.Object3D {
       this.turtleModel.position.x += 0.2
       this.turtleModel.position.z -= 0.2
       this.turtleModel.position.y += 0.1
-    }
-    if (this.diverModel) {
-      // TODO : keep model axis when moving
-      this.diverModel.position.x -= 0.1
-      this.diverModel.position.y += 0.1
-      this.diverModel.position.z -= 0.7
     }
     if (this.modelMixers.length > 0) {
       for (var i = 0; i < this.modelMixers.length; i++) {

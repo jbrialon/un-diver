@@ -7,6 +7,8 @@ import i18n from '@/i18n'
 import html2canvas from 'html2canvas'
 import HtmlTextureManager from '@/utils/HtmlTextureManager'
 
+require('viewport-units-buggyfill').init()
+
 Vue.config.productionTip = false
 
 Vue.directive('html-to-texture', (element, binding) => {

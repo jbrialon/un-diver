@@ -30,7 +30,8 @@
           <div slot="slideContent">
             <div class="slider__slide slider__slide--center">
               <Parallax class="slider__parallax"></Parallax>
-              <icon-mouse class="slider__mouse-icon"></icon-mouse>
+              <icon-mouse class="slider__icon slider__icon--mouse"></icon-mouse>
+              <icon-hand class="slider__icon slider__icon--hand"></icon-hand>
               <p class="text">
                 To dive, use scroll & rotation to explore
               </p>
@@ -49,6 +50,7 @@ import 'vueperslides/dist/vueperslides.min.css'
 import Tilt from '@/components/vue/Intro/Tilt.vue'
 import Parallax from '@/components/vue/Intro/Parallax.vue'
 import iconMouse from '@/components/icon/icon-mouse.vue'
+import iconHand from '@/components/icon/icon-hand.vue'
 
 import Utils from '@/utils/Utils'
 
@@ -66,7 +68,8 @@ export default {
     VueperSlides,
     VueperSlide,
     Parallax,
-    iconMouse
+    iconMouse,
+    iconHand
   }
 }
 </script>
@@ -111,8 +114,22 @@ export default {
   &__parallax {
     margin:auto;
   }
-  &__mouse-icon {
+  &__icon {
     margin:20px auto 0 auto;
+    &--mouse {
+      @include small-only {
+        display:none;
+      }
+    }
+    &--hand {
+      display:none;
+      animation-name: handAnim;
+      animation-duration: 1s;
+      animation-iteration-count: infinite;
+      @include small-only {
+        display:block;
+      }
+    }
   }
   &__container {
     position:relative;
@@ -128,7 +145,7 @@ export default {
       width:33px;
       height:33px;
       @include small-only {
-        top:32vh;
+        top:36vh;
       }
       svg {
         position:absolute;
@@ -199,6 +216,14 @@ export default {
         text-align:center;
         max-width:625px;
       }
+    }
+  }
+  @keyframes handAnim {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(10px);
     }
   }
 }

@@ -80,7 +80,7 @@ export default {
   &__burger {
     position:relative;
     display:none;
-    width:27px;
+    width:28px;
     height:22px;
     @include small-only {
       display:block;
@@ -104,7 +104,7 @@ export default {
       display:block;
       background:$white;
       border-radius:4px;
-      width:27px;
+      width:28px;
       height:2px;
       transform-origin: left;
       &:nth-child(1) {

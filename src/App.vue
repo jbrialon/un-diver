@@ -12,7 +12,7 @@
       <div id="rotate-device-message">
         Please rotate your device to landscape
       </div>
-      <button v-if="!start3dExperience" @click="start()" id="startBtn">START EXPERIENCE</button>
+      <button v-if="!start3dExperience" @click="startExperience()" id="startBtn">START EXPERIENCE {{ Math.floor(loadingPercent * 100) }}</button>
   </div>
 </template>
 
@@ -138,23 +138,6 @@ export default {
   },
   data () {
     return {
-      envManager: null,
-      scrollingElement: null,
-      sceneIsAutoScrolling: false,
-      pageHeight: 0,
-      stageSize: new THREE.Vector2(0, 0),
-      stageDOMElement: null,
-      scene: null,
-      cameraManager: null,
-      renderer: null,
-      firstSectionZPosition: 0,
-      postProcessingManager: null,
-      screenOrientation: window.orientation || 0,
-      scrollTween: null,
-      sectionMargin: 0,
-      sectionsDepthList: [],
-      ThreeClock: new THREE.Clock(),
-      sections: [],
       sectionsData: null
     }
   },
@@ -166,6 +149,7 @@ export default {
       return this.screenOrientation === 0
     },
     ...mapGetters([
+      'loadingPercent',
       'start3dExperience',
       'vrModeActivated',
       'nightModeActivated',
@@ -173,24 +157,49 @@ export default {
       'goToSectionId'
     ])
   },
+  beforeCreate () {
+    this.stageSize = new THREE.Vector2(0, 0)
+    this.scene = null
+    this.envManager = null
+    this.scrollingElement = null
+    this.sceneIsAutoScrolling = false
+    this.pageHeight = 0
+    this.stageDOMElement = null
+    this.cameraManager = null
+    this.renderer = null
+    this.firstSectionZPosition = 0
+    this.postProcessingManager = null
+    this.screenOrientation = window.orientation || 0
+    this.scrollTween = null
+    this.sectionMargin = 0
+    this.sectionsDepthList = []
+    this.ThreeClock = new THREE.Clock()
+    this.sections = []
+  },
   mounted () {
-    this.sectionMargin = CONST.SceneDepth * CONST.SectionsMargin
-    const sceneDepthWithoutMargins = CONST.SceneDepth - (this.sectionMargin * (database.length - 1))
-    Utils.computeChildDepths(database, sceneDepthWithoutMargins)
-    this.sectionsData = database
-
-    this.stageDOMElement = this.$refs.stage
-    this.initScene()
-    this.buildSections()
-    this.initEnvironment()
-    this.initPostProcessing()
-    this.handelEvents()
-    this.onResize()
-    AnimationLoopManager.addCallback(this.checkCurrentSection)
-    AnimationLoopManager.addLastCallback(this.render3D)
-    this.renderer.setAnimationLoop(AnimationLoopManager.renderLoop)
+    this.initExperience()
   },
   methods: {
+    initExperience () {
+      this.sectionMargin = CONST.SceneDepth * CONST.SectionsMargin
+      const sceneDepthWithoutMargins = CONST.SceneDepth - (this.sectionMargin * (database.length - 1))
+      Utils.computeChildDepths(database, sceneDepthWithoutMargins)
+      this.sectionsData = database
+
+      this.stageDOMElement = this.$refs.stage
+      this.initScene()
+      this.buildSections()
+      this.initEnvironment()
+      this.initPostProcessing()
+      this.handelEvents()
+      this.onResize()
+      AnimationLoopManager.addCallback(this.checkCurrentSection)
+      AnimationLoopManager.addLastCallback(this.render3D)
+      this.renderer.setAnimationLoop(AnimationLoopManager.renderLoop)
+    },
+    startExperience () {
+      this.$store.commit('start3dExperience')
+    },
     handelEvents () {
       window.addEventListener('resize', this.onResize, false)
       window.addEventListener('orientationchange', this.onScreenOrientationChange, false)
@@ -374,9 +383,6 @@ export default {
       this.renderer.forceContextLoss()
       this.renderer.context = undefined
       this.renderer.domElement = undefined
-    },
-    start () {
-      this.$store.commit('start3dExperience')
     }
   },
   watch: {

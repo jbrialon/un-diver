@@ -1,12 +1,14 @@
 import * as CONST from '@/Constants'
 import store from '@/store'
+import Utils from '@/utils/Utils'
+import LoadingManager from '@/utils/LoadingManager'
 import {TweenMax, Power4, Sine, Linear} from 'gsap'
 import THREE from '@/reflectance/ReflectanceImports'
 
 export default class WatchModel extends THREE.Object3D {
   model
-  modelLoader = new THREE.OBJLoader()
-  textureLoader = new THREE.TextureLoader()
+  modelLoader = new THREE.OBJLoader(LoadingManager.instance)
+  textureLoader = new THREE.TextureLoader(LoadingManager.instance)
   material = new THREE.MeshStandardMaterial()
 
   rotationTween
@@ -17,26 +19,21 @@ export default class WatchModel extends THREE.Object3D {
 
   constructor () {
     super()
+    this.textureLoader.setPath(CONST.WatchTexturesPath)
     this.modelLoader.load(CONST.WatchModelPath, this.onModelLoaded)
+    this.material.map = this.textureLoader.load(CONST.WatchDiffuseMap)
+    this.material.metalnessMap = this.material.roughnessMap = this.textureLoader.load(CONST.WatchMetalnessMap)
+    this.material.emissiveMap = this.textureLoader.load(CONST.WatchEmissiveMap)
+    this.material.roughness = 1
+    this.material.metalness = 1
+    this.material.emissive = new THREE.Color(0xffffff)
+    this.material.emissiveIntensity = 0
   }
 
   onModelLoaded = (group) => {
     this.model = group
-    this.textureLoader.setPath(CONST.WatchTexturesPath)
 
-    this.material.roughness = 1
-    this.material.metalness = 1
-    this.material.map = this.textureLoader.load(CONST.WatchDiffuseMap)
-    this.material.metalnessMap = this.material.roughnessMap = this.textureLoader.load(CONST.WatchMetalnessMap)
-    this.material.emissive = new THREE.Color(0xffffff)
-    this.material.emissiveIntensity = 0
-    this.material.emissiveMap = this.textureLoader.load(CONST.WatchEmissiveMap)
-
-    this.model.traverse((child) => {
-      if (child instanceof THREE.Mesh) {
-        child.material = this.material
-      }
-    })
+    Utils.applyMaterialToGroup(this.model, this.material)
 
     this.matrixAutoUpdate = false
     this.model.scale.set(3, 3, 3)

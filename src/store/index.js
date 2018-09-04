@@ -5,7 +5,9 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    start3dExperience: true,
+    loadingPercent: 0,
+    loadingComplete: false,
+    start3dExperience: false,
     cameraDummy: null,
     stageSize: null,
     vrMode: false,
@@ -46,6 +48,16 @@ const store = new Vuex.Store({
     },
     setViewportSizeAtCameraFocus (state, object) {
       state.viewportSizeAtCameraFocus = object
+    },
+    loadingPercent (state, value) {
+      if (value < state.loadingPercent) {
+        // eslint-disable-next-line
+        console.log('LOADER PROBLEM !!!')
+      }
+      state.loadingPercent = value
+    },
+    loadingComplete (state) {
+      state.loadingComplete = true
     }
   },
   getters: {
@@ -72,6 +84,12 @@ const store = new Vuex.Store({
     },
     viewportSizeAtCameraFocus: state => {
       return state.viewportSizeAtCameraFocus
+    },
+    loadingPercent: state => {
+      return state.loadingPercent
+    },
+    loadingComplete: state => {
+      return state.loadingComplete
     }
   }
 })

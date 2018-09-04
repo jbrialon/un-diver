@@ -21,6 +21,18 @@ class Utils {
     })
   }
 
+  /*
+  * Loop through children of given Object3D
+  * and applys given material to each
+  */
+  static applyMaterialToGroup (group, material) {
+    group.traverse((child) => {
+      if (child.isMesh) {
+        child.material = material
+      }
+    })
+  }
+
   static pad (n, width, z) {
     z = z || '0'
     n = n + ''

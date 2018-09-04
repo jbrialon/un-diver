@@ -4,6 +4,7 @@
 */
 import {TweenMax, Power4} from 'gsap'
 import * as CONST from '@/Constants'
+import LoadingManager from '@/utils/LoadingManager'
 // TODO : fix those imports, its ugly
 import THREE from '@/reflectance/ReflectanceImports'
 import FBXLoader from 'three-fbxloader-offical'
@@ -11,15 +12,19 @@ import GuiManager from '@/utils/GuiManager'
 import Utils from '@/utils/Utils'
 import AnimationLoopManager from '@/utils/AnimationLoopManager'
 import FishManager from '@/components/three/fishes/FishManager.js'
-// import Plankton from '@/components/three/Plankton.js'
 
 export default class Environment extends THREE.Object3D {
   clock = new THREE.Clock();
   scene
+
   terrainModel
   sharkModel
   turtleModel
-  diverModel
+
+  terrainMaterial
+  sharkMaterial
+  turtleMaterial
+
   modelMixers = []
   fishManager
   ambientLight
@@ -45,6 +50,32 @@ export default class Environment extends THREE.Object3D {
   init () {
     this.scene.fog = new THREE.FogExp2(this.backgroundColor, CONST.FogDensity)
 
+    this.addLights()
+
+    let fbxLoader = new FBXLoader(LoadingManager.instance)
+    // let objLoader = new THREE.OBJLoader(LoadingManager.instance)
+    let textureLoader = new THREE.TextureLoader(LoadingManager.instance)
+    // objLoader.load(CONST.TerrainModelPath, this.onTerrainLoaded)
+    fbxLoader.load(CONST.SharkModelPath, this.onSharkLoaded)
+    // modelLoader.load(CONST.TurtleModelPath, this.onTurtleLoaded)
+
+    // this.terrainMaterial = new THREE.MeshLambertMaterial()
+    this.sharkMaterial = new THREE.MeshLambertMaterial()
+    this.sharkMaterial.skinning = true
+    this.sharkMaterial.shininess = 0
+    // this.turtleMaterial = new THREE.MeshLambertMaterial()
+
+    // this.terrainMaterial.map = textureLoader.load(CONST.TerrainDiffusePath)
+    this.sharkMaterial.map = textureLoader.load(CONST.SharkDiffuseMap)
+    // this.turtleMaterial.map = textureLoader.load(CONST.TurtleDiffusePath)
+
+    this.addEnvironmentMap()
+    this.addFishes()
+
+    AnimationLoopManager.addCallback(this.updateEnvironment)
+  }
+
+  addLights () {
     this.ambientLight = new THREE.AmbientLight(0xffffff)
     super.add(this.ambientLight)
 
@@ -59,27 +90,16 @@ export default class Environment extends THREE.Object3D {
     let guiLightFolder = GuiManager.addFolder('Lights')
     guiLightFolder.add(this, 'ambientLightFactor', 0, 2).name('Ambient')
     guiLightFolder.add(this, 'directionnalLightFactor', 0, 2).name('Directionnal')
+  }
 
-    let loader = new FBXLoader()
-    loader.load(CONST.TerrainModelPath, this.onTerrainLoaded)
-    loader.load(CONST.SharkModelPath, this.onSharkLoaded)
-    loader.load(CONST.TurtleModelPath, this.onTurtleLoaded)
-
-    // this.scene.add(new THREE.HemisphereLight(0x443333, 0x222233, 4))
-    // Set up environment map
+  addEnvironmentMap () {
     const hdrUrls = this.genEnvironementMapCubeUrls(CONST.HdrEnvTexturePath, '.hdr')
-    new THREE.HDRCubeTextureLoader().load(THREE.UnsignedByteType, hdrUrls, this.onEnvironmentLoaded)
+    new THREE.HDRCubeTextureLoader(LoadingManager.instance).load(THREE.UnsignedByteType, hdrUrls, this.onEnvironmentLoaded)
+  }
 
-    // set up plankton
-    // let plankton = new Plankton(CONST.SceneDepth)
-    // plankton.visible = false
-    // super.add(plankton)
-    // GuiManager.add(plankton, 'visible').name('Plankton')
-
+  addFishes () {
     this.fishManager = new FishManager()
     this.add(this.fishManager)
-
-    AnimationLoopManager.addCallback(this.updateEnvironment)
   }
 
   genEnvironementMapCubeUrls (prefix, postfix) {
@@ -103,6 +123,7 @@ export default class Environment extends THREE.Object3D {
 
   onTerrainLoaded = (object) => {
     this.terrainModel = object
+    Utils.applyMaterialToGroup(this.terrainModel, this.terrainMaterial)
     // this.terrainModel.children[2].material.side = THREE.BackSide
     this.terrainModel.position.x = -386
     this.terrainModel.position.y = 1372
@@ -120,25 +141,27 @@ export default class Environment extends THREE.Object3D {
 
   onSharkLoaded = (object) => {
     this.sharkModel = object
+    this.sharkMaterial.shininess = 0
+    Utils.applyMaterialToGroup(this.sharkModel, this.sharkMaterial)
     this.initAnimal(this.sharkModel)
     this.sharkModel.position.y = 200
     this.sharkModel.position.x = 500
     this.sharkModel.position.z = -5500
     this.sharkModel.rotateX(THREE.Math.degToRad(30))
     this.sharkModel.rotateY(THREE.Math.degToRad(45))
-    Utils.removeObjectShininess(this.sharkModel)
     super.add(this.sharkModel)
   }
 
   onTurtleLoaded = (object) => {
     this.turtleModel = object
+    this.turtleMaterial.shininess = 0
+    Utils.applyMaterialToGroup(this.turtleModel, this.turtleMaterial)
     this.initAnimal(this.turtleModel)
     this.turtleModel.position.y = -350
     this.turtleModel.position.x = -300
     this.turtleModel.position.z = -12000
     this.turtleModel.rotateX(THREE.Math.degToRad(45))
     this.turtleModel.rotateY(THREE.Math.degToRad(45))
-    Utils.removeObjectShininess(this.turtleModel)
     super.add(this.turtleModel)
   }
 
@@ -146,7 +169,6 @@ export default class Environment extends THREE.Object3D {
     this.initModelAnimation(animalModel)
     animalModel.traverse(function (child) {
       if (child.isMesh) {
-        child.castShadow = true
         child.receiveShadow = true
       }
     })
@@ -155,7 +177,7 @@ export default class Environment extends THREE.Object3D {
   initModelAnimation (model) {
     model.mixer = new THREE.AnimationMixer(model)
     this.modelMixers.push(model.mixer)
-    model.mixer.clipAction(model.animations[ 0 ]).setDuration(5).play()
+    model.mixer.clipAction(model.animations[0]).setDuration(5).play()
   }
 
   toggleNight (activated) {

@@ -3,14 +3,15 @@ import THREE from '@/reflectance/ReflectanceImports'
 import store from '@/store'
 import * as CONST from '@/Constants'
 import Boid from '@/components/three/fishes/Boid.js'
+import LoadingManager from '@/utils/LoadingManager'
 
 export default class FishManager extends THREE.Object3D {
   BIRTH_PLACE = new THREE.Vector3(600, 300, 0)
   NUM_FISH = 100
   fishes = []
   boids = []
-  modelLoader = new THREE.OBJLoader()
-  textureLoader = new THREE.TextureLoader()
+  modelLoader = new THREE.OBJLoader(LoadingManager.instance)
+  textureLoader = new THREE.TextureLoader(LoadingManager.instance)
 
   constructor () {
     super()
@@ -21,7 +22,6 @@ export default class FishManager extends THREE.Object3D {
   }
 
   onModelLoaded = (fishModel) => {
-    this.textureLoader.load(CONST.WatchDiffuseMap)
     this.populate(fishModel)
   }
 

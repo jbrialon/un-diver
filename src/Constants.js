@@ -26,11 +26,17 @@ export const CameraRotationRestrictFactor = 0.3 // we don't want user to be able
 * ENVIRONMENT
 */
 export const TerrainModelPath = ModelsPath + 'environment.fbx'
-export const SharkModelPath = ModelsPath + 'shark.fbx'
-export const TurtleModelPath = ModelsPath + 'turtle.fbx'
-export const DiverModelPath = ModelsPath + 'diver.fbx'
-export const FishModelPath = ModelsPath + '/fish/fish.obj'
-export const FishTexture = ModelsPath + '/fish/fish.png'
+
+export const SharkModelPath = ModelsPath + 'shark/riggedshark.fbx'
+export const SharkDiffuseMap = ModelsPath + 'shark/shark_diffuse.jpg'
+export const SharkGlossinessMap = ModelsPath + 'shark/shark_glossiness.gif'
+
+export const TurtleModelPath = ModelsPath + 'turtle/turtle.fbx'
+export const TurtleDiffuseMap = ModelsPath + 'turtle/Turtle_diffuse.jpg'
+export const TurtleGlossinessMap = ModelsPath + 'turtle/Turtle_glossiness.gif'
+
+export const FishModelPath = ModelsPath + 'fish/fish.obj'
+export const FishTexture = ModelsPath + 'fish/fish.png'
 
 /*
 * WATCH SECTION

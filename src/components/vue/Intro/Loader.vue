@@ -23,6 +23,13 @@
         <circle ref="borderTwo" cx="118" cy="118" r="48" fill="none" stroke="#B5966B" stroke-width="1" stroke-opacity="0.2"></circle>
       </svg>
 
+      <svg class="circleBackgroundBorder1" width="236" height="236" viewBox="0 0 236 236">
+        <circle ref="sonar1" cx="118" cy="118" r="48" fill="none" stroke="#B5966B" stroke-width="1" stroke-opacity="0.8"></circle>
+      </svg>
+      <svg class="circleBackgroundBorder1" width="236" height="236" viewBox="0 0 236 236">
+        <circle ref="sonar2" cx="118" cy="118" r="48" fill="none" stroke="#B5966B" stroke-width="1" stroke-opacity="0.8"></circle>
+      </svg>
+
       <svg class="circleFill" width="236" height="236" viewBox="0 0 236 236" :style="strokeDashoffset">
         <circle ref="circlefill" cx="118" cy="118" r="48" stroke="#B5966B" stroke-width="3" fill="none"></circle>
       </svg>
@@ -49,7 +56,8 @@ export default {
   data () {
     return {
       test: true,
-      tl: new TimelineMax()
+      tl: new TimelineMax(),
+      tlRepeat: new TimelineMax({repeat: -1})
     }
   },
   methods: {
@@ -59,13 +67,20 @@ export default {
       this.tl.to(this.$refs.text, 1.5, {autoAlpha: 1, ease: Power2.easeOut})
       this.tl.to(this.$refs.gradient, 1, {attr: {'fill-opacity': 1}, ease: Power2.easeOut}, '-=1.5')
       this.tl.to(this.$refs.borderOne, 1.5, {attr: {r: 74, 'stroke-opacity': 0.4}, ease: Power2.easeOut}, '-=0.5')
-      this.tl.to(this.$refs.borderTwo, 1.5, {attr: {r: 116, 'stroke-opacity': 0.2}, ease: Power2.easeOut}, '-=1.5')
+      this.tl.to(this.$refs.borderTwo, 1.5, {attr: {r: 116, 'stroke-opacity': 0.2}, onComplete: this.launchSonar, ease: Power2.easeOut}, '-=1.5')
+    },
+    launchSonar () {
+      this.tlRepeat.to(this.$refs.sonar1, 1, {attr: {r: 74, 'stroke-opacity': 0}, ease: Power2.easeOut})
+      this.tlRepeat.to(this.$refs.sonar2, 1.5, {attr: {r: 116, 'stroke-opacity': 0}, ease: Power2.easeOut}, '-=1')
     },
     hide () {
+      this.tlRepeat.pause()
       TweenMax.to(this.$refs.circlefill, 1, {attr: {'stroke-opacity': 0}, ease: Power2.easeOut})
       TweenMax.to(this.$refs.circletrack, 1, {attr: {'stroke-opacity': 0}, ease: Power2.easeOut})
       TweenMax.to(this.$refs.borderOne, 1, {attr: {'stroke-opacity': 0}, ease: Power2.easeOut})
       TweenMax.to(this.$refs.borderTwo, 1, {attr: {'stroke-opacity': 0}, ease: Power2.easeOut})
+      TweenMax.to(this.$refs.sonar1, 1, {attr: {'stroke-opacity': 0}, ease: Power2.easeOut})
+      TweenMax.to(this.$refs.sonar2, 1, {attr: {'stroke-opacity': 0}, ease: Power2.easeOut})
       TweenMax.to(this.$refs.background, 1.5, {attr: {r: 0}, ease: Power2.easeOut})
       TweenMax.to(this.$refs.text, 1, {autoAlpha: 0, ease: Power2.easeOut})
       TweenMax.to(this.$refs.gradient, 1, {attr: {'fill-opacity': 0}, ease: Power2.easeOut})

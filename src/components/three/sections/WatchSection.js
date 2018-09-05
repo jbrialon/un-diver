@@ -2,6 +2,7 @@
 * Section with the main Watch 3D model
 * and all features
 */
+import * as CONST from '@/Constants'
 import store from '@/store'
 import * as THREE from 'three'
 import Section from '@/components/three/Section.js'
@@ -9,6 +10,8 @@ import Fader from '@/components/three/behaviors/Fader.js'
 import WatchModel from '@/components/three/models/WatchModel.js'
 import StickToCamera from '@/components/three/behaviors/StickToCamera.js'
 import HtmlTextureManager from '@/utils/HtmlTextureManager.js'
+import AnimationLoopManager from '@/utils/AnimationLoopManager'
+import _ from 'lodash'
 
 export default class WatchSection extends Section {
     featuresStickToCameraDistance
@@ -20,6 +23,15 @@ export default class WatchSection extends Section {
     watchRotationTween
     currentZPosition = 0
 
+    introTextsZPosition = new THREE.Vector3()
+    watchZPosition = new THREE.Vector3()
+    featuresZPosition = new THREE.Vector3()
+    detailsZPosition = new THREE.Vector3()
+
+    featuresPositions = []
+    featuresRotations = []
+    featuresDistance = []
+
     constructor (sectionData) {
       super(sectionData)
 
@@ -28,10 +40,19 @@ export default class WatchSection extends Section {
       this.addFeatures()
       this.addDetails()
 
-      return Object.assign(
-        this,
-        new Fader(this)
-      )
+      AnimationLoopManager.addCallback(this.test)
+    }
+
+    test = () => {
+      if (this.watch3DModel.model && this.featuresPositions.length > 0 && this.featuresPositions.length > 0) {
+        _.forEach(this.featuresPositions, (item, index) => {
+          item.distance = Math.floor(window.AppCameraDummy.position.z + item.position - CONST.CameraDistanceToSection)
+        })
+        this.featuresPositions = _.sortBy(this.featuresPositions, ['distance'])
+        let pc = (this.featuresPositions[0].distance / this.featuresPositions[0].depth * 0.5)
+        let rotation = pc * (Math.PI * 0.25)
+        this.watch3DModel.model.rotation.y = (this.featuresPositions[0].index % 2 === 0) ? rotation : -rotation
+      }
     }
 
     /*
@@ -39,6 +60,7 @@ export default class WatchSection extends Section {
     */
     addIntroTexts () {
       let introIndex = 0
+      this.introTextsZPosition = this.currentZPosition
       this.sectionData.intro.items.forEach(introText => {
         const textZPos = this.currentZPosition
         HtmlTextureManager.loadTextureById('watch-section-intro-' + introIndex, texture => {
@@ -64,6 +86,7 @@ export default class WatchSection extends Section {
     * Add the watch 3D model
      */
     addWatchModel () {
+      this.watchZPosition = this.currentZPosition
       this.watch3DModel = new WatchModel()
       this.watch3DModel.position.z = this.currentZPosition
       this.add(this.watch3DModel)
@@ -78,7 +101,7 @@ export default class WatchSection extends Section {
     * When a features is getting sticked / unsticked to camera
     */
     onFeatureSticked = (feature, unsticked) => {
-      this.watch3DModel.orientWatch(feature.watchOrientation, unsticked)
+      // this.watch3DModel.orientWatch(feature.watchOrientation, unsticked)
 
       if (feature.textId === 'glowing') {
         this.setNightMode(!unsticked)
@@ -99,9 +122,11 @@ export default class WatchSection extends Section {
     */
     addFeatures () {
       let featureIndex = 0
+      this.featuresZPosition = this.currentZPosition
       this.sectionData.features.items.forEach(featureObject => {
         const watchOrientation = (featureIndex % 2 !== 0) ? 'left' : 'right'
         const textZPos = this.currentZPosition - (featureObject.depth * 0.5)
+        const textIndex = featureIndex
         HtmlTextureManager.loadTextureById('watch-section-feature-' + featureObject.id, texture => {
           const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
           const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
@@ -123,6 +148,8 @@ export default class WatchSection extends Section {
             new Fader(textMesh, 750),
             new StickToCamera(textMesh, (featureObject.depth * 0.375), this.onFeatureSticked)
           )
+          this.featuresPositions.push({distance: 0, index: textIndex, depth: featureObject.depth, position: this.position.z - textZPos})
+          this.featuresRotations.push({position: this.position.z - textZPos, rotation: (watchOrientation === 'left') ? Math.PI * 0.25 : -Math.PI * 0.25})
         })
         this.currentZPosition -= featureObject.depth
         featureIndex++
@@ -130,6 +157,7 @@ export default class WatchSection extends Section {
     }
 
     addDetails () {
+      this.detailsZPosition = this.currentZPosition - (this.sectionData.details.depth * 0.5)
       HtmlTextureManager.loadTextureById('watch-section-details', texture => {
         const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
         const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
@@ -139,7 +167,7 @@ export default class WatchSection extends Section {
         detailsMesh.watchOrientation = 'center'
         let translate = texture.image.width * 0.5
         detailsMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(translate, 0, 0))
-        detailsMesh.position.z = this.currentZPosition - (this.sectionData.details.depth * 0.5)
+        detailsMesh.position.z = this.detailsZPosition
         detailsMesh.position.x = 50
         detailsMesh.scale.set(0.5, 0.5, 0.5)
         detailsMesh.updateMatrix()

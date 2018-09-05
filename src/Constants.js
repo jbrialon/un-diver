@@ -26,17 +26,19 @@ export const InitialCameraTweenDuration = 4 // After intro, automatic tween to f
 /*
 * ENVIRONMENT
 */
-export const TerrainModelPath = ModelsPath + 'environment/environment.obj'
-export const TerrainDiffuseMap = ModelsPath + 'environment/diffuse.jpg'
-export const TerrainCorailMap = ModelsPath + 'environment/corail.jpg'
+export const TerrainModelPath = ModelsPath + 'environment/environment.fbx'
+export const TerrainRockMap = ModelsPath + 'environment/rock.jpg'
+export const TerrainCoralMap = ModelsPath + 'environment/coral.jpg'
+export const SharkPathName = 'shark_spline'
+export const TurtlePathName = 'turtle_spline'
 
 export const SharkModelPath = ModelsPath + 'shark/riggedshark.fbx'
 export const SharkDiffuseMap = ModelsPath + 'shark/shark_diffuse.jpg'
 export const SharkGlossinessMap = ModelsPath + 'shark/shark_glossiness.gif'
 
-export const TurtleModelPath = ModelsPath + 'turtle/turtle.fbx'
-export const TurtleDiffuseMap = ModelsPath + 'turtle/Turtle_diffuse.jpg'
-export const TurtleGlossinessMap = ModelsPath + 'turtle/Turtle_glossiness.gif'
+export const TurtleModelPath = ModelsPath + 'turtle/riggedturtle.fbx'
+export const TurtleDiffuseMap = ModelsPath + 'turtle/turtle_diffuse.jpg'
+export const TurtleGlossinessMap = ModelsPath + 'turtle/turtle_glossiness.gif'
 
 export const FishModelPath = ModelsPath + 'fish/fish.obj'
 export const FishTexture = ModelsPath + 'fish/fish.png'
@@ -59,5 +61,7 @@ export const WatchEmissiveMap = 'Watch_EM.png'
 */
 export const SEA_BOTTOM_REACHED = 'seabottomreached'
 export const SEA_BOTTOM_LEAVED = 'seabottomleaved'
+export const SHARK_PATH_LOADED = 'sharkpathloaded'
+export const TURTLE_PATH_LOADED = 'turtlepathloaded'
 export const ENVIRONMENT_MAP_LOADED = 'environmentmaploaded'
 export const OPEN_VUE = 'openvue'

@@ -7,6 +7,17 @@ export default class Animal extends THREE.Object3D {
   material = new THREE.MeshStandardMaterial()
   mesh = new THREE.Mesh()
 
+  animationDelta = 0.2
+  up = new THREE.Vector3(0, 0, 0)
+  axis = new THREE.Vector3()
+  pt
+  radians
+  tangent
+  path
+
+  animationSpline
+  animationPath
+
   fbxLoader = new FBXLoader(LoadingManager.instance)
   textureLoader = new THREE.TextureLoader(LoadingManager.instance)
 
@@ -45,15 +56,34 @@ export default class Animal extends THREE.Object3D {
     this.material.roughness = 1
   }
 
+  setAnimationPath (path) {
+    this.animationPath = path
+    this.animationPath.position.set(0, 0, 0)
+    this.add(this.animationPath)
+    let verticesTypedArray = this.animationPath.geometry.attributes.position
+    let verticesCount = verticesTypedArray.count
+    let vectorsArray = []
+    for (let index = 0; index < verticesCount; index++) {
+      vectorsArray.push(new THREE.Vector3(verticesTypedArray.getX(index), verticesTypedArray.getY(index), verticesTypedArray.getZ(index)))
+    }
+    this.animationSpline = new THREE.CatmullRomCurve3(vectorsArray)
+  }
+
   initModelAnimation () {
     this.mesh.mixer = new THREE.AnimationMixer(this.mesh)
     this.mesh.mixer.clipAction(this.mesh.animations[0]).setDuration(5).play()
   }
 
   updateAnimation (delta) {
-    this.position.x -= 0.65
-    this.position.z += 1
-    this.position.y -= 0.15
     this.mesh.mixer.update(delta)
+    if (this.animationSpline) {
+      this.pt = this.animationSpline.getPoint(this.animationDelta)
+      this.mesh.position.set(this.pt.x, this.pt.y, this.pt.z)
+      this.tangent = this.animationSpline.getTangent(this.animationDelta).normalize()
+      this.axis.crossVectors(this.up, this.tangent).normalize()
+      this.radians = Math.acos(this.up.dot(this.tangent))
+      this.mesh.quaternion.setFromAxisAngle(this.axis, this.radians)
+      this.animationDelta = (this.animationDelta >= 1) ? 0 : this.animationDelta += 0.0002
+    }
   }
 }

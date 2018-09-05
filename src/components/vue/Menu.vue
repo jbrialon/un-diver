@@ -1,31 +1,19 @@
 <template>
   <nav class="menu">
     <transition name="fade">
-      <c-link v-if="!vrModeActivated" class="menu__item hide-for-mobile" :href="''" :label="'Find a boutique'"></c-link>
+      <c-link v-if="!vrModeActivated" class="menu__item hide-for-mobile" :href="$t('header_cta_2_link')" :label="$t('header_cta_2')"></c-link>
     </transition>
     <transition name="fade">
       <button v-if="displayButton" class="menu__item menu__item--sound" :class="{'disabled': !sound}" type="button" name="sound" @click="toggleSound()">
-        SOUND
+        {{ $t("header_cta_sound") }}
       </button>
     </transition>
     <transition name="fade">
       <button v-if="displayButton" class="menu__item menu__item--lang" type="button">
-        FR
+        {{ currentLocale }}
         <ul>
-          <li>
-            <a href="#" hreflang="en">EN</a>
-          </li>
-          <li>
-            <a href="#" hreflang="zh-hans">CN</a>
-          </li>
-          <li>
-            <a href="#" hreflang="ru">RU</a>
-          </li>
-          <li>
-            <a href="#" hreflang="ja">JP</a>
-          </li>
-          <li>
-            <a href="#" hreflang="fr">FR</a>
+          <li v-for="(locale, index) in localesList" :key="index">
+            <a href="#" :hreflang="locale">{{ locale }}</a>
           </li>
         </ul>
       </button>
@@ -42,13 +30,16 @@ import Link from '@/components/vue/Link.vue'
 import iconVr from '@/components/icon/icon-vr.vue'
 
 import Utils from '@/utils/Utils'
+import { localesList } from '@/i18n'
 
 export default {
   name: 'Menu',
   data () {
     return {
       sound: true,
-      isMobile: Utils.isMobile()
+      isMobile: Utils.isMobile(),
+      localesList: localesList,
+      currentLocale: this.$i18n.locale
     }
   },
   components: {
@@ -151,7 +142,10 @@ export default {
           a {
             color:$white;
             text-decoration:none;
-
+            transition:color 300ms ease-out;
+            &:hover {
+              color:$gold;
+            }
           }
         }
       }

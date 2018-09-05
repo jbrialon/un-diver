@@ -20,8 +20,10 @@
   }
 }
 
+u,
 .border-bottom {
   position:relative;
+  text-decoration:none;
   &:before {
     content: '';
     position: absolute;
@@ -34,5 +36,11 @@
     @include small-only {
       height: 10px;
     }
+  }
+}
+
+u {
+  &:before {
+    height:10px;
   }
 }

@@ -9,7 +9,7 @@
         </button>
       </transition>
       <transition name="fade">
-        <c-link v-if="!vrModeActivated" :href="''" :label="'Diver collection'" class="header__link"></c-link>
+        <c-link v-if="!vrModeActivated" :href="$t('header_cta_1_link')" :label="$t('header_cta_1')" class="header__link"></c-link>
       </transition>
       <a href="/" class="header__logo" v-if="!menuMobileActivated">
         <img src="@/assets/logo_un.png" alt="Ulysse Nardin">

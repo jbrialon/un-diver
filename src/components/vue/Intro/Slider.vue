@@ -1,15 +1,11 @@
 <template>
   <div class="slider">
     <div class="slider__container">
-      <vueper-slides class="no-shadow" :fade="true" :bullets="false" :touchable="isMobile" fixed-height="570px" :infinite="false" :autoplay="true">
+      <vueper-slides class="no-shadow" :fade="true" :bullets="false" :touchable="isMobile" fixed-height="570px" :infinite="false" :autoplay="false">
         <vueper-slide :key="1">
           <div slot="slideContent">
             <div class="slider__slide slider__slide--left">
-              <p class="text">
-                <span class="border-bottom">Ulysse Nardin</span>,
-                watchmaker of the oceans, is proud to announce its partnership with free diver and photographer
-                <span class="border-bottom">Buyle</span>
-              </p>
+              <p class="text" v-html="$t('slide_1_text')"></p>
               <tilt class="image" :src="image1"></tilt>
             </div>
           </div>
@@ -18,23 +14,41 @@
           <div slot="slideContent">
             <div class="slider__slide slider__slide--right">
               <tilt class="image" :src="image2"></tilt>
-              <p class="text">
-                <span class="border-bottom">Ulysse Nardin</span>
-                has created the Diver, a robust, functional sports watch, water resistant to
-                <span class="border-bottom">300</span> <span class="border-bottom">meters</span>
-              </p>
+              <p class="text" v-html="$t('slide_2_text')"></p>
             </div>
           </div>
         </vueper-slide>
         <vueper-slide :key="3">
           <div slot="slideContent">
+            <div class="slider__slide slider__slide--left">
+              <p class="text" v-html="$t('slide_3_text')"></p>
+              <tilt class="image" :src="image3"></tilt>
+            </div>
+          </div>
+        </vueper-slide>
+        <vueper-slide :key="4">
+          <div slot="slideContent">
+            <div class="slider__slide slider__slide--right">
+              <tilt class="image" :src="image4"></tilt>
+              <p class="text" v-html="$t('slide_4_text')"></p>
+            </div>
+          </div>
+        </vueper-slide>
+        <vueper-slide :key="5">
+          <div slot="slideContent">
+            <div class="slider__slide slider__slide--left">
+              <p class="text" v-html="$t('slide_5_text')"></p>
+              <tilt class="image" :src="image5"></tilt>
+            </div>
+          </div>
+        </vueper-slide>
+        <vueper-slide :key="6">
+          <div slot="slideContent">
             <div class="slider__slide slider__slide--center">
               <Parallax class="slider__parallax"></Parallax>
               <icon-mouse class="slider__icon slider__icon--mouse"></icon-mouse>
               <icon-hand class="slider__icon slider__icon--hand"></icon-hand>
-              <p class="text">
-                To dive, use scroll & rotation to explore
-              </p>
+              <p class="text" v-html="$t('slide_6_text')"></p>
             </div>
           </div>
         </vueper-slide>
@@ -59,8 +73,11 @@ export default {
   data () {
     return {
       isMobile: Utils.isMobile(),
-      image1: require('@/assets/slider/intro_1.jpg'),
-      image2: require('@/assets/slider/intro_2.jpg')
+      image1: require('@/assets/slider/intro_01.jpg'),
+      image2: require('@/assets/slider/intro_02.jpg'),
+      image3: require('@/assets/slider/intro_03.jpg'),
+      image4: require('@/assets/slider/intro_04.jpg'),
+      image5: require('@/assets/slider/intro_05.jpg')
     }
   },
   components: {
@@ -88,11 +105,11 @@ export default {
 
   .text {
     position:absolute;
-    top:30%;
+    top:25%;
     color:$white;
-    font-size:40px;
+    font-size:35px;
     font-weight:$fw-medium;
-    line-height:47px;
+    line-height:40px;
     text-align:left;
     z-index:1;
     @include small-only {

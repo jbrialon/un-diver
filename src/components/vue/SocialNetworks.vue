@@ -2,7 +2,7 @@
   <transition name="fade">
     <div class="social-networks" v-if="show">
       <ul>
-        <li>Contact</li>
+        <li>{{ $t("footer_contact") }}</li>
         <li>
           <a href="https://www.instagram.com/ulyssenardinofficial/" target="_blank">
             <icon-inst></icon-inst>

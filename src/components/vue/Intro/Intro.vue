@@ -16,11 +16,9 @@
       <!-- Intro Paragraph -->
       <div ref="paragraph" class="intro__paragraph">
         <h2 class="border-bottom">
-          Diver Experience
+          {{ $t("intro_title") }}
         </h2>
-        <p>
-          Ulysse Nardin, watchmaker of the oceans, is proud to announce its partnership with free diver and photographer Buyle
-        </p>
+        <p v-html="$t('intro_paragraph')"></p>
       </div>
       <c-slider ref="slider"></c-slider>
       <!-- Loaded -->
@@ -61,6 +59,7 @@ export default {
     next () {
       if (this.loadingPercent === 1 && this.uiActivated) {
         TweenMax.set(this.$el, {background: 'transparent'})
+        TweenMax.to(this.$refs.paragraph, 1, {autoAlpha: 0, ease: Power1.easeOut})
         this.tlLeave.to(this.$refs.slider.$el, 2, {autoAlpha: 0, ease: Power1.easeOut})
         this.tlLeave.to(this.$refs.loader.$el, 1.5, {xPercent: -50, yPercent: -50, left: '50%', top: '50%', ease: Power2.easeInOut}, '-=2')
         this.tlLeave.to(this.$refs.mask2, 2.3, {attr: {r: 1100}, onStart: this.hideLoader, onComplete: this.leaveIntro, ease: Power2.easeOut})
@@ -83,7 +82,7 @@ export default {
     this.tl.to(this.$refs.loader.$el, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=1.7')
     this.tl.to(this.$refs.loader.$el, 1.5, {xPercent: -50, yPercent: -50, left: '50%', top: '85%', ease: Power2.easeInOut})
     this.tl.to(this.$refs.paragraph, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=1')
-    this.tl.to(this.$refs.paragraph, 1, {autoAlpha: 0, ease: Power1.easeOut})
+    this.tl.to(this.$refs.paragraph, 1, {autoAlpha: 0, ease: Power1.easeOut}, 20)
     this.tl.to(this.$refs.slider.$el, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=1')
     this.tl.play()
   }
@@ -146,6 +145,7 @@ export default {
       font-size:70px;
       font-weight:$fw-medium;
       margin-bottom:40px;
+      display:inline-block;
       line-height:82px;
       @include small-only {
         display:inline-block;
@@ -156,7 +156,8 @@ export default {
     }
     p {
       font-size:20px;
-      line-height:24px;
+      line-height:28px;
+      letter-spacing:1px;
     }
   }
   &__loader {

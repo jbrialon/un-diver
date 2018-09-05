@@ -3,7 +3,7 @@ import * as NormalizeRAF from './utils/NormalizeRAF.js'
 import Vue from 'vue'
 import App from '@/App.vue'
 import store from '@/store/index.js'
-import i18n from '@/i18n'
+import { i18n } from '@/i18n'
 import html2canvas from 'html2canvas'
 import HtmlTextureManager from '@/utils/HtmlTextureManager'
 

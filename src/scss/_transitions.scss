@@ -8,11 +8,3 @@
 .fade-enter, .fade-leave-active {
   opacity: 0
 }
-
-.fade-intro-enter-active, .fade-intro--leave-active {
-  opacity:1;
-  transition: opacity 1s ease-out;
-}
-.fade-intro--enter, .fade-intro--leave-active {
-  opacity: 0
-}

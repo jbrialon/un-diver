@@ -5,7 +5,10 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    start3dExperience: true,
+    loadingPercent: 0,
+    loadingComplete: false,
+    initDiving: false,
+    render3dExperience: false,
     cameraDummy: null,
     stageSize: null,
     vrMode: false,
@@ -13,11 +16,15 @@ const store = new Vuex.Store({
     currentSectionId: undefined,
     goToSectionId: undefined,
     menuMobile: false,
-    viewportSizeAtCameraFocus: undefined
+    viewportSizeAtCameraFocus: undefined,
+    showUI: false
   },
   mutations: {
-    start3dExperience (state) {
-      state.start3dExperience = true
+    initDiving (state) {
+      state.initDiving = true
+    },
+    render3dExperience (state) {
+      state.render3dExperience = true
     },
     toggleVrMode (state) {
       state.vrMode = !state.vrMode
@@ -40,13 +47,25 @@ const store = new Vuex.Store({
     toggleMenuMobile (state) {
       state.menuMobile = !state.menuMobile
     },
+    toggleUI (state) {
+      state.showUI = !state.showUI
+    },
     setViewportSizeAtCameraFocus (state, object) {
       state.viewportSizeAtCameraFocus = object
+    },
+    loadingPercent (state, value) {
+      state.loadingPercent = value
+    },
+    loadingComplete (state) {
+      state.loadingComplete = true
     }
   },
   getters: {
-    start3dExperience: state => {
-      return state.start3dExperience
+    initDiving: state => {
+      return state.initDiving
+    },
+    render3dExperience: state => {
+      return state.render3dExperience
     },
     vrModeActivated: state => {
       return state.vrMode
@@ -63,8 +82,17 @@ const store = new Vuex.Store({
     menuMobileActivated: state => {
       return state.menuMobile
     },
+    uiActivated: state => {
+      return state.showUI
+    },
     viewportSizeAtCameraFocus: state => {
       return state.viewportSizeAtCameraFocus
+    },
+    loadingPercent: state => {
+      return state.loadingPercent
+    },
+    loadingComplete: state => {
+      return state.loadingComplete
     }
   }
 })

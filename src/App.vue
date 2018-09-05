@@ -1,19 +1,18 @@
 <template>
-  <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation, started: start3dExperience}">
+  <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation, started: render3dExperience}">
       <c-watch-section v-if="sectionsData" :watch-data="sectionsData[0]"></c-watch-section>
       <c-other-models-section v-if="sectionsData" :models-data="sectionsData[1].watches"></c-other-models-section>
       <c-final-section v-if="sectionsData" :section-data="sectionsData[2]"></c-final-section>
+      <c-intro></c-intro>
       <div id="stage" ref="stage"></div>
       <c-header></c-header>
       <c-menu-mobile></c-menu-mobile>
       <c-sections v-if="sectionsData" :items="sectionsData"></c-sections>
       <c-meter></c-meter>
-      <!-- <c-tilt></c-tilt> -->
       <c-social-networks></c-social-networks>
       <div id="rotate-device-message">
         Please rotate your device to landscape
       </div>
-      <button v-if="!start3dExperience" @click="start()" id="startBtn">START EXPERIENCE</button>
   </div>
 </template>
 
@@ -38,8 +37,8 @@ import WatchSectionVue from '@/components/vue/vue-textures/WatchSection.vue'
 import OtherModelsSectionVue from '@/components/vue/vue-textures/OtherModelsSection.vue'
 import FinalSectionVue from '@/components/vue/vue-textures/FinalSection.vue'
 import MenuMobile from '@/components/vue/Menu-mobile.vue'
-import socialNetworks from '@/components/vue/social-networks.vue'
-import Tilt from '@/components/vue/tilt.vue'
+import SocialNetworks from '@/components/vue/SocialNetworks.vue'
+import Intro from '@/components/vue/Intro/Intro.vue'
 
 // libs
 import * as THREE from 'three'
@@ -136,28 +135,11 @@ export default {
     'c-other-models-section': OtherModelsSectionVue,
     'c-final-section': FinalSectionVue,
     'c-menu-mobile': MenuMobile,
-    'c-social-networks': socialNetworks,
-    'c-tilt': Tilt
+    'c-social-networks': SocialNetworks,
+    'c-intro': Intro
   },
   data () {
     return {
-      envManager: null,
-      scrollingElement: null,
-      sceneIsAutoScrolling: false,
-      pageHeight: 0,
-      stageSize: new THREE.Vector2(0, 0),
-      stageDOMElement: null,
-      scene: null,
-      cameraManager: null,
-      renderer: null,
-      firstSectionZPosition: 0,
-      postProcessingManager: null,
-      screenOrientation: window.orientation || 0,
-      scrollTween: null,
-      sectionMargin: 0,
-      sectionsDepthList: [],
-      ThreeClock: new THREE.Clock(),
-      sections: [],
       sectionsData: null
     }
   },
@@ -169,31 +151,58 @@ export default {
       return this.screenOrientation === 0
     },
     ...mapGetters([
-      'start3dExperience',
+      'loadingPercent',
+      'loadingComplete',
+      'render3dExperience',
+      'initDiving',
       'vrModeActivated',
       'nightModeActivated',
       'currentSectionId',
       'goToSectionId'
     ])
   },
+  beforeCreate () {
+    this.stageSize = new THREE.Vector2(0, 0)
+    this.scene = null
+    this.envManager = null
+    this.scrollingElement = null
+    this.sceneIsAutoScrolling = false
+    this.pageHeight = 0
+    this.stageDOMElement = null
+    this.cameraManager = null
+    this.renderer = null
+    this.firstSectionZPosition = 0
+    this.postProcessingManager = null
+    this.screenOrientation = window.orientation || 0
+    this.scrollTween = null
+    this.sectionMargin = 0
+    this.sectionsDepthList = []
+    this.ThreeClock = new THREE.Clock()
+    this.sections = []
+  },
   mounted () {
-    this.sectionMargin = CONST.SceneDepth * CONST.SectionsMargin
-    const sceneDepthWithoutMargins = CONST.SceneDepth - (this.sectionMargin * (database.length - 1))
-    Utils.computeChildDepths(database, sceneDepthWithoutMargins)
-    this.sectionsData = database
-
-    this.stageDOMElement = this.$refs.stage
-    this.initScene()
-    this.buildSections()
-    this.initEnvironment()
-    this.initPostProcessing()
-    this.handelEvents()
-    this.onResize()
-    AnimationLoopManager.addCallback(this.checkCurrentSection)
-    AnimationLoopManager.addLastCallback(this.render3D)
-    this.renderer.setAnimationLoop(AnimationLoopManager.renderLoop)
+    this.initExperience()
   },
   methods: {
+    initExperience () {
+      this.sectionMargin = CONST.SceneDepth * CONST.SectionsMargin
+      const sceneDepthWithoutMargins = CONST.SceneDepth - (this.sectionMargin * (database.length - 1))
+      Utils.computeChildDepths(database, sceneDepthWithoutMargins)
+      this.sectionsData = database
+
+      this.stageDOMElement = this.$refs.stage
+      this.initScene()
+      this.buildSections()
+      this.initEnvironment()
+      this.initPostProcessing()
+      this.handelEvents()
+      this.onResize()
+      AnimationLoopManager.addCallback(this.checkCurrentSection)
+      AnimationLoopManager.addLastCallback(this.render3D)
+    },
+    startRender () {
+      this.renderer.setAnimationLoop(AnimationLoopManager.renderLoop)
+    },
     handelEvents () {
       window.addEventListener('resize', this.onResize, false)
       window.addEventListener('orientationchange', this.onScreenOrientationChange, false)
@@ -312,7 +321,7 @@ export default {
       this.cameraManager.setSize(this.stageSize)
       this.postProcessingManager.setSize(this.stageSize)
       this.initPageHeight()
-      if (this.start3dExperience) this.setPageHeight()
+      if (this.render3dExperience) this.setPageHeight()
       this.sections.forEach(section => {
         section.resize()
       })
@@ -377,15 +386,18 @@ export default {
       this.renderer.forceContextLoss()
       this.renderer.context = undefined
       this.renderer.domElement = undefined
-    },
-    start () {
-      this.$store.commit('start3dExperience')
     }
   },
   watch: {
-    'start3dExperience' (activated) {
+    'initDiving' (activated) {
       this.setPageHeight()
-      this.cameraManager.startExperience()
+      this.cameraManager.initDiving()
+    },
+    'render3dExperience' (complete) {
+      this.startRender()
+    },
+    'loadingComplete' (complete) {
+      this.$store.commit('render3dExperience')
     },
     'nightModeActivated' (activated) {
       this.envManager.toggleNight(activated)
@@ -421,8 +433,11 @@ export default {
   }
 
   body {
+    position:relative;
+    width:100vw;
     min-height: 100vh;
     background: black;
+    overflow-x: hidden;
 
     &.vr {
       .stats, .gui {
@@ -432,7 +447,9 @@ export default {
   }
 
   #app {
+    position:relative;
     font-family: 'Roboto', sans-serif;
+    width:100vw;
     height: 100vh;
     overflow: hidden;
     &.started {

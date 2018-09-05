@@ -19,3 +19,20 @@
     display:none !important;
   }
 }
+
+.border-bottom {
+  position:relative;
+  &:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 15px;
+    background: $gold;
+    bottom: 4px;
+    left: 0;
+    z-index: -1;
+    @include small-only {
+      height: 10px;
+    }
+  }
+}

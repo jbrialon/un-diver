@@ -91,7 +91,7 @@ export default {
       'loadingPercent',
       'uiActivated'
     ]),
-    animateLoader () {
+    appLoaded () {
       return this.loadingPercent === 1 && this.uiActivated
     },
     strokeDashoffset () {
@@ -106,8 +106,8 @@ export default {
     }
   },
   watch: {
-    animateLoader () {
-      if (this.animateLoader) {
+    appLoaded () {
+      if (this.appLoaded) {
         this.animate()
       }
     }

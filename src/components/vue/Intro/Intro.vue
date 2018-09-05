@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Loader from '@/components/vue/Intro/Loader.vue'
 import Slider from '@/components/vue/Intro/Slider.vue'
 import { TweenMax, TimelineMax, Power1, Power2 } from 'gsap'
@@ -39,7 +40,6 @@ export default {
   data () {
     return {
       show: true,
-      hideBackground: false,
       tl: new TimelineMax(),
       tlLeave: new TimelineMax()
     }
@@ -48,24 +48,29 @@ export default {
     'c-loader': Loader,
     'c-slider': Slider
   },
+  computed: {
+    ...mapGetters([
+      'loadingPercent',
+      'uiActivated'
+    ])
+  },
   methods: {
     showUI () {
       this.$store.commit('toggleUI')
     },
     next () {
-      TweenMax.set(this.$el, {background: 'transparent'})
-      this.tlLeave.to(this.$refs.slider.$el, 2, {autoAlpha: 0, ease: Power1.easeOut})
-      this.tlLeave.to(this.$refs.loader.$el, 1.5, {xPercent: -50, yPercent: -50, left: '50%', top: '50%', ease: Power2.easeInOut}, '-=2')
-      this.tlLeave.to(this.$refs.mask2, 2.3, {attr: {r: 1100}, onStart: this.hideLoader, onComplete: this.leaveIntro, ease: Power2.easeOut})
+      if (this.loadingPercent === 1 && this.uiActivated) {
+        TweenMax.set(this.$el, {background: 'transparent'})
+        this.tlLeave.to(this.$refs.slider.$el, 2, {autoAlpha: 0, ease: Power1.easeOut})
+        this.tlLeave.to(this.$refs.loader.$el, 1.5, {xPercent: -50, yPercent: -50, left: '50%', top: '50%', ease: Power2.easeInOut}, '-=2')
+        this.tlLeave.to(this.$refs.mask2, 2.3, {attr: {r: 1100}, onStart: this.hideLoader, onComplete: this.leaveIntro, ease: Power2.easeOut})
+      }
     },
     hideLoader () {
       this.$refs.loader.hide()
     },
     leaveIntro () {
       this.show = false
-      this.$store.commit('initDiving')
-    },
-    afterLeave () {
       this.$store.commit('initDiving')
     }
   },

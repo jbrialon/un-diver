@@ -49,6 +49,13 @@ export const WatchMetalnessMap = 'Watch_RM.png'
 export const WatchEmissiveMap = 'Watch_EM.png'
 
 /*
-* BOUTIQUE SECTION
+* FINAL SECTION
 */
-export const BoutiqueImage = require('./assets/boutique/moscow.jpg')
+
+/*
+* EVENTS
+*/
+export const SEA_BOTTOM_REACHED = 'seabottomreached'
+export const SEA_BOTTOM_LEAVED = 'seabottomleaved'
+export const ENVIRONMENT_MAP_LOADED = 'environmentmaploaded'
+export const OPEN_VUE = 'openvue'

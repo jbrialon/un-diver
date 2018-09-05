@@ -2,6 +2,7 @@
   <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation, started: render3dExperience}">
       <c-watch-section v-if="sectionsData" :watch-data="sectionsData[0]"></c-watch-section>
       <c-other-models-section v-if="sectionsData" :models-data="sectionsData[1].watches"></c-other-models-section>
+      <c-final-section v-if="sectionsData" :section-data="sectionsData[2]"></c-final-section>
       <c-intro></c-intro>
       <div id="stage" ref="stage"></div>
       <c-header></c-header>
@@ -24,7 +25,7 @@ import Environment from '@/components/three/Environment.js'
 import VrRenderer from '@/components/three/VrRenderer.js'
 import WatchSection from '@/components/three/sections/WatchSection.js'
 import OtherModelsSection from '@/components/three/sections/OtherModelsSection.js'
-import BoutiqueSection from '@/components/three/sections/BoutiqueSection.js'
+import FinalSection from '@/components/three/sections/FinalSection.js'
 import CameraManager from '@/components/three/CameraManager.js'
 
 // vue
@@ -32,9 +33,10 @@ import { mapGetters } from 'vuex'
 import Meter from '@/components/vue/Meter.vue'
 import Header from '@/components/vue/Header.vue'
 import SectionsAnchors from '@/components/vue/SectionsAnchors.vue'
-import WatchSectionVue from '@/components/vue/WatchSection.vue'
+import WatchSectionVue from '@/components/vue/vue-textures/WatchSection.vue'
+import OtherModelsSectionVue from '@/components/vue/vue-textures/OtherModelsSection.vue'
+import FinalSectionVue from '@/components/vue/vue-textures/FinalSection.vue'
 import MenuMobile from '@/components/vue/Menu-mobile.vue'
-import OtherModelsSectionVue from '@/components/vue/OtherModelsSection.vue'
 import SocialNetworks from '@/components/vue/SocialNetworks.vue'
 import Intro from '@/components/vue/Intro/Intro.vue'
 
@@ -116,9 +118,9 @@ const database = [
   },
   {
     id: 2,
-    type: 'boutique',
-    title: 'Boutique',
-    text: 'Boutique',
+    type: 'final',
+    title: 'Share the experience',
+    text: 'Ulysse Nardin\nwatchmaker of the oceans',
     weight: 0
   }
 ]
@@ -130,8 +132,9 @@ export default {
     'c-meter': Meter,
     'c-sections': SectionsAnchors,
     'c-watch-section': WatchSectionVue,
-    'c-menu-mobile': MenuMobile,
     'c-other-models-section': OtherModelsSectionVue,
+    'c-final-section': FinalSectionVue,
+    'c-menu-mobile': MenuMobile,
     'c-social-networks': SocialNetworks,
     'c-intro': Intro
   },
@@ -287,8 +290,8 @@ export default {
           case 'other-models':
             section = new OtherModelsSection(item)
             break
-          case 'boutique':
-            section = new BoutiqueSection(item)
+          case 'final':
+            section = new FinalSection(item)
             break
         }
         section.matrix.multiply(new THREE.Matrix4().makeTranslation(0, 0, -currentZPos))

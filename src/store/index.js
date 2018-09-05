@@ -7,7 +7,8 @@ const store = new Vuex.Store({
   state: {
     loadingPercent: 0,
     loadingComplete: false,
-    start3dExperience: false,
+    initDiving: false,
+    render3dExperience: false,
     cameraDummy: null,
     stageSize: null,
     vrMode: false,
@@ -19,8 +20,11 @@ const store = new Vuex.Store({
     showUI: false
   },
   mutations: {
-    start3dExperience (state) {
-      state.start3dExperience = true
+    initDiving (state) {
+      state.initDiving = true
+    },
+    render3dExperience (state) {
+      state.render3dExperience = true
     },
     toggleVrMode (state) {
       state.vrMode = !state.vrMode
@@ -50,10 +54,6 @@ const store = new Vuex.Store({
       state.viewportSizeAtCameraFocus = object
     },
     loadingPercent (state, value) {
-      if (value < state.loadingPercent) {
-        // eslint-disable-next-line
-        console.log('LOADER PROBLEM !!!')
-      }
       state.loadingPercent = value
     },
     loadingComplete (state) {
@@ -61,8 +61,11 @@ const store = new Vuex.Store({
     }
   },
   getters: {
-    start3dExperience: state => {
-      return state.start3dExperience
+    initDiving: state => {
+      return state.initDiving
+    },
+    render3dExperience: state => {
+      return state.render3dExperience
     },
     vrModeActivated: state => {
       return state.vrMode

@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation, started: start3dExperience}">
+  <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation, started: render3dExperience}">
       <c-watch-section v-if="sectionsData" :watch-data="sectionsData[0]"></c-watch-section>
       <c-other-models-section v-if="sectionsData" :models-data="sectionsData[1].watches"></c-other-models-section>
       <c-intro></c-intro>
@@ -12,7 +12,6 @@
       <div id="rotate-device-message">
         Please rotate your device to landscape
       </div>
-      <button v-if="!start3dExperience" @click="startExperience()" id="startBtn">START EXPERIENCE {{ Math.floor(loadingPercent * 100) }}</button>
   </div>
 </template>
 
@@ -150,7 +149,9 @@ export default {
     },
     ...mapGetters([
       'loadingPercent',
-      'start3dExperience',
+      'loadingComplete',
+      'render3dExperience',
+      'initDiving',
       'vrModeActivated',
       'nightModeActivated',
       'currentSectionId',
@@ -195,10 +196,9 @@ export default {
       this.onResize()
       AnimationLoopManager.addCallback(this.checkCurrentSection)
       AnimationLoopManager.addLastCallback(this.render3D)
-      this.renderer.setAnimationLoop(AnimationLoopManager.renderLoop)
     },
-    startExperience () {
-      this.$store.commit('start3dExperience')
+    startRender () {
+      this.renderer.setAnimationLoop(AnimationLoopManager.renderLoop)
     },
     handelEvents () {
       window.addEventListener('resize', this.onResize, false)
@@ -318,7 +318,7 @@ export default {
       this.cameraManager.setSize(this.stageSize)
       this.postProcessingManager.setSize(this.stageSize)
       this.initPageHeight()
-      if (this.start3dExperience) this.setPageHeight()
+      if (this.render3dExperience) this.setPageHeight()
       this.sections.forEach(section => {
         section.resize()
       })
@@ -386,9 +386,15 @@ export default {
     }
   },
   watch: {
-    'start3dExperience' (activated) {
+    'initDiving' (activated) {
       this.setPageHeight()
-      this.cameraManager.startExperience()
+      this.cameraManager.initDiving()
+    },
+    'render3dExperience' (complete) {
+      this.startRender()
+    },
+    'loadingComplete' (complete) {
+      this.$store.commit('render3dExperience')
     },
     'nightModeActivated' (activated) {
       this.envManager.toggleNight(activated)

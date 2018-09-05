@@ -59,7 +59,7 @@ export default {
       this.show = false
     },
     afterLeave () {
-      this.$store.commit('start3dExperience')
+      this.$store.commit('initDiving')
     }
   },
   mounted () {

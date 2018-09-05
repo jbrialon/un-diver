@@ -24,10 +24,10 @@
       </svg>
 
       <svg class="circleFill" width="236" height="236" viewBox="0 0 236 236" :style="strokeDashoffset">
-        <circle cx="118" cy="118" r="48" stroke="#B5966B" stroke-width="3" fill="none"></circle>
+        <circle ref="circlefill" cx="118" cy="118" r="48" stroke="#B5966B" stroke-width="3" fill="none"></circle>
       </svg>
       <svg class="circleTrack" width="236" height="236" viewBox="0 0 236 236">
-        <circle cx="118" cy="118" r="48" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="3" fill="none"></circle>
+        <circle ref="circletrack" cx="118" cy="118" r="48" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="3" fill="none"></circle>
       </svg>
     </div>
     <div ref="number" class="loader__number">
@@ -49,23 +49,26 @@ export default {
   data () {
     return {
       test: true,
-      tl: new TimelineMax(),
-      tlRepeat: new TimelineMax({repeat: -1})
+      tl: new TimelineMax()
     }
   },
   methods: {
     animate () {
-      TweenMax.to(this.$refs.number, 1.5, {autoAlpha: 0, ease: Power2.easeOut})
-      TweenMax.to(this.$refs.text, 1.5, {autoAlpha: 1, ease: Power2.easeOut})
-
-      this.tl.to(this.$refs.background, 1, {attr: {r: 48}, ease: Power2.easeOut}, 2)
-      this.tl.to(this.$refs.gradient, 1, {attr: {'fill-opacity': 1}, ease: Power2.easeOut}, '-=1')
+      this.tl.to(this.$refs.background, 1, {attr: {r: 48}, ease: Power2.easeOut})
+      this.tl.to(this.$refs.number, 1.5, {autoAlpha: 0, ease: Power2.easeOut}, '-=2')
+      this.tl.to(this.$refs.text, 1.5, {autoAlpha: 1, ease: Power2.easeOut})
+      this.tl.to(this.$refs.gradient, 1, {attr: {'fill-opacity': 1}, ease: Power2.easeOut}, '-=1.5')
       this.tl.to(this.$refs.borderOne, 1.5, {attr: {r: 74, 'stroke-opacity': 0.4}, ease: Power2.easeOut}, '-=0.5')
-      this.tl.to(this.$refs.borderTwo, 1.5, {attr: {r: 116, 'stroke-opacity': 0.2}, ease: Power2.easeOut}, '-=0.5')
+      this.tl.to(this.$refs.borderTwo, 1.5, {attr: {r: 116, 'stroke-opacity': 0.2}, ease: Power2.easeOut}, '-=1.5')
     },
-    repeat () {
-      this.tlRepeat.fromTo(this.$refs.borderOne, 1.5, {attr: {r: 48, 'stroke-opacity': 0.4}, ease: Power2.easeOut}, {attr: {r: 74, 'stroke-opacity': 0}, ease: Power2.easeOut})
-      this.tlRepeat.fromTo(this.$refs.borderTwo, 2, {attr: {r: 48, 'stroke-opacity': 0.4}, ease: Power2.easeOut}, {attr: {r: 116, 'stroke-opacity': 0}, ease: Power2.easeOut}, '-=1')
+    hide () {
+      TweenMax.to(this.$refs.circlefill, 1, {attr: {'stroke-opacity': 0}, ease: Power2.easeOut})
+      TweenMax.to(this.$refs.circletrack, 1, {attr: {'stroke-opacity': 0}, ease: Power2.easeOut})
+      TweenMax.to(this.$refs.borderOne, 1, {attr: {'stroke-opacity': 0}, ease: Power2.easeOut})
+      TweenMax.to(this.$refs.borderTwo, 1, {attr: {'stroke-opacity': 0}, ease: Power2.easeOut})
+      TweenMax.to(this.$refs.background, 1.5, {attr: {r: 0}, ease: Power2.easeOut})
+      TweenMax.to(this.$refs.text, 1, {autoAlpha: 0, ease: Power2.easeOut})
+      TweenMax.to(this.$refs.gradient, 1, {attr: {'fill-opacity': 0}, ease: Power2.easeOut})
     }
   },
   computed: {

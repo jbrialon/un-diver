@@ -55,8 +55,11 @@ export default {
     next () {
       TweenMax.set(this.$el, {background: 'transparent'})
       this.tlLeave.to(this.$refs.slider.$el, 2, {autoAlpha: 0, ease: Power1.easeOut})
-      this.tlLeave.to(this.$refs.loader.$el, 1.5, {autoAlpha: 0, xPercent: -50, yPercent: -50, left: '50%', top: '50%', ease: Power2.easeInOut}, '-=2')
-      this.tlLeave.to(this.$refs.mask2, 1.7, {attr: {r: 1100}, onComplete: this.leaveIntro, ease: Power2.easeIn})
+      this.tlLeave.to(this.$refs.loader.$el, 1.5, {xPercent: -50, yPercent: -50, left: '50%', top: '50%', ease: Power2.easeInOut})
+      this.tlLeave.to(this.$refs.mask2, 2.3, {attr: {r: 1100}, onStart: this.hideLoader, onComplete: this.leaveIntro, ease: Power2.easeOut})
+    },
+    hideLoader () {
+      this.$refs.loader.hide()
     },
     leaveIntro () {
       this.show = false

@@ -1,7 +1,7 @@
 <template>
   <div class="slider">
     <div class="slider__container">
-      <vueper-slides class="no-shadow" :fade="true" :bullets="false" :touchable="isMobile" fixed-height="570px">
+      <vueper-slides class="no-shadow" :fade="true" :bullets="false" :touchable="isMobile" fixed-height="570px" :infinite="false" :autoplay="true">
         <vueper-slide :key="1">
           <div slot="slideContent">
             <div class="slider__slide slider__slide--left">

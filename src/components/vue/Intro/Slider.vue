@@ -112,6 +112,7 @@ export default {
     line-height:40px;
     text-align:left;
     z-index:1;
+    text-shadow: 2px 1px 10px rgba(0, 0, 0, 0.7);
     @include small-only {
       position:relative;
       top:auto;

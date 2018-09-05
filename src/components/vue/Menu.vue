@@ -13,7 +13,9 @@
         {{ currentLocale }}
         <ul>
           <li v-for="(locale, index) in localesList" :key="index">
-            <a href="#" :hreflang="locale">{{ locale }}</a>
+            <a href="#" :hreflang="locale" @click="setLang(locale)">
+              {{ locale }}
+            </a>
           </li>
         </ul>
       </button>
@@ -56,6 +58,10 @@ export default {
     }
   },
   methods: {
+    setLang (locale) {
+      this.currentLocale = locale
+      this.$i18n.locale = locale
+    },
     toggleSound () {
       this.sound = !this.sound
     },

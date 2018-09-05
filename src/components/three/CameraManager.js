@@ -60,8 +60,8 @@ export default class CameraManager extends THREE.Object3D {
     store.commit('setViewportSizeAtCameraFocus', this.vewportSizeAtCameraFocus)
   }
 
-  initDiving () {
-    TweenMax.to(this.position, CONST.InitialCameraTweenDuration, {
+  initDiving (skipInitialTween) {
+    TweenMax.to(this.position, skipInitialTween ? 0 : CONST.InitialCameraTweenDuration, {
       z: CONST.CameraDistanceToSection,
       ease: Power4.easeInOut,
       onComplete: () => {

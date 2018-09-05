@@ -5,13 +5,12 @@
 import {TweenMax, Power4} from 'gsap'
 import * as CONST from '@/Constants'
 import LoadingManager from '@/utils/LoadingManager'
-// TODO : fix those imports, its ugly
-import THREE from '@/reflectance/ReflectanceImports'
-import FBXLoader from 'three-fbxloader-offical'
+import THREE from '@/utils/ThreeWithPlugins'
 import GuiManager from '@/utils/GuiManager'
-import Utils from '@/utils/Utils'
 import AnimationLoopManager from '@/utils/AnimationLoopManager'
 import FishManager from '@/components/three/fishes/FishManager.js'
+import Animal from '@/components/three/models/Animal'
+import Terrain from '@/components/three/models/Terrain'
 
 export default class Environment extends THREE.Object3D {
   clock = new THREE.Clock();
@@ -21,11 +20,6 @@ export default class Environment extends THREE.Object3D {
   sharkModel
   turtleModel
 
-  terrainMaterial
-  sharkMaterial
-  turtleMaterial
-
-  modelMixers = []
   fishManager
   ambientLight
   directionalLight
@@ -51,24 +45,8 @@ export default class Environment extends THREE.Object3D {
     this.scene.fog = new THREE.FogExp2(this.backgroundColor, CONST.FogDensity)
 
     this.addLights()
-
-    let fbxLoader = new FBXLoader(LoadingManager.instance)
-    // let objLoader = new THREE.OBJLoader(LoadingManager.instance)
-    let textureLoader = new THREE.TextureLoader(LoadingManager.instance)
-    // objLoader.load(CONST.TerrainModelPath, this.onTerrainLoaded)
-    fbxLoader.load(CONST.SharkModelPath, this.onSharkLoaded)
-    // modelLoader.load(CONST.TurtleModelPath, this.onTurtleLoaded)
-
-    // this.terrainMaterial = new THREE.MeshLambertMaterial()
-    this.sharkMaterial = new THREE.MeshLambertMaterial()
-    this.sharkMaterial.skinning = true
-    this.sharkMaterial.shininess = 0
-    // this.turtleMaterial = new THREE.MeshLambertMaterial()
-
-    // this.terrainMaterial.map = textureLoader.load(CONST.TerrainDiffusePath)
-    this.sharkMaterial.map = textureLoader.load(CONST.SharkDiffuseMap)
-    // this.turtleMaterial.map = textureLoader.load(CONST.TurtleDiffusePath)
-
+    this.addTerrain()
+    this.addAnimals()
     this.addEnvironmentMap()
     this.addFishes()
 
@@ -90,6 +68,33 @@ export default class Environment extends THREE.Object3D {
     let guiLightFolder = GuiManager.addFolder('Lights')
     guiLightFolder.add(this, 'ambientLightFactor', 0, 2).name('Ambient')
     guiLightFolder.add(this, 'directionnalLightFactor', 0, 2).name('Directionnal')
+  }
+
+  addTerrain () {
+    this.terrainModel = new Terrain()
+    this.add(this.terrainModel)
+  }
+
+  addAnimals () {
+    this.sharkModel = new Animal(CONST.SharkModelPath)
+    this.sharkModel.loadDiffuseMap(CONST.SharkDiffuseMap)
+    this.sharkModel.loadGlossinessMap(CONST.SharkGlossinessMap)
+    this.sharkModel.position.y = 200
+    this.sharkModel.position.x = 500
+    this.sharkModel.position.z = -5500
+    this.sharkModel.rotateX(THREE.Math.degToRad(30))
+    this.sharkModel.rotateY(THREE.Math.degToRad(45))
+    this.add(this.sharkModel)
+
+    /*
+    this.turtleModel = new Animal(CONST.TurtleModelPath)
+    this.turtleModel.position.y = -350
+    this.turtleModel.position.x = -300
+    this.turtleModel.position.z = -12000
+    this.turtleModel.rotateX(THREE.Math.degToRad(45))
+    this.turtleModel.rotateY(THREE.Math.degToRad(45))
+    this.add(this.turtleModel)
+    */
   }
 
   addEnvironmentMap () {
@@ -121,86 +126,14 @@ export default class Environment extends THREE.Object3D {
     pmremCubeUVPacker.dispose()
   }
 
-  onTerrainLoaded = (object) => {
-    this.terrainModel = object
-    Utils.applyMaterialToGroup(this.terrainModel, this.terrainMaterial)
-    // this.terrainModel.children[2].material.side = THREE.BackSide
-    this.terrainModel.position.x = -386
-    this.terrainModel.position.y = 1372
-    this.terrainModel.position.z = -CONST.SceneDepth - 500
-    this.terrainModel.rotateX(THREE.Math.degToRad(90))
-    this.terrainModel.name = 'Terrain'
-    this.scene.add(this.terrainModel)
-
-    let guiTerrainFolder = GuiManager.addFolder('Terrain position')
-    guiTerrainFolder.add(this.terrainModel.position, 'x', -3000, 2000)
-    guiTerrainFolder.add(this.terrainModel.position, 'y', 1000, 15000)
-    guiTerrainFolder.add(this.terrainModel.position, 'z', 15000, 45000)
-    guiTerrainFolder.add(this.terrainModel.rotation, 'x', 0, Math.PI).name('rotationX')
-  }
-
-  onSharkLoaded = (object) => {
-    this.sharkModel = object
-    this.sharkMaterial.shininess = 0
-    Utils.applyMaterialToGroup(this.sharkModel, this.sharkMaterial)
-    this.initAnimal(this.sharkModel)
-    this.sharkModel.position.y = 200
-    this.sharkModel.position.x = 500
-    this.sharkModel.position.z = -5500
-    this.sharkModel.rotateX(THREE.Math.degToRad(30))
-    this.sharkModel.rotateY(THREE.Math.degToRad(45))
-    super.add(this.sharkModel)
-  }
-
-  onTurtleLoaded = (object) => {
-    this.turtleModel = object
-    this.turtleMaterial.shininess = 0
-    Utils.applyMaterialToGroup(this.turtleModel, this.turtleMaterial)
-    this.initAnimal(this.turtleModel)
-    this.turtleModel.position.y = -350
-    this.turtleModel.position.x = -300
-    this.turtleModel.position.z = -12000
-    this.turtleModel.rotateX(THREE.Math.degToRad(45))
-    this.turtleModel.rotateY(THREE.Math.degToRad(45))
-    super.add(this.turtleModel)
-  }
-
-  initAnimal (animalModel) {
-    this.initModelAnimation(animalModel)
-    animalModel.traverse(function (child) {
-      if (child.isMesh) {
-        child.receiveShadow = true
-      }
-    })
-  }
-
-  initModelAnimation (model) {
-    model.mixer = new THREE.AnimationMixer(model)
-    this.modelMixers.push(model.mixer)
-    model.mixer.clipAction(model.animations[0]).setDuration(5).play()
-  }
-
   toggleNight (activated) {
     TweenMax.to(this, 0.5, {ease: Power4.easeOut, backgroundNightColorDarken: activated ? CONST.NightOpacity : 1})
   }
 
   updateEnvironment = () => {
     let delta = this.clock.getDelta()
-    if (this.sharkModel) {
-      this.sharkModel.position.x -= 0.65
-      this.sharkModel.position.z += 1
-      this.sharkModel.position.y -= 0.15
-    }
-    if (this.turtleModel) {
-      this.turtleModel.position.x += 0.2
-      this.turtleModel.position.z -= 0.2
-      this.turtleModel.position.y += 0.1
-    }
-    if (this.modelMixers.length > 0) {
-      for (var i = 0; i < this.modelMixers.length; i++) {
-        this.modelMixers[i].update(delta)
-      }
-    }
+    this.sharkModel.updateAnimation(delta)
+    // this.turtleModel.updateAnimation(delta)
 
     this.backgroundDepthColorDarken = 1 - (window.AppScrollPercentage * 0.5)
     this.nightFactor = this.backgroundNightColorDarken * this.backgroundDepthColorDarken

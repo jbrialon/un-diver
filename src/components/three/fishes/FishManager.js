@@ -1,5 +1,4 @@
-// TODO : fix those imports below
-import THREE from '@/reflectance/ReflectanceImports'
+import THREE from '@/utils/ThreeWithPlugins'
 import store from '@/store'
 import * as CONST from '@/Constants'
 import Boid from '@/components/three/fishes/Boid.js'

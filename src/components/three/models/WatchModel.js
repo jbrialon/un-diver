@@ -3,7 +3,7 @@ import store from '@/store'
 import Utils from '@/utils/Utils'
 import LoadingManager from '@/utils/LoadingManager'
 import {TweenMax, Power4, Sine, Linear} from 'gsap'
-import THREE from '@/reflectance/ReflectanceImports'
+import THREE from '@/utils/ThreeWithPlugins'
 
 export default class WatchModel extends THREE.Object3D {
   model

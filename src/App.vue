@@ -199,9 +199,15 @@ export default {
       this.onResize()
       AnimationLoopManager.addCallback(this.checkCurrentSection)
       AnimationLoopManager.addLastCallback(this.render3D)
+      if (this.render3dExperience) this.startRender()
+      if (this.initDiving) this.startDiving(true)
     },
     startRender () {
       this.renderer.setAnimationLoop(AnimationLoopManager.renderLoop)
+    },
+    startDiving (skipInitialTween) {
+      this.setPageHeight()
+      this.cameraManager.initDiving(skipInitialTween)
     },
     handelEvents () {
       window.addEventListener('resize', this.onResize, false)
@@ -390,8 +396,7 @@ export default {
   },
   watch: {
     'initDiving' (activated) {
-      this.setPageHeight()
-      this.cameraManager.initDiving()
+      this.startDiving()
     },
     'render3dExperience' (complete) {
       this.startRender()

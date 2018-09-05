@@ -26,7 +26,9 @@ export const InitialCameraTweenDuration = 4 // After intro, automatic tween to f
 /*
 * ENVIRONMENT
 */
-export const TerrainModelPath = ModelsPath + 'environment.fbx'
+export const TerrainModelPath = ModelsPath + 'environment/environment.obj'
+export const TerrainDiffuseMap = ModelsPath + 'environment/diffuse.jpg'
+export const TerrainCorailMap = ModelsPath + 'environment/corail.jpg'
 
 export const SharkModelPath = ModelsPath + 'shark/riggedshark.fbx'
 export const SharkDiffuseMap = ModelsPath + 'shark/shark_diffuse.jpg'

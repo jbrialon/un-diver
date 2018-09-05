@@ -7,7 +7,6 @@
 <script>
 import { TweenMax, Power2 } from 'gsap'
 import Utils from '@/utils/Utils'
-
 export default {
   name: 'tilt',
   data () {
@@ -65,7 +64,6 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/scss/_vars.scss';
-
 .tilt {
   img {
     display:block;

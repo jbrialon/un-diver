@@ -6,7 +6,7 @@ import store from '@/store'
 import * as THREE from 'three'
 import Section from '@/components/three/Section.js'
 import Fader from '@/components/three/behaviors/Fader.js'
-import WatchModel from '@/components/three/WatchModel.js'
+import WatchModel from '@/components/three/models/WatchModel.js'
 import StickToCamera from '@/components/three/behaviors/StickToCamera.js'
 import HtmlTextureManager from '@/utils/HtmlTextureManager.js'
 

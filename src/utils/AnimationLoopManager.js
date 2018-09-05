@@ -14,6 +14,10 @@ class AnimationLoopManager {
     AnimationLoopManager.callbacks.unshift(callback)
   }
 
+  static replaceFirstCallback (callback) {
+    AnimationLoopManager.callbacks[0] = callback
+  }
+
   static addCallback (callback) {
     AnimationLoopManager.callbacks.splice(Math.min(1, AnimationLoopManager.callbacks.length), 0, callback)
   }

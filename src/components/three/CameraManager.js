@@ -36,7 +36,6 @@ export default class CameraManager extends THREE.Object3D {
     this.setVisibleViewPortSizeAtCameraFocus(CONST.CameraDistanceToSection, this.camera)
     this.updateCamera()
     this.position.z = CONST.InitialCameraDistance
-    if (store.state.initDiving) this.initDiving()
     this.add(this.camera)
 
     this.handleEvents()
@@ -45,6 +44,9 @@ export default class CameraManager extends THREE.Object3D {
     this.setCameraWiggleY()
 
     GuiManager.add(this, 'resetOrientation').name('Reset Orientation')
+
+    AnimationLoopManager.addFirstCallback(this.updateCameraRotation) // Only update Camera rotation before initial tween is ended
+    if (store.state.initDiving) this.initDiving()
   }
 
   setVisibleViewPortSizeAtCameraFocus (depth, camera) {
@@ -63,7 +65,7 @@ export default class CameraManager extends THREE.Object3D {
       z: CONST.CameraDistanceToSection,
       ease: Power4.easeInOut,
       onComplete: () => {
-        AnimationLoopManager.addFirstCallback(this.updateCamera)
+        AnimationLoopManager.replaceFirstCallback(this.updateCamera) // Once initial tween is done user is able to scroll
       }
     })
   }
@@ -86,21 +88,22 @@ export default class CameraManager extends THREE.Object3D {
 
   updateCamera = () => {
     this.position.z += (((-this.scrollingElement.scrollTop * CONST.PageHeightMultiplyer) + CONST.CameraDistanceToSection) - this.position.z) * 0.1
-    this.updateCameraRotation()
     window.AppScrollPercentage = Utils.clamp((-(this.position.z - CONST.CameraDistanceToSection) / CONST.SceneDepth), 0, 1)
-    if (this.vrModeActivated) {
-      this.camera.quaternion.copy(this.cameraRotationQuaternion)
-    } else {
-      this.camera.quaternion.slerp(this.cameraRotationQuaternion, CONST.CameraRotationEaseFactor)
-    }
+    this.updateCameraRotation()
   }
 
-  updateCameraRotation () {
+  updateCameraRotation = () => {
     if (this.deviceOrientation) {
       this.deviceOrientationToQuaternion(this.cameraRotationQuaternion, this.deviceOrientation)
       this.cameraRotationQuaternion.premultiply(this.deviceOrientationInitialQuat)
     } else {
       this.cameraRotationQuaternion.setFromEuler(new THREE.Euler(-this.mousePosition.y, -this.mousePosition.x, 0))
+    }
+
+    if (this.vrModeActivated) {
+      this.camera.quaternion.copy(this.cameraRotationQuaternion)
+    } else {
+      this.camera.quaternion.slerp(this.cameraRotationQuaternion, CONST.CameraRotationEaseFactor)
     }
   }
 
@@ -132,12 +135,9 @@ export default class CameraManager extends THREE.Object3D {
   }
 
   onMouseMove = (e) => {
-    // TODO : handle this for mobile devices
-    if (e.target.nodeName === 'CANVAS') {
-      this.mousePosition.x = e.clientX
-      this.mousePosition.y = e.clientY
-      this.restrictFOV(this.mousePosition)
-    }
+    this.mousePosition.x = e.clientX
+    this.mousePosition.y = e.clientY
+    this.restrictFOV(this.mousePosition)
   }
 
   onDeviceOrientationInit = (e) => {

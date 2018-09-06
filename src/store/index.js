@@ -17,7 +17,8 @@ const store = new Vuex.Store({
     goToSectionId: undefined,
     menuMobile: false,
     viewportSizeAtCameraFocus: undefined,
-    showUI: false
+    showUI: false,
+    showGallery: false
   },
   mutations: {
     initDiving (state) {
@@ -38,8 +39,8 @@ const store = new Vuex.Store({
     setCurrentSectionId (state, id) {
       state.currentSectionId = id
     },
-    goToSectionId (state, id) {
-      state.goToSectionId = id
+    goToSectionId (state, idObj) {
+      state.goToSectionId = idObj
     },
     setNightMode (state, active) {
       state.nightMode = active
@@ -58,6 +59,9 @@ const store = new Vuex.Store({
     },
     loadingComplete (state) {
       state.loadingComplete = true
+    },
+    showGallery (state, show) {
+      state.showGallery = show
     }
   },
   getters: {
@@ -93,6 +97,9 @@ const store = new Vuex.Store({
     },
     loadingComplete: state => {
       return state.loadingComplete
+    },
+    showGallery: state => {
+      return state.showGallery
     }
   }
 })

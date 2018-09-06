@@ -7,7 +7,7 @@ export default class Animal extends THREE.Object3D {
   material = new THREE.MeshLambertMaterial()
   mesh = new THREE.Mesh()
 
-  showAnimationSpline = false
+  showAnimationSpline = true
   cruisingSpeed = 0.001
   cruisingRadius = 1000
 
@@ -24,12 +24,15 @@ export default class Animal extends THREE.Object3D {
   fbxLoader = new FBXLoader(LoadingManager.instance)
   textureLoader = new THREE.TextureLoader(LoadingManager.instance)
 
-  constructor (modelPath) {
+  constructor () {
     super()
     this.mesh.mixer = {update: () => {}}
-    this.fbxLoader.load(modelPath, this.onModelLoaded, () => {}, this.onError)
     this.material.skinning = true
     this.material.shininess = 0
+  }
+
+  loadModel (modelPath) {
+    this.fbxLoader.load(modelPath, this.onModelLoaded, () => {}, this.onError)
   }
 
   set speed (speed) {
@@ -41,6 +44,7 @@ export default class Animal extends THREE.Object3D {
   }
 
   onModelLoaded = (object) => {
+    object.scale.copy(this.mesh.scale)
     this.mesh = object
     this.mesh.traverse(function (child) {
       if (child.isMesh) {

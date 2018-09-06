@@ -12,6 +12,7 @@ import FishManager from '@/components/three/fishes/FishManager.js'
 import Animal from '@/components/three/models/Animal'
 import Terrain from '@/components/three/models/Terrain'
 import Plankton from '@/components/three/Plankton'
+import _ from 'lodash'
 
 export default class Environment extends THREE.Object3D {
   clock = new THREE.Clock();
@@ -20,6 +21,8 @@ export default class Environment extends THREE.Object3D {
   terrainModel
   sharkModel
   turtleModel
+
+  animalsArray = []
 
   ambientLight
   directionalLight
@@ -73,17 +76,20 @@ export default class Environment extends THREE.Object3D {
 
   addTerrain () {
     this.terrainModel = new Terrain()
+    /*
     this.terrainModel.addEventListener(CONST.SHARK_PATH_LOADED, event => {
       this.sharkModel.setAnimationPath(event.spline)
     })
     this.terrainModel.addEventListener(CONST.TURTLE_PATH_LOADED, event => {
       this.turtleModel.setAnimationPath(event.spline)
     })
+    */
     this.add(this.terrainModel)
   }
 
   addAnimals () {
-    this.sharkModel = new Animal(CONST.SharkModelPath)
+    this.sharkModel = new Animal()
+    this.sharkModel.loadModel(CONST.SharkModelPath)
     this.sharkModel.loadDiffuseMap(CONST.SharkDiffuseMap)
     this.sharkModel.loadGlossinessMap(CONST.SharkGlossinessMap)
     this.sharkModel.position.y = 500
@@ -92,16 +98,36 @@ export default class Environment extends THREE.Object3D {
     this.sharkModel.cruisingRadius = 2000
     this.sharkModel.speed = 1
     this.sharkModel.setOrientation(new THREE.Euler(THREE.Math.degToRad(30), THREE.Math.degToRad(45), 0))
+    this.sharkModel.setAnimationPath(null)
     this.add(this.sharkModel)
+    this.animalsArray.push(this.sharkModel)
 
-    this.turtleModel = new Animal(CONST.TurtleModelPath)
+    this.turtleModel = new Animal()
+    this.turtleModel.loadModel(CONST.TurtleModelPath)
     this.turtleModel.loadDiffuseMap(CONST.TurtleDiffuseMap)
     this.turtleModel.position.y = -300
     this.turtleModel.position.x = 0
     this.turtleModel.position.z = -13000
     this.turtleModel.speed = -1
+    this.turtleModel.mesh.scale.multiplyScalar(2)
     this.turtleModel.setOrientation(new THREE.Euler(THREE.Math.degToRad(25), THREE.Math.degToRad(45), 0))
+    this.turtleModel.setAnimationPath(null)
     this.add(this.turtleModel)
+    this.animalsArray.push(this.turtleModel)
+
+    let otherSharkModel = new Animal()
+    otherSharkModel.loadModel(CONST.SharkModelPath)
+    otherSharkModel.loadDiffuseMap(CONST.SharkDiffuseMap)
+    otherSharkModel.loadGlossinessMap(CONST.SharkGlossinessMap)
+    otherSharkModel.position.y = 400
+    otherSharkModel.position.x = 400
+    otherSharkModel.position.z = -CONST.SceneDepth * 0.8
+    otherSharkModel.cruisingRadius = 2000
+    otherSharkModel.speed = 1
+    otherSharkModel.setOrientation(new THREE.Euler(THREE.Math.degToRad(30), THREE.Math.degToRad(60), 0))
+    otherSharkModel.setAnimationPath(null)
+    this.add(otherSharkModel)
+    this.animalsArray.push(otherSharkModel)
   }
 
   addEnvironmentMap () {
@@ -152,8 +178,9 @@ export default class Environment extends THREE.Object3D {
 
   updateEnvironment = () => {
     let delta = this.clock.getDelta()
-    this.sharkModel.updateAnimation(delta)
-    this.turtleModel.updateAnimation(delta)
+    _.forEach(this.animalsArray, animal => {
+      animal.updateAnimation(delta)
+    })
 
     this.backgroundDepthColorDarken = 1 - (window.AppScrollPercentage * 0.5)
     this.nightFactor = this.backgroundNightColorDarken * this.backgroundDepthColorDarken

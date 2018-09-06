@@ -41,7 +41,7 @@ import SocialNetworks from '@/components/vue/SocialNetworks.vue'
 import Intro from '@/components/vue/Intro/Intro.vue'
 
 // libs
-import * as THREE from 'three'
+import THREE from '@/utils/ThreeWithPlugins'
 import GuiManager from '@/utils/GuiManager'
 import Utils from '@/utils/Utils'
 
@@ -171,6 +171,7 @@ export default {
     this.stageDOMElement = null
     this.cameraManager = null
     this.renderer = null
+    this.cssRenderer = null
     this.firstSectionZPosition = 0
     this.postProcessingManager = null
     this.screenOrientation = window.orientation || 0
@@ -195,7 +196,7 @@ export default {
       this.buildSections()
       this.initEnvironment()
       this.initPostProcessing()
-      this.handelEvents()
+      this.handleEvents()
       this.onResize()
       AnimationLoopManager.addCallback(this.checkCurrentSection)
       AnimationLoopManager.addLastCallback(this.render3D)
@@ -209,11 +210,13 @@ export default {
       this.setPageHeight()
       this.cameraManager.initDiving(skipInitialTween)
     },
-    handelEvents () {
+    handleEvents () {
+      this.cameraManager.handleEvents()
       window.addEventListener('resize', this.onResize, false)
       window.addEventListener('orientationchange', this.onScreenOrientationChange, false)
     },
     removeListeners () {
+      this.cameraManager.removeListeners()
       window.removeEventListener('resize', this.onResize, false)
       window.removeEventListener('orientationchange', this.onScreenOrientationChange, false)
     },
@@ -228,15 +231,20 @@ export default {
       this.renderer.setPixelRatio(
         window.devicePixelRatio || window.webkitDevicePixelRatio || 1
       )
-
       this.renderer.gammaInput = true
       this.renderer.gammaOutput = true
       this.renderer.toneMapping = THREE.LinearToneMapping
+      this.stageDOMElement.appendChild(this.renderer.domElement)
+
+      this.cssRenderer = new THREE.CSS3DRenderer()
+      this.cssRenderer.setSize(this.stageSize.width, this.stageSize.height)
+      this.cssRenderer.domElement.style.position = 'fixed'
+      this.cssRenderer.domElement.style.top = 0
+      this.stageDOMElement.appendChild(this.cssRenderer.domElement)
 
       this.vrRenderer = new VrRenderer(this.renderer)
       this.vrRenderer.setSize(this.stageSize.width, this.stageSize.height)
       this.vrRenderer.setEyeSeparation(1.3)
-      this.stageDOMElement.appendChild(this.renderer.domElement)
 
       this.scene.add(this.cameraManager)
       window.AppCameraDummy = this.cameraManager
@@ -275,7 +283,7 @@ export default {
     },
     initEnvironment () {
       this.envManager = new Environment(this.scene, this.renderer)
-      this.envManager.addEventListener('environmentmaploaded', this.onEnvironmentMapLoaded)
+      this.envManager.addEventListener(CONST.ENVIRONMENT_MAP_LOADED, this.onEnvironmentMapLoaded)
       this.scene.add(this.envManager)
     },
     onEnvironmentMapLoaded (event) {
@@ -311,9 +319,6 @@ export default {
       this.firstSectionZPosition = this.sectionsData[0].zpos
       this.initPageHeight()
     },
-    onCurrentSectionIdChange (event) {
-      if (!this.sceneIsAutoScrolling) this.$store.commit('setCurrentSectionId', event.message)
-    },
     initPageHeight () {
       this.pageHeight = (CONST.SceneDepth - this.firstSectionZPosition) / CONST.PageHeightMultiplyer + this.stageSize.height
     },
@@ -323,6 +328,7 @@ export default {
     onResize () {
       this.stageSize.set(this.stageDOMElement.clientWidth, this.stageDOMElement.clientHeight)
       this.renderer.setSize(this.stageSize.width, this.stageSize.height)
+      this.cssRenderer.setSize(this.stageSize.width, this.stageSize.height)
       this.vrRenderer.setSize(this.stageSize.width, this.stageSize.height)
       this.cameraManager.setSize(this.stageSize)
       this.postProcessingManager.setSize(this.stageSize)
@@ -358,6 +364,7 @@ export default {
         this.renderer.render(this.scene, this.cameraManager.camera)
         this.postProcessingManager.render()
       }
+      this.cssRenderer.render(this.scene, this.cameraManager.camera)
     },
     clearThree (obj) {
       if (obj !== null) {
@@ -384,7 +391,6 @@ export default {
     },
     disposeScene () {
       this.removeListeners()
-      this.cameraManager.removeListeners()
       AnimationLoopManager.cleartLoop()
       this.renderer.setAnimationLoop(() => {})
       this.clearThree(this.scene)
@@ -413,10 +419,10 @@ export default {
       this.postProcessingManager.toggleVisibility()
       document.body.className = activated ? 'vr' : ''
     },
-    'goToSectionId' (id) {
-      let scrollVal = Math.floor(this.zPosToScrollTop((this.sectionsData[id].zpos)))
+    'goToSectionId' (idObj) {
+      let scrollVal = Math.floor(this.zPosToScrollTop((this.sectionsData[idObj.id].zpos)))
       this.sceneIsAutoScrolling = true
-      this.$store.commit('setCurrentSectionId', id)
+      this.$store.commit('setCurrentSectionId', idObj.id)
       this.cameraManager.scrollTo(scrollVal, () => {
         this.sceneIsAutoScrolling = false
       })

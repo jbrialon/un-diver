@@ -15,7 +15,7 @@ export default class FinalSection extends Section {
   ctasDomElement
   ctasDomElement3D
   ctasDistanceToCamera
-  ctasVisible = false
+  ctasVisible = true
 
   constructor (sectionData) {
     super(sectionData)
@@ -37,6 +37,7 @@ export default class FinalSection extends Section {
       this.add(this.ctasDomElement3D)
       this.ctasDomElement3D.position.y = -texture.image.height * 0.5
       this.size = this.ctasDomElement.getBoundingClientRect()
+      this.setVisibility(false)
       AnimationLoopManager.addCallback(this.checkCTADisplay)
     } else {
       // eslint-disable-next-line

@@ -12,7 +12,6 @@ const store = new Vuex.Store({
     cameraDummy: null,
     stageSize: null,
     vrMode: false,
-    nightMode: false,
     currentSectionId: undefined,
     goToSectionId: undefined,
     menuMobile: false,
@@ -42,9 +41,6 @@ const store = new Vuex.Store({
     goToSectionId (state, idObj) {
       state.goToSectionId = idObj
     },
-    setNightMode (state, active) {
-      state.nightMode = active
-    },
     toggleMenuMobile (state) {
       state.menuMobile = !state.menuMobile
     },
@@ -73,9 +69,6 @@ const store = new Vuex.Store({
     },
     vrModeActivated: state => {
       return state.vrMode
-    },
-    nightModeActivated: state => {
-      return state.nightMode
     },
     currentSectionId: state => {
       return state.currentSectionId

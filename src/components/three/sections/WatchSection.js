@@ -11,7 +11,7 @@ import StickToCamera from '@/components/three/behaviors/StickToCamera.js'
 import HtmlTextureManager from '@/utils/HtmlTextureManager.js'
 import Button from '@/components/three/Button'
 // import * as CONST from '@/Constants'
-// import AnimationLoopManager from '@/utils/AnimationLoopManager'
+import AnimationLoopManager from '@/utils/AnimationLoopManager'
 // import _ from 'lodash'
 
 export default class WatchSection extends Section {
@@ -33,6 +33,10 @@ export default class WatchSection extends Section {
     featuresRotations = []
     featuresDistance = []
 
+    glowStartPosition = 0
+    glowEndPosition = 0
+    nightIntensity = 0
+
     constructor (sectionData) {
       super(sectionData)
 
@@ -41,6 +45,7 @@ export default class WatchSection extends Section {
       this.addFeatures()
       this.addDetails()
 
+      AnimationLoopManager.addCallback(this.checkGlowing)
       // AnimationLoopManager.addCallback(this.testRotation)
     }
 
@@ -106,19 +111,9 @@ export default class WatchSection extends Section {
     onFeatureSticked = (feature, unsticked) => {
       this.watch3DModel.orientWatch(feature.watchOrientation, unsticked)
 
-      if (feature.textId === 'glowing') {
-        this.setNightMode(!unsticked)
-      } else if (feature.textId === 'details' && feature.button) {
+      if (feature.textId === 'details' && feature.button) {
         feature.button.setVisibility(!unsticked)
       }
-    }
-
-    /*
-    * Store glow mode in state and turn on phosphorescent components
-    */
-    setNightMode (activated) {
-      store.commit('setNightMode', activated)
-      this.watch3DModel.setNightMode(activated)
     }
 
     /*
@@ -131,6 +126,7 @@ export default class WatchSection extends Section {
       this.sectionData.features.items.forEach(featureObject => {
         const watchOrientation = (featureIndex % 2 !== 0) ? 'left' : 'right'
         const textZPos = this.currentZPosition - (featureObject.depth * 0.5)
+        const textContainerPos = this.currentZPosition
         const textIndex = featureIndex
         HtmlTextureManager.loadTextureById('watch-section-feature-' + featureObject.id, texture => {
           const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
@@ -160,6 +156,9 @@ export default class WatchSection extends Section {
             moreBtn.position.x = moreBtn.size.width
             moreBtn.position.y = -texture.image.height - moreBtn.size.height * 0.5
             textMesh.add(moreBtn)
+          } else if (featureObject.id === 'glowing') {
+            this.glowStartPosition = textContainerPos + this.position.z
+            this.glowEndPosition = textContainerPos - featureObject.depth + this.position.z
           }
 
           this.featuresPositions.push({distance: 0, index: textIndex, depth: featureObject.depth, position: this.position.z - textZPos})
@@ -208,5 +207,16 @@ export default class WatchSection extends Section {
 
     setEnvironmentMap (texture) {
       this.watch3DModel.setEnvironmentMap(texture)
+    }
+
+    checkGlowing = () => {
+      let cameraPosition = window.AppCameraDummy.position.z
+      if (cameraPosition < this.glowStartPosition && cameraPosition > this.glowEndPosition) {
+        this.nightIntensity = 1 - Math.abs((cameraPosition - this.glowStartPosition) / (this.glowEndPosition - this.glowStartPosition) * 2 - 1)
+      } else {
+        this.nightIntensity = 0
+      }
+      window.AppNightIntensity = this.nightIntensity
+      this.watch3DModel.setNightIntensity(this.nightIntensity)
     }
 }

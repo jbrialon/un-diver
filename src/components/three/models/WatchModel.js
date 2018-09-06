@@ -1,5 +1,4 @@
 import * as CONST from '@/Constants'
-import store from '@/store'
 import Utils from '@/utils/Utils'
 import LoadingManager from '@/utils/LoadingManager'
 import {TweenMax, Power4, Sine, Linear} from 'gsap'
@@ -59,7 +58,6 @@ export default class WatchModel extends THREE.Object3D {
     this.rotationTween = TweenMax.set(this.model.rotation, {y: 0})
 
     this.initHands()
-    this.setNightMode(store.state.nightMode)
   }
 
   initHands () {
@@ -127,15 +125,9 @@ export default class WatchModel extends THREE.Object3D {
     }
   }
 
-  setNightMode (activated) {
-    TweenMax.to(this.material, 0.5, {
-      envMapIntensity: activated ? 0.2 : 2,
-      ease: Power4.easeInOut
-    })
-    TweenMax.to(this.material, 0.5, {
-      emissiveIntensity: activated ? 1 : 0,
-      ease: Power4.easeInOut
-    })
+  setNightIntensity (intensity) {
+    this.material.envMapIntensity = ((1 - intensity) * 1.8) + 0.2
+    this.material.emissiveIntensity = intensity
   }
 
   setHandsRotation = () => {

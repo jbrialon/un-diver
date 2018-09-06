@@ -2,7 +2,6 @@
 * Creates the environment
 * add to the scene fishes, rocks etc...
 */
-import {TweenMax, Power4} from 'gsap'
 import * as CONST from '@/Constants'
 import LoadingManager from '@/utils/LoadingManager'
 import THREE from '@/utils/ThreeWithPlugins'
@@ -172,16 +171,13 @@ export default class Environment extends THREE.Object3D {
     pmremCubeUVPacker.dispose()
   }
 
-  toggleNight (activated) {
-    TweenMax.to(this, 0.5, {ease: Power4.easeOut, backgroundNightColorDarken: activated ? CONST.NightOpacity : 1})
-  }
-
   updateEnvironment = () => {
     let delta = this.clock.getDelta()
     _.forEach(this.animalsArray, animal => {
       animal.updateAnimation(delta)
     })
 
+    this.backgroundNightColorDarken = 1 - window.AppNightIntensity * (1 - CONST.NightOpacity)
     this.backgroundDepthColorDarken = 1 - (window.AppScrollPercentage * 0.5)
     this.nightFactor = this.backgroundNightColorDarken * this.backgroundDepthColorDarken
     this.ambientLight.intensity = this.nightFactor * this.ambientLightFactor

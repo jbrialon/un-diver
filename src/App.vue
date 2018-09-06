@@ -156,7 +156,6 @@ export default {
       'render3dExperience',
       'initDiving',
       'vrModeActivated',
-      'nightModeActivated',
       'currentSectionId',
       'goToSectionId'
     ])
@@ -251,6 +250,7 @@ export default {
       window.AppStageSize = this.stageSize
       window.AppRenderer = this.renderer
       window.AppScene = this.scene
+      window.AppNightIntensity = 0
 
       let renderOptionFolder = GuiManager.addFolder('Render Options')
       let toneMappingOptions = {None: THREE.NoToneMapping, Linear: THREE.LinearToneMapping, Reinhard: THREE.ReinhardToneMapping, Uncharted2: THREE.Uncharted2ToneMapping, Cineon: THREE.CineonToneMapping}
@@ -409,9 +409,6 @@ export default {
     },
     'loadingComplete' (complete) {
       this.$store.commit('render3dExperience')
-    },
-    'nightModeActivated' (activated) {
-      this.envManager.toggleNight(activated)
     },
     'vrModeActivated' (activated) {
       this.onResize()

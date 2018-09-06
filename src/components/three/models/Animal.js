@@ -7,7 +7,7 @@ export default class Animal extends THREE.Object3D {
   material = new THREE.MeshLambertMaterial()
   mesh = new THREE.Mesh()
 
-  showAnimationSpline = true
+  showAnimationSpline = false
   cruisingSpeed = 0.001
   cruisingRadius = 1000
 

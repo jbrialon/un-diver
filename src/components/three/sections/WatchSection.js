@@ -2,7 +2,6 @@
 * Section with the main Watch 3D model
 * and all features
 */
-import * as CONST from '@/Constants'
 import store from '@/store'
 import * as THREE from 'three'
 import Section from '@/components/three/Section.js'
@@ -10,8 +9,9 @@ import Fader from '@/components/three/behaviors/Fader.js'
 import WatchModel from '@/components/three/models/WatchModel.js'
 import StickToCamera from '@/components/three/behaviors/StickToCamera.js'
 import HtmlTextureManager from '@/utils/HtmlTextureManager.js'
-import AnimationLoopManager from '@/utils/AnimationLoopManager'
-import _ from 'lodash'
+// import * as CONST from '@/Constants'
+// import AnimationLoopManager from '@/utils/AnimationLoopManager'
+// import _ from 'lodash'
 
 export default class WatchSection extends Section {
     featuresStickToCameraDistance
@@ -40,9 +40,10 @@ export default class WatchSection extends Section {
       this.addFeatures()
       this.addDetails()
 
-      AnimationLoopManager.addCallback(this.test)
+      // AnimationLoopManager.addCallback(this.testRotation)
     }
 
+    /*
     test = () => {
       if (this.watch3DModel.model && this.featuresPositions.length > 0 && this.featuresPositions.length > 0) {
         _.forEach(this.featuresPositions, (item, index) => {
@@ -54,6 +55,7 @@ export default class WatchSection extends Section {
         this.watch3DModel.model.rotation.y = (this.featuresPositions[0].index % 2 === 0) ? rotation : -rotation
       }
     }
+    */
 
     /*
     * Add the main title for the watch section
@@ -101,7 +103,7 @@ export default class WatchSection extends Section {
     * When a features is getting sticked / unsticked to camera
     */
     onFeatureSticked = (feature, unsticked) => {
-      // this.watch3DModel.orientWatch(feature.watchOrientation, unsticked)
+      this.watch3DModel.orientWatch(feature.watchOrientation, unsticked)
 
       if (feature.textId === 'glowing') {
         this.setNightMode(!unsticked)

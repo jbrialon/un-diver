@@ -29,7 +29,7 @@ export default class Environment extends THREE.Object3D {
   backgroundColor = new THREE.Color()
   backgroundDepthColorDarken = 1
   backgroundNightColorDarken = 1
-  ambientLightFactor = 1
+  ambientLightFactor = 2
   directionnalLightFactor = 1
   nightFactor = 1
 
@@ -66,7 +66,7 @@ export default class Environment extends THREE.Object3D {
     super.add(this.directionalLight)
 
     let guiLightFolder = GuiManager.addFolder('Lights')
-    guiLightFolder.add(this, 'ambientLightFactor', 0, 2).name('Ambient')
+    guiLightFolder.add(this, 'ambientLightFactor', 0, 3).name('Ambient')
     guiLightFolder.add(this, 'directionnalLightFactor', 0, 2).name('Directionnal')
   }
 
@@ -85,19 +85,21 @@ export default class Environment extends THREE.Object3D {
     this.sharkModel = new Animal(CONST.SharkModelPath)
     this.sharkModel.loadDiffuseMap(CONST.SharkDiffuseMap)
     this.sharkModel.loadGlossinessMap(CONST.SharkGlossinessMap)
-    this.sharkModel.position.y = 200
+    this.sharkModel.position.y = 500
     this.sharkModel.position.x = 500
-    this.sharkModel.position.z = -5500
-    this.sharkModel.rotateX(THREE.Math.degToRad(30))
+    this.sharkModel.position.z = -6300
+    this.sharkModel.cruisingRadius = 2000
+    this.sharkModel.speed = 1
+    this.sharkModel.setOrientation(new THREE.Euler(THREE.Math.degToRad(30), THREE.Math.degToRad(45), 0))
     this.add(this.sharkModel)
 
     this.turtleModel = new Animal(CONST.TurtleModelPath)
     this.turtleModel.loadDiffuseMap(CONST.TurtleDiffuseMap)
-    this.turtleModel.position.y = -350
-    this.turtleModel.position.x = -300
-    this.turtleModel.position.z = -12000
-    this.turtleModel.rotateX(THREE.Math.degToRad(45))
-    this.turtleModel.rotateY(THREE.Math.degToRad(45))
+    this.turtleModel.position.y = -300
+    this.turtleModel.position.x = 0
+    this.turtleModel.position.z = -13000
+    this.turtleModel.speed = -1
+    this.turtleModel.setOrientation(new THREE.Euler(THREE.Math.degToRad(25), THREE.Math.degToRad(45), 0))
     this.add(this.turtleModel)
   }
 

@@ -4,16 +4,19 @@ import LoadingManager from '@/utils/LoadingManager'
 import Utils from '@/utils/Utils'
 
 export default class Animal extends THREE.Object3D {
-  material = new THREE.MeshStandardMaterial()
+  material = new THREE.MeshLambertMaterial()
   mesh = new THREE.Mesh()
 
+  showAnimationSpline = false
+  cruisingSpeed = 0.001
+  cruisingRadius = 1000
+
   animationDelta = 0.2
-  up = new THREE.Vector3(0, 0, 0)
-  axis = new THREE.Vector3()
-  pt
+  upVector = new THREE.Vector3(-1, 0, 0)
+  rotationAxis = new THREE.Vector3()
+  currentPoint
   radians
   tangent
-  path
 
   animationSpline
   animationPath
@@ -27,6 +30,14 @@ export default class Animal extends THREE.Object3D {
     this.fbxLoader.load(modelPath, this.onModelLoaded, () => {}, this.onError)
     this.material.skinning = true
     this.material.shininess = 0
+  }
+
+  set speed (speed) {
+    this.cruisingSpeed = speed * 0.01
+  }
+
+  get speed () {
+    return this.cruisingSpeed * 0.01
   }
 
   onModelLoaded = (object) => {
@@ -51,12 +62,23 @@ export default class Animal extends THREE.Object3D {
   }
 
   loadGlossinessMap (mapPath) {
-    this.material.metalnessMap = this.material.roughnessMap = this.textureLoader.load(mapPath)
-    this.material.metalness = 1
-    this.material.roughness = 1
+    let newMaterial = new THREE.MeshStandardMaterial()
+    newMaterial.map = this.material.map
+    newMaterial.metalnessMap = newMaterial.roughnessMap = this.textureLoader.load(mapPath)
+    newMaterial.metalness = 1
+    newMaterial.roughness = 1
+    newMaterial.shininess = 0
+    newMaterial.skinning = true
+    this.material = newMaterial
+  }
+
+  setOrientation (euler) {
+    this.quaternion.setFromEuler(euler)
   }
 
   setAnimationPath (path) {
+    // TODO : if possible work with spline passed in Terrain FBX model, passed in "path" argument here
+    /*
     this.animationPath = path
     this.animationPath.position.set(0, 0, 0)
     this.add(this.animationPath)
@@ -67,6 +89,29 @@ export default class Animal extends THREE.Object3D {
       vectorsArray.push(new THREE.Vector3(verticesTypedArray.getX(index), verticesTypedArray.getY(index), verticesTypedArray.getZ(index)))
     }
     this.animationSpline = new THREE.CatmullRomCurve3(vectorsArray)
+    */
+
+    // Create the default ellipse path to animate animal
+    this.animationSpline = new THREE.EllipseCurve(
+      0, 0, // ax, aY
+      this.cruisingRadius, this.cruisingRadius * 0.2, // xRadius, yRadius
+      0, 2 * Math.PI, // aStartAngle, aEndAngle
+      false, // aClockwise
+      0 // aRotation
+    )
+
+    let points2D = this.animationSpline.getPoints(50)
+    let points3d = []
+    for (let index = 0; index < points2D.length; index++) {
+      points3d.push(new THREE.Vector3(points2D[index].x, 0, points2D[index].y))
+    }
+    this.animationSpline = new THREE.CatmullRomCurve3(points3d)
+    if (this.showAnimationSpline) {
+      let geometry = new THREE.BufferGeometry().setFromPoints(points3d)
+      let material = new THREE.LineBasicMaterial({color: 0xff0000})
+      let curveObject = new THREE.Line(geometry, material)
+      this.add(curveObject)
+    }
   }
 
   initModelAnimation () {
@@ -77,13 +122,15 @@ export default class Animal extends THREE.Object3D {
   updateAnimation (delta) {
     this.mesh.mixer.update(delta)
     if (this.animationSpline) {
-      this.pt = this.animationSpline.getPoint(this.animationDelta)
-      this.mesh.position.set(this.pt.x, this.pt.y, this.pt.z)
+      this.currentPoint = this.animationSpline.getPoint(this.animationDelta)
+      this.mesh.position.set(this.currentPoint.x, this.currentPoint.y, this.currentPoint.z)
       this.tangent = this.animationSpline.getTangent(this.animationDelta).normalize()
-      this.axis.crossVectors(this.up, this.tangent).normalize()
-      this.radians = Math.acos(this.up.dot(this.tangent))
-      this.mesh.quaternion.setFromAxisAngle(this.axis, this.radians)
-      this.animationDelta = (this.animationDelta >= 1) ? 0 : this.animationDelta += 0.0002
+      this.rotationAxis.crossVectors(this.upVector, this.tangent).normalize()
+      this.radians = Math.acos(this.upVector.dot(this.tangent))
+      this.mesh.quaternion.setFromAxisAngle(this.rotationAxis, this.radians)
+      this.animationDelta += (this.cruisingSpeed * delta)
+      this.animationDelta = (this.animationDelta > 1) ? 0 : this.animationDelta
+      this.animationDelta = (this.animationDelta < 0) ? 1 : this.animationDelta
     }
   }
 }

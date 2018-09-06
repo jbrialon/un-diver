@@ -3,8 +3,8 @@
 * when object is closer than CONST.CameraDistanceToSection
 * and release it in space when given maxDistance is reached by camera
 */
-import * as CONST from '../../../Constants'
-import AnimationLoopManager from '../../../utils/AnimationLoopManager'
+import * as CONST from '@/Constants'
+import AnimationLoopManager from '@/utils/AnimationLoopManager'
 import * as THREE from 'three'
 
 export default class StickToCamera {

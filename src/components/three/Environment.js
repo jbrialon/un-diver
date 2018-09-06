@@ -29,7 +29,7 @@ export default class Environment extends THREE.Object3D {
   backgroundColor = new THREE.Color()
   backgroundDepthColorDarken = 1
   backgroundNightColorDarken = 1
-  ambientLightFactor = 1
+  ambientLightFactor = 2
   directionnalLightFactor = 1
   nightFactor = 1
 
@@ -45,8 +45,8 @@ export default class Environment extends THREE.Object3D {
     this.scene.fog = new THREE.FogExp2(this.backgroundColor, CONST.FogDensity)
 
     this.addLights()
-    this.addTerrain()
     this.addAnimals()
+    this.addTerrain()
     this.addEnvironmentMap()
     this.addFishes()
 
@@ -66,12 +66,18 @@ export default class Environment extends THREE.Object3D {
     super.add(this.directionalLight)
 
     let guiLightFolder = GuiManager.addFolder('Lights')
-    guiLightFolder.add(this, 'ambientLightFactor', 0, 2).name('Ambient')
+    guiLightFolder.add(this, 'ambientLightFactor', 0, 3).name('Ambient')
     guiLightFolder.add(this, 'directionnalLightFactor', 0, 2).name('Directionnal')
   }
 
   addTerrain () {
     this.terrainModel = new Terrain()
+    this.terrainModel.addEventListener(CONST.SHARK_PATH_LOADED, event => {
+      this.sharkModel.setAnimationPath(event.spline)
+    })
+    this.terrainModel.addEventListener(CONST.TURTLE_PATH_LOADED, event => {
+      this.turtleModel.setAnimationPath(event.spline)
+    })
     this.add(this.terrainModel)
   }
 
@@ -79,22 +85,22 @@ export default class Environment extends THREE.Object3D {
     this.sharkModel = new Animal(CONST.SharkModelPath)
     this.sharkModel.loadDiffuseMap(CONST.SharkDiffuseMap)
     this.sharkModel.loadGlossinessMap(CONST.SharkGlossinessMap)
-    this.sharkModel.position.y = 200
+    this.sharkModel.position.y = 500
     this.sharkModel.position.x = 500
-    this.sharkModel.position.z = -5500
-    this.sharkModel.rotateX(THREE.Math.degToRad(30))
-    this.sharkModel.rotateY(THREE.Math.degToRad(45))
+    this.sharkModel.position.z = -6300
+    this.sharkModel.cruisingRadius = 2000
+    this.sharkModel.speed = 1
+    this.sharkModel.setOrientation(new THREE.Euler(THREE.Math.degToRad(30), THREE.Math.degToRad(45), 0))
     this.add(this.sharkModel)
 
-    /*
     this.turtleModel = new Animal(CONST.TurtleModelPath)
-    this.turtleModel.position.y = -350
-    this.turtleModel.position.x = -300
-    this.turtleModel.position.z = -12000
-    this.turtleModel.rotateX(THREE.Math.degToRad(45))
-    this.turtleModel.rotateY(THREE.Math.degToRad(45))
+    this.turtleModel.loadDiffuseMap(CONST.TurtleDiffuseMap)
+    this.turtleModel.position.y = -300
+    this.turtleModel.position.x = 0
+    this.turtleModel.position.z = -13000
+    this.turtleModel.speed = -1
+    this.turtleModel.setOrientation(new THREE.Euler(THREE.Math.degToRad(25), THREE.Math.degToRad(45), 0))
     this.add(this.turtleModel)
-    */
   }
 
   addEnvironmentMap () {
@@ -133,7 +139,7 @@ export default class Environment extends THREE.Object3D {
   updateEnvironment = () => {
     let delta = this.clock.getDelta()
     this.sharkModel.updateAnimation(delta)
-    // this.turtleModel.updateAnimation(delta)
+    this.turtleModel.updateAnimation(delta)
 
     this.backgroundDepthColorDarken = 1 - (window.AppScrollPercentage * 0.5)
     this.nightFactor = this.backgroundNightColorDarken * this.backgroundDepthColorDarken
@@ -141,7 +147,7 @@ export default class Environment extends THREE.Object3D {
     this.directionalLight.intensity = this.nightFactor * this.directionnalLightFactor
     this.backgroundColor = this.surfaceColor.clone().lerp(this.bottomColor, window.AppScrollPercentage).multiplyScalar(this.nightFactor)
     this.ambientLight.color = this.backgroundColor
-    // this.directionalLight.color = this.backgroundColor
+    this.directionalLight.color = this.backgroundColor
     this.scene.background = this.backgroundColor
     this.scene.fog.color = this.backgroundColor
     this.fishManager.updateFishes()

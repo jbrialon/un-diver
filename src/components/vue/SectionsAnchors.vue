@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     goToSection (id) {
-      this.$store.commit('goToSectionId', id)
+      this.$store.commit('goToSectionId', {id: id, time: Date.now()})
     }
   }
 }

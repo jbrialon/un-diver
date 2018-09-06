@@ -21,7 +21,8 @@
       <div class="watch-section__details--price">{{ watchData.details.price }}</div>
     </div>
 
-    <c-link v-html-to-texture="'watch-section-details-button'" :href="''" :label="'dive to the other models'" class="header__link"></c-link>
+    <c-link id="watch-section-details-button" :href="'#'" :label="'dive to the other models'"></c-link>
+    <a id="watch-section-more-button" class="watch-section__more-button" href="" @click.prevent="showGallery">+</a>
   </div>
 </template>
 
@@ -45,6 +46,9 @@ export default {
     },
     getIntroId (id) {
       return 'watch-section-intro-' + id
+    },
+    showGallery () {
+      this.$store.commit('showGallery', true)
     }
   }
 }
@@ -134,6 +138,36 @@ export default {
         bottom: 4px;
         left: 0;
         z-index: -1;
+      }
+    }
+  }
+
+  &__more-button {
+    text-decoration: none;
+    font-weight: 100;
+    color: $white;
+    position: relative;
+    font-size: 3em;
+    &::before {
+      content: "";
+      display: block;
+      position: absolute;
+      z-index: -1;
+      background: $gold;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) translateY(-45%);
+      height: 50px;
+      width: 50px;
+      border-radius: 25px;
+      transition: all 0.1s ease-out;
+    }
+
+    &:hover {
+      &::before {
+        height: 60px;
+        width: 60px;
+        border-radius: 30px;
       }
     }
   }

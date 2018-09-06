@@ -131,7 +131,8 @@ export default class CameraManager extends THREE.Object3D {
   }
 
   onMouseOut = (e) => {
-    this.resetOrientation()
+    // TODO : fix mouseout fired when hovering btn that have been added to dom after window.addEventListener
+    // this.resetOrientation()
   }
 
   onMouseMove = (e) => {

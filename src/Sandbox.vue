@@ -1,36 +1,40 @@
 <template>
   <div id="app">
       <div id="stage" ref="stage"></div>
+      <c-link id="test__link" :href="$t('header_cta_1_link')" :label="$t('header_cta_1')" class="header__link"></c-link>
   </div>
 </template>
 
 <script>
-import * as CONST from '@/Constants'
+/* eslint-disable */
 import GuiManager from '@/utils/GuiManager'
 import AnimationLoopManager from '@/utils/AnimationLoopManager'
-import THREE from '@/reflectance/ReflectanceImports'
-import WatchModel from '@/components/three/WatchModel'
+import THREE from '@/utils/ThreeWithPlugins'
+import Link from '@/components/vue/Link'
+import Button from '@/components/three/Button'
 
 export default {
   components: {
+    'c-link': Link
   },
   data () {
     return {
       stageSize: new THREE.Vector2(0, 0),
       stageDOMElement: null,
+      cssScene: null,
+      div: null,
       scene: null,
       camera: null,
+      cssRenderer: null,
       renderer: null,
+      planeMesh: null,
       params: {
         envMap: 'HDR',
         roughness: 0.0,
         metalness: 0.0,
         exposure: 1.0
       },
-      controls: null,
-      objects: [],
-      hdrCubeRenderTarget: null,
-      watch: null
+      objects: []
     }
   },
 
@@ -38,7 +42,9 @@ export default {
     this.stageDOMElement = this.$refs.stage
     this.renderer = new THREE.WebGLRenderer({antialias: true})
     this.renderer.setPixelRatio(window.devicePixelRatio)
-    this.renderer.setSize(window.innerWidth, window.innerHeight)
+    this.renderer.setClearColor(0xffffff, 1)
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.renderer.domElement.style.zIndex = 5;
     this.stageDOMElement.appendChild(this.renderer.domElement)
     this.renderer.gammaInput = true
     this.renderer.gammaOutput = true
@@ -46,12 +52,33 @@ export default {
     this.renderer.toneMappingExposure = 3
     this.scene = new THREE.Scene()
     this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 10000)
-    this.camera.position.z = 2
+    this.camera.position.z = 300
 
-    this.controls = new THREE.TrackballControls(this.camera, this.renderer.domElement)
     this.scene.add(new THREE.HemisphereLight(0x443333, 0x222233, 4))
 
-    this.addEnv()
+    //CSS3D Renderer
+    this.cssRenderer = new THREE.CSS3DRenderer()
+    this.cssRenderer.setSize(window.innerWidth, window.innerHeight)
+    this.cssRenderer.domElement.style.position = 'fixed'
+    this.cssRenderer.domElement.style.top = 0
+    document.body.appendChild(this.cssRenderer.domElement)
+
+
+    // create the plane mesh
+    var material = new THREE.MeshBasicMaterial({ wireframe: true });
+    var geometry = new THREE.PlaneGeometry();
+    this.planeMesh= new THREE.Mesh( geometry, material );
+    // add it to the WebGL scene
+    this.scene.add(this.planeMesh);
+
+    let btn = new Button('test__link')
+    btn.addEventListener('mouseover', event => {
+      // eslint-disable-next-line
+      console.log('mouseover')
+      event.preventDefault()
+      event.stopImmediatePropagation()
+    })
+    this.planeMesh.add(btn)
 
     AnimationLoopManager.addFirstCallback(this.render3D)
     this.renderer.setAnimationLoop(AnimationLoopManager.renderLoop)
@@ -62,39 +89,9 @@ export default {
   },
 
   methods: {
-    genCubeUrls (prefix, postfix) {
-      return [
-        prefix + 'px' + postfix, prefix + 'nx' + postfix,
-        prefix + 'py' + postfix, prefix + 'ny' + postfix,
-        prefix + 'pz' + postfix, prefix + 'nz' + postfix
-      ]
-    },
-    addEnv () {
-      const hdrUrls = this.genCubeUrls(CONST.HdrEnvTexturePath, '.hdr')
-      new THREE.HDRCubeTextureLoader().load(THREE.UnsignedByteType, hdrUrls, (hdrCubeMap) => {
-        var pmremGenerator = new THREE.PMREMGenerator(hdrCubeMap)
-        pmremGenerator.update(this.renderer)
-        var pmremCubeUVPacker = new THREE.PMREMCubeUVPacker(pmremGenerator.cubeLods)
-        pmremCubeUVPacker.update(this.renderer)
-        this.hdrCubeRenderTarget = pmremCubeUVPacker.CubeUVRenderTarget
-        hdrCubeMap.dispose()
-        pmremGenerator.dispose()
-        pmremCubeUVPacker.dispose()
-        this.addWatch()
-      })
-    },
-    addWatch () {
-      this.watch = new WatchModel()
-      this.watch.setEnvironmentMap(this.hdrCubeRenderTarget.texture)
-      this.watch.scale.set(0.02, 0.02, 0.02)
-      this.watch.rotation.y = -Math.PI
-
-      let box = new THREE.BoxHelper(this.watch, 0xffff00)
-      this.scene.add(box)
-      this.scene.add(this.watch)
-    },
     render3D () {
-      this.controls.update()
+      this.planeMesh.rotation.y += 0.05
+      this.cssRenderer.render(this.scene, this.camera)
       this.renderer.render(this.scene, this.camera)
     },
     clearThree (obj) {
@@ -137,12 +134,13 @@ export default {
   @import './scss/main.scss';
 
   body {
-    min-height: 200vh;
+    min-height: 100vh;
     background: black;
   }
 
   #app {
     height: 100vh;
+    opacity: 0.5;
 
     #stage {
       height: 100vh;

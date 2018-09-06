@@ -3,9 +3,10 @@
 */
 import store from '@/store'
 import * as THREE from 'three'
-import Section from '../Section.js'
+import Section from '@/components/three/Section.js'
 import HtmlTextureManager from '@/utils/HtmlTextureManager.js'
 import Fader from '@/components/three/behaviors/Fader.js'
+import Button from '@/components/three/Button'
 
 export default class OtherModelsSection extends Section {
   sectionWidth = 0.45 // 75% of screen width
@@ -17,22 +18,25 @@ export default class OtherModelsSection extends Section {
     super(sectionData)
     this.models = this.sectionData.watches
     this.models.forEach(watch => {
-      HtmlTextureManager.loadTextureById('other-models-section-' + watch.id, this.onTextureLoaded)
-    })
-  }
+      HtmlTextureManager.loadTextureById('other-models-section-' + watch.id, texture => {
+        const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
+        const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
+        const modelMesh = new THREE.Mesh(geometry, material)
+        modelMesh.matrixAutoUpdate = false
+        this.modelsMesh.push(modelMesh)
+        Object.assign(
+          modelMesh,
+          new Fader(modelMesh)
+        )
+        this.add(modelMesh)
 
-  onTextureLoaded = (texture) => {
-    const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
-    const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
-    const modelMesh = new THREE.Mesh(geometry, material)
-    modelMesh.matrixAutoUpdate = false
-    this.modelsMesh.push(modelMesh)
-    Object.assign(
-      modelMesh,
-      new Fader(modelMesh)
-    )
-    this.add(modelMesh)
-    this.resize()
+        let findAStoreBtn = new Button('other-models-section-button-' + watch.id)
+        findAStoreBtn.position.y = -texture.image.height * 0.6
+        findAStoreBtn.setAutoDisplayMode(900)
+        modelMesh.add(findAStoreBtn)
+        this.resize()
+      })
+    })
   }
 
   resize () {

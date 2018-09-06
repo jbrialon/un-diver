@@ -55,6 +55,15 @@ class Utils {
     return Math.max(min, Math.min(number, max))
   }
 
+  static getDistanceToCamera (object3D) {
+    let worldPos = new THREE.Vector3()
+    object3D.localToWorld(worldPos)
+    var dx = window.AppCameraDummy.position.x - worldPos.x
+    var dy = window.AppCameraDummy.position.y - worldPos.y
+    var dz = window.AppCameraDummy.position.z - worldPos.z
+    return Math.sqrt(dx * dx + dy * dy + dz * dz)
+  }
+
   /*
   * Loops on every passed items and calculates
   * item depth depending on item weight property

@@ -1,8 +1,8 @@
 <template>
   <transition name="fade">
-    <div class="social-networks" v-if="show">
+    <div class="social-networks" v-if="show" :class="{'footer-mode': footerMode}">
       <ul>
-        <li>{{ $t("footer_contact") }}</li>
+        <li v-if="footerMode">{{ $t("footer_contact") }}</li>
         <li>
           <a href="https://www.instagram.com/ulyssenardinofficial/" target="_blank">
             <icon-inst></icon-inst>
@@ -46,6 +46,13 @@ import Utils from '@/utils/Utils'
 
 export default {
   name: 'social-networks',
+  props: {
+    footerMode: {
+      type: Boolean,
+      required: false,
+      default: true
+    }
+  },
   data () {
     return {
       isMobile: Utils.isMobile()
@@ -64,7 +71,7 @@ export default {
       'uiActivated'
     ]),
     show () {
-      return (this.isMobile && this.menuMobileActivated) || (!this.isMobile && this.uiActivated)
+      return (this.isMobile && this.menuMobileActivated) || (!this.isMobile && this.uiActivated) || !this.footerMode
     }
   }
 }
@@ -75,17 +82,21 @@ export default {
 @import '@/scss/_mixins.scss';
 
 .social-networks {
-  position:fixed;
-  right:4vw;
-  bottom:4vw;
-  color:$white;
-  z-index:$zSocialNetwork;
-  @include small-only {
-    color:$darkblue;
-    left:8vw;
-    right:8vw;
-    bottom:8vw;
+
+  &.footer-mode {
+    position:fixed;
+    right:4vw;
+    bottom:4vw;
+    color:$white;
+    z-index:$zSocialNetwork;
+    @include small-only {
+      color:$darkblue;
+      left:8vw;
+      right:8vw;
+      bottom:8vw;
+    }
   }
+
   ul {
     display:flex;
     align-items: center;

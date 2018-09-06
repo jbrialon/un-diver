@@ -9,6 +9,7 @@ import Fader from '@/components/three/behaviors/Fader.js'
 import WatchModel from '@/components/three/models/WatchModel.js'
 import StickToCamera from '@/components/three/behaviors/StickToCamera.js'
 import HtmlTextureManager from '@/utils/HtmlTextureManager.js'
+import Button from '@/components/three/Button'
 // import * as CONST from '@/Constants'
 // import AnimationLoopManager from '@/utils/AnimationLoopManager'
 // import _ from 'lodash'
@@ -107,6 +108,8 @@ export default class WatchSection extends Section {
 
       if (feature.textId === 'glowing') {
         this.setNightMode(!unsticked)
+      } else if (feature.textId === 'details' && feature.button) {
+        feature.button.setVisibility(!unsticked)
       }
     }
 
@@ -150,6 +153,15 @@ export default class WatchSection extends Section {
             new Fader(textMesh, 750),
             new StickToCamera(textMesh, (featureObject.depth * 0.375), this.onFeatureSticked)
           )
+
+          if (featureObject.id === 'diameter') {
+            let moreBtn = new Button('watch-section-more-button')
+            moreBtn.setAutoDisplayMode(900)
+            moreBtn.position.x = moreBtn.size.width
+            moreBtn.position.y = -texture.image.height - moreBtn.size.height * 0.5
+            textMesh.add(moreBtn)
+          }
+
           this.featuresPositions.push({distance: 0, index: textIndex, depth: featureObject.depth, position: this.position.z - textZPos})
           this.featuresRotations.push({position: this.position.z - textZPos, rotation: (watchOrientation === 'left') ? Math.PI * 0.25 : -Math.PI * 0.25})
         })
@@ -180,6 +192,17 @@ export default class WatchSection extends Section {
           new Fader(detailsMesh, 750),
           new StickToCamera(detailsMesh, this.sectionData.details.depth * 0.5, this.onFeatureSticked)
         )
+
+        let otherModelsBtn = new Button('watch-section-details-button')
+        otherModelsBtn.position.x = texture.image.width * 0.5
+        otherModelsBtn.position.y = -texture.image.height * 0.6
+        otherModelsBtn.addEventListener('click', event => {
+          event.preventDefault()
+          event.stopPropagation()
+          store.commit('goToSectionId', {id: store.state.currentSectionId + 1, time: Date.now()})
+        })
+        detailsMesh.add(otherModelsBtn)
+        detailsMesh.button = otherModelsBtn
       })
     }
 

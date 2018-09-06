@@ -20,5 +20,10 @@ import '@/loaders/OBJLoader.js'
 import '@/loaders/RGBELoader.js'
 import '@/loaders/HDRCubeTextureLoader.js'
 
+/*
+* RENDERERS
+*/
+import '@/renderers/CSS3DRenderer.js'
+
 let THREE = THREEJS
 export default THREE

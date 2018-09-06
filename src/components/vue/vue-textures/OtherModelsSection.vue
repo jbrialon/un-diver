@@ -1,16 +1,16 @@
 <template>
   <div class="other-models-section">
-    <div class="other-models-section__item" v-html-to-texture="getModelId(watch.id)" v-for="watch in modelsData" :key="watch.id">
-      <div class="other-models-section__item--image">
-        <img :src="getImageUrl(watch.id)" :alt="watch.title">
+    <div class="other-models-section__item" v-for="watch in modelsData" :key="watch.id">
+      <div v-html-to-texture="getModelId(watch.id)">
+        <div class="other-models-section__item--image">
+          <img :src="getImageUrl(watch.id)" :alt="watch.title">
+        </div>
+        <div class="other-models-section__item--title">{{ watch.title }}</div>
+        <div class="other-models-section__item--descriptionlabel">{{ 'description' }}</div>
+        <div class="other-models-section__item--description">{{ watch.description }}</div>
+        <div class="other-models-section__item--price">{{ watch.price }}</div>
       </div>
-      <div class="other-models-section__item--title">{{ watch.title }}</div>
-      <div class="other-models-section__item--descriptionlabel">{{ 'description' }}</div>
-      <div class="other-models-section__item--description">{{ watch.description }}</div>
-      <div class="other-models-section__item--price">{{ watch.price }}</div>
-      <div>
-        <c-link :href="''" :label="'buy in boutique'" class="header__link"></c-link>
-      </div>
+      <c-link :id="getButtonId(watch.id)" :href="''" :label="'find a store'"></c-link>
     </div>
   </div>
 </template>
@@ -30,6 +30,9 @@ export default {
     }
   },
   methods: {
+    getButtonId (id) {
+      return 'other-models-section-button-' + id
+    },
     getModelId (id) {
       return 'other-models-section-' + id
     },

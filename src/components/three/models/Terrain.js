@@ -35,7 +35,7 @@ export default class Terrain extends THREE.Object3D {
 
   onModelLoaded = (object) => {
     this.mesh = object
-    this.mesh.position.x = -386
+    this.mesh.position.x = -700
     this.mesh.position.y = 2761
     this.mesh.position.z = -CONST.SceneDepth - 500
     this.mesh.rotateX(THREE.Math.degToRad(90))

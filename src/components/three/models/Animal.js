@@ -65,11 +65,22 @@ export default class Animal extends THREE.Object3D {
     let newMaterial = new THREE.MeshStandardMaterial()
     newMaterial.map = this.material.map
     newMaterial.metalnessMap = newMaterial.roughnessMap = this.textureLoader.load(mapPath)
-    newMaterial.metalness = 1
+    newMaterial.metalness = 0.5
     newMaterial.roughness = 1
-    newMaterial.shininess = 0
+    newMaterial.shininess = 1
     newMaterial.skinning = true
+    if (this.material.envMap) this.applyEnvMap(this.material.envMap, newMaterial)
     this.material = newMaterial
+  }
+
+  setEnvironmentMap (texture) {
+    this.applyEnvMap(texture, this.material)
+  }
+
+  applyEnvMap (texture, material) {
+    material.envMap = texture
+    material.envMapIntensity = 2
+    material.needsUpdate = true
   }
 
   setOrientation (euler) {

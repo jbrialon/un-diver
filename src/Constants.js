@@ -7,6 +7,7 @@ export const SectionsMargin = 0.1 // Percent margins between each Sections, actu
 export const SeaSurfaceColorCode = 0x014d74 // environment color at the surface of the sea
 export const SeaBottomColorCode = 0x0e293c // environment color at the bottom of the sea
 export const FogDensity = 0.0005 // environment fog density
+export const TexturesPath = 'textures/' // textures folder
 export const ModelsPath = 'models/' // 3D models folder
 export const HdrEnvTexturePath = 'textures/environmentmap/' // HDR texture for environment map
 export const NightOpacity = 0.2
@@ -26,6 +27,9 @@ export const InitialCameraTweenDuration = 4 // After intro, automatic tween to f
 /*
 * ENVIRONMENT
 */
+export const PlanktonParticleMapPath = TexturesPath + 'particles/'
+export const PlanktonParticleCount = 5000
+export const PlanktonParticleMapCount = 3
 export const TerrainModelPath = ModelsPath + 'environment/environment.fbx'
 export const TerrainRockMap = ModelsPath + 'environment/rock.jpg'
 export const TerrainCoralMap = ModelsPath + 'environment/coral.jpg'
@@ -41,7 +45,7 @@ export const TurtleDiffuseMap = ModelsPath + 'turtle/turtle_diffuse.jpg'
 export const TurtleGlossinessMap = ModelsPath + 'turtle/turtle_glossiness.gif'
 
 export const FishModelPath = ModelsPath + 'fish/fish.obj'
-export const FishTexture = ModelsPath + 'fish/fish.png'
+export const FishTexture = ModelsPath + 'fish/fish.jpg'
 
 /*
 * WATCH SECTION

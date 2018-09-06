@@ -2,41 +2,55 @@
 * Adds Plankton-style particles to the scene
 */
 import * as THREE from 'three'
-import AnimationLoopManager from '../../utils/AnimationLoopManager'
+import AnimationLoopManager from '@/utils/AnimationLoopManager'
+import * as CONST from '@/Constants'
+// import store from '@/store'
 
 export default class Plankton extends THREE.Object3D {
-  spheres = []
-  maxZPos
+  textureLoader = new THREE.TextureLoader()
+  planktonVertices = []
+  geometry = new THREE.BufferGeometry()
+  parameters = []
+  materials = []
 
-  constructor (maxZPos) {
+  constructor () {
     super()
-    var spriteMap = new THREE.TextureLoader().load(require('../../assets/dust.png'))
-    var material = new THREE.SpriteMaterial({map: spriteMap, fog: true})
-    material.blending = THREE.AdditiveBlending
-    for (let i = 0; i < 1000; i++) {
-      let mesh = new THREE.Sprite(material)
-      mesh.position.x = Math.random() * 2500 - 1250
-      mesh.position.y = Math.random() * 2500 - 1250
-      mesh.position.z = -Math.random() * (maxZPos + 500)
-      mesh.scale.x = Math.random() * 20
-      mesh.scale.y = Math.random() * 20
-      mesh.scale.z = Math.random() * 20
-      material.opacity = Math.random() * 0.4 + 0.1
-      this.add(mesh)
-      this.spheres.push(mesh)
+    for (let index = 0; index < CONST.PlanktonParticleMapCount; index++) {
+      let sprite = this.textureLoader.load(CONST.PlanktonParticleMapPath + index + '.png')
+      let param = []
+      param.push(sprite) // sprite map
+      param.push(Math.random() * 15) // particle size
+      this.parameters.push(param)
     }
+
+    let worldSize = new THREE.Vector3(2000, 2000, CONST.SceneDepth)
+    for (let i = 0; i < CONST.PlanktonParticleCount; i++) {
+      let x = Math.random() * worldSize.x - (worldSize.x * 0.5)
+      let y = Math.random() * worldSize.y - (worldSize.y * 0.5)
+      let z = Math.random() * -worldSize.z
+      this.planktonVertices.push(x, y, z)
+    }
+
+    for (let i = 0; i < this.parameters.length; i++) {
+      var sprite = this.parameters[i][0]
+      var size = this.parameters[i][1]
+      this.materials[i] = new THREE.PointsMaterial({size: size, map: sprite, blending: THREE.AdditiveBlending, depthTest: true, transparent: true, fog: true, depthWrite: false})
+      this.materials[i].color.setHex(0xffffff)
+      this.materials[i].opacity = 0.1
+      var particles = new THREE.Points(this.geometry, this.materials[i])
+      particles.position.z = 0
+      this.add(particles)
+    }
+
+    this.geometry.addAttribute('position', new THREE.Float32BufferAttribute(this.planktonVertices, 3))
+
     AnimationLoopManager.addCallback(this.updatePlankton)
   }
 
   updatePlankton = () => {
-    if (this.visible) {
-      let timer = 0.00001 * Date.now()
-      for (var i = 0, il = this.spheres.length; i < il; i++) {
-        var sphere = this.spheres[i]
-        sphere.position.x = 1250 * Math.cos(timer + i)
-        sphere.position.y = 1250 * Math.sin(timer + i * 1.1)
-        sphere.material.rotation = 20 * Math.cos(timer + i)
-      }
+    let time = Date.now() * 0.00001
+    for (var i = 0; i < this.children.length; i++) {
+      this.children[i].rotation.z = time * (i < 4 ? i + 1 : -(i + 1))
     }
   }
 }

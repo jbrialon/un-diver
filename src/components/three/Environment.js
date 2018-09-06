@@ -11,6 +11,7 @@ import AnimationLoopManager from '@/utils/AnimationLoopManager'
 import FishManager from '@/components/three/fishes/FishManager.js'
 import Animal from '@/components/three/models/Animal'
 import Terrain from '@/components/three/models/Terrain'
+import Plankton from '@/components/three/Plankton'
 
 export default class Environment extends THREE.Object3D {
   clock = new THREE.Clock();
@@ -20,7 +21,6 @@ export default class Environment extends THREE.Object3D {
   sharkModel
   turtleModel
 
-  fishManager
   ambientLight
   directionalLight
 
@@ -47,6 +47,7 @@ export default class Environment extends THREE.Object3D {
     this.addLights()
     this.addAnimals()
     this.addTerrain()
+    this.addPlankton()
     this.addEnvironmentMap()
     this.addFishes()
 
@@ -108,9 +109,21 @@ export default class Environment extends THREE.Object3D {
     new THREE.HDRCubeTextureLoader(LoadingManager.instance).load(THREE.UnsignedByteType, hdrUrls, this.onEnvironmentLoaded)
   }
 
+  addPlankton () {
+    let plankton = new Plankton()
+    this.add(plankton)
+  }
+
   addFishes () {
-    this.fishManager = new FishManager()
-    this.add(this.fishManager)
+    let fishManager = new FishManager(25, new THREE.Vector3(80, 80, 80))
+    fishManager.position.set(200, 200, -2000)
+    fishManager.updateMatrix()
+    this.add(fishManager)
+
+    let fishManagerDepth = new FishManager(60, new THREE.Vector3(200, 200, 400))
+    fishManagerDepth.position.set(-600, 400, -12000)
+    fishManagerDepth.updateMatrix()
+    this.add(fishManagerDepth)
   }
 
   genEnvironementMapCubeUrls (prefix, postfix) {
@@ -126,7 +139,8 @@ export default class Environment extends THREE.Object3D {
     pmremGenerator.update(this.renderer)
     let pmremCubeUVPacker = new THREE.PMREMCubeUVPacker(pmremGenerator.cubeLods)
     pmremCubeUVPacker.update(this.renderer)
-    this.dispatchEvent({type: 'environmentmaploaded', texture: pmremCubeUVPacker.CubeUVRenderTarget.texture})
+    this.dispatchEvent({type: CONST.ENVIRONMENT_MAP_LOADED, texture: pmremCubeUVPacker.CubeUVRenderTarget.texture})
+    this.sharkModel.setEnvironmentMap(pmremCubeUVPacker.CubeUVRenderTarget.texture)
     cubeMap.dispose()
     pmremGenerator.dispose()
     pmremCubeUVPacker.dispose()
@@ -147,9 +161,8 @@ export default class Environment extends THREE.Object3D {
     this.directionalLight.intensity = this.nightFactor * this.directionnalLightFactor
     this.backgroundColor = this.surfaceColor.clone().lerp(this.bottomColor, window.AppScrollPercentage).multiplyScalar(this.nightFactor)
     this.ambientLight.color = this.backgroundColor
-    this.directionalLight.color = this.backgroundColor
+    // this.directionalLight.color = this.backgroundColor
     this.scene.background = this.backgroundColor
     this.scene.fog.color = this.backgroundColor
-    this.fishManager.updateFishes()
   }
 }

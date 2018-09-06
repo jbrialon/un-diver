@@ -10,11 +10,9 @@ export default class Fish {
   _depth
   _goal
   _goalOffset = new THREE.Vector3()
-  _neighborhoodRadius = 10
-  _maxSpeed = 2
-  _maxSteerForce = 0.05
-
-  worldOrigin = new THREE.Vector3()
+  _neighborhoodRadius = 20
+  _maxSpeed = 1 + Math.random()
+  _maxSteerForce = 0.02
 
   position = new THREE.Vector3()
   velocity = new THREE.Vector3()
@@ -29,16 +27,6 @@ export default class Fish {
 
   setGoalOffset (target) {
     this._goalOffset = target
-  }
-
-  setWorldOrigin (originVector) {
-    this.worldOrigin = originVector
-  }
-
-  setWorldSize (width, height, depth) {
-    this._width = width
-    this._height = height
-    this._depth = depth
   }
 
   run (boids) {
@@ -96,7 +84,7 @@ export default class Fish {
   repulse (target) {
     var distance = this.position.distanceTo(target)
 
-    if (distance < 50) {
+    if (distance < this._neighborhoodRadius * 3) {
       var steer = new THREE.Vector3()
 
       steer.subVectors(this.position, target)

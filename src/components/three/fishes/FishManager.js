@@ -1,23 +1,30 @@
 import THREE from '@/utils/ThreeWithPlugins'
-import store from '@/store'
 import * as CONST from '@/Constants'
 import Boid from '@/components/three/fishes/Boid.js'
 import LoadingManager from '@/utils/LoadingManager'
+import AnimationLoopManager from '@/utils/AnimationLoopManager'
 
 export default class FishManager extends THREE.Object3D {
-  BIRTH_PLACE = new THREE.Vector3(600, 300, 0)
+  BIRTH_PLACE = new THREE.Vector3(1500, 300, -3000)
   NUM_FISH = 100
   fishes = []
   boids = []
   modelLoader = new THREE.OBJLoader(LoadingManager.instance)
   textureLoader = new THREE.TextureLoader(LoadingManager.instance)
 
-  constructor () {
+  neighborhoodRadius
+  worldSize
+
+  constructor (neighborhoodRadius, worldSize) {
     super()
+    this.neighborhoodRadius = neighborhoodRadius
+    this.worldSize = worldSize
     this.matrixAutoUpdate = false
     this.modelLoader.load(CONST.FishModelPath, this.onModelLoaded)
-    this.fishMaterial = new THREE.MeshStandardMaterial()
+    this.fishMaterial = new THREE.MeshPhongMaterial()
     this.fishMaterial.map = this.textureLoader.load(CONST.FishTexture)
+
+    AnimationLoopManager.addCallback(this.updateFishes)
   }
 
   onModelLoaded = (fishModel) => {
@@ -28,27 +35,28 @@ export default class FishManager extends THREE.Object3D {
     fishModel.traverse(child => {
       if (child instanceof THREE.Mesh) {
         child.material = this.fishMaterial
+        child.material.side = THREE.DoubleSide
+        child.material.shininess = 100
+        // child.material.color = new THREE.Color(0x555555)
       }
     })
     for (var i = 0; i < this.NUM_FISH; i++) {
       this.boids[i] = new Boid()
       let boid = this.boids[i]
 
-      boid.setWorldSize(store.state.stageSize.width * 2, store.state.stageSize.height * 2, 50)
+      boid._neighborhoodRadius = this.neighborhoodRadius
 
-      boid.position.x = Math.random() * 50
-      boid.position.y = Math.random() * 50
-      boid.position.z = -Math.random() * 50
+      boid.position.x = Math.random() * this.worldSize.x * 2 - this.worldSize.x
+      boid.position.y = Math.random() * this.worldSize.y * 2 - this.worldSize.y
+      boid.position.z = -Math.random() * this.worldSize.z * 2 - this.worldSize.z
       boid.velocity.x = Math.random() * 2 - 1
       boid.velocity.y = Math.random() * 2 - 1
       boid.velocity.z = Math.random() * 2 - 1
 
-      boid.setGoal(window.AppCameraDummy.position)
-      boid.setGoalOffset(new THREE.Vector3(25, 15, -150))
+      // boid.setGoal(window.AppCameraDummy.position)
+      // boid.setGoalOffset(new THREE.Vector3(25, 15, -150))
 
-      fishModel.scale.x = 0.4
-      fishModel.scale.y = 0.4
-      fishModel.scale.z = 0.4
+      fishModel.scale.x = fishModel.scale.y = fishModel.scale.z = 3 + Math.random() * 2
       fishModel.rotation.y = -3.14 / 2
 
       var clone = fishModel.clone()
@@ -60,11 +68,10 @@ export default class FishManager extends THREE.Object3D {
     }
   }
 
-  updateFishes () {
+  updateFishes = () => {
     // this.BIRTH_PLACE.z = window.AppCameraDummy.position.z
     for (var i = 0, imax = this.fishes.length; i < imax; i++) {
       let boid = this.boids[i]
-      boid.setWorldOrigin(this.BIRTH_PLACE)
       boid.run(this.boids)
 
       let fish = this.fishes[i]

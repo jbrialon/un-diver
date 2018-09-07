@@ -22,7 +22,7 @@ export const CameraRotationEaseFactor = 0.1 // How much the camera rotation is s
 export const CameraRotationRestrictFactor = 0.3 // we don't want user to be able to watch 3D space all around
 export const InitialCameraDistance = 3000 // Initial camera distance from first section
 export const CameraDistanceToSection = 750 // Distance between current section and camera
-export const InitialCameraTweenDuration = 4 // After intro, automatic tween to first section
+export const InitialCameraTweenDuration = 6 // After intro, automatic tween to first section
 
 /*
 * ENVIRONMENT

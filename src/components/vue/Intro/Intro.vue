@@ -63,6 +63,7 @@ export default {
         this.tlLeave.to(this.$refs.slider.$el, 2, {autoAlpha: 0, ease: Power1.easeOut})
         this.tlLeave.to(this.$refs.loader.$el, 1.5, {xPercent: -50, yPercent: -50, left: '50%', top: '50%', ease: Power2.easeInOut}, '-=2')
         this.tlLeave.to(this.$refs.mask2, 2.3, {attr: {r: 1100}, onStart: this.hideLoader, onComplete: this.leaveIntro, ease: Power2.easeOut})
+        this.$store.commit('initDiving')
       }
     },
     hideLoader () {
@@ -70,7 +71,6 @@ export default {
     },
     leaveIntro () {
       this.show = false
-      this.$store.commit('initDiving')
     }
   },
   mounted () {

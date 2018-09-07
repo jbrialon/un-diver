@@ -30,9 +30,10 @@ export const InitialCameraTweenDuration = 4 // After intro, automatic tween to f
 export const PlanktonParticleMapPath = TexturesPath + 'particles/'
 export const PlanktonParticleCount = 5000
 export const PlanktonParticleMapCount = 3
-export const TerrainModelPath = ModelsPath + 'environment/environment.fbx'
+export const TerrainModelPath = ModelsPath + 'environment/environment.obj'
 export const TerrainRockMap = ModelsPath + 'environment/rock.jpg'
 export const TerrainCoralMap = ModelsPath + 'environment/coral.jpg'
+export const TerrainFloorMap = ModelsPath + 'environment/floor.jpg'
 export const SharkPathName = 'shark_spline'
 export const TurtlePathName = 'turtle_spline'
 

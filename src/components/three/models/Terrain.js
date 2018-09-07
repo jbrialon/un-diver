@@ -1,5 +1,4 @@
 import THREE from '@/utils/ThreeWithPlugins'
-import FBXLoader from 'three-fbxloader-offical'
 import * as CONST from '@/Constants'
 import LoadingManager from '@/utils/LoadingManager'
 // import Utils from '@/utils/Utils'
@@ -8,12 +7,13 @@ import GuiManager from '@/utils/GuiManager'
 export default class Terrain extends THREE.Object3D {
   rockTexture
   coralsTexture
+  floorTexture
   mesh = null
 
   sharkPathSpline = null
   turtlePathSpline = null
 
-  objLoader = new FBXLoader(LoadingManager.instance)
+  objLoader = new THREE.OBJLoader(LoadingManager.instance)
   textureLoader = new THREE.TextureLoader(LoadingManager.instance)
 
   constructor () {
@@ -21,6 +21,7 @@ export default class Terrain extends THREE.Object3D {
     this.objLoader.load(CONST.TerrainModelPath, this.onModelLoaded, () => {}, this.onError)
     this.rockTexture = this.textureLoader.load(CONST.TerrainRockMap, this.onTextureLoaded)
     this.coralsTexture = this.textureLoader.load(CONST.TerrainCoralMap, this.onTextureLoaded)
+    this.floorTexture = this.textureLoader.load(CONST.TerrainFloorMap, this.onTextureLoaded)
 
     this.rockTexture.wrapS = THREE.RepeatWrapping
     this.rockTexture.wrapT = THREE.RepeatWrapping
@@ -30,6 +31,10 @@ export default class Terrain extends THREE.Object3D {
     this.coralsTexture.wrapT = THREE.RepeatWrapping
     this.coralsTexture.repeat.set(7.5, 50)
 
+    this.floorTexture.wrapS = THREE.RepeatWrapping
+    this.floorTexture.wrapT = THREE.RepeatWrapping
+    this.floorTexture.repeat.set(3, 3)
+
     Object.assign(this, THREE.EventDispatcher)
   }
 
@@ -37,7 +42,7 @@ export default class Terrain extends THREE.Object3D {
     this.mesh = object
     this.mesh.position.x = -700
     this.mesh.position.y = 2761
-    this.mesh.position.z = -CONST.SceneDepth - 500
+    this.mesh.position.z = -CONST.SceneDepth + 700
     this.mesh.rotateX(THREE.Math.degToRad(90))
     this.mesh.name = 'Terrain'
     super.add(this.mesh)
@@ -48,7 +53,7 @@ export default class Terrain extends THREE.Object3D {
     let guiTerrainFolder = GuiManager.addFolder('Terrain position')
     guiTerrainFolder.add(this.mesh.position, 'x', -3000, 2000)
     guiTerrainFolder.add(this.mesh.position, 'y', 1000, 4000)
-    guiTerrainFolder.add(this.mesh.position, 'z', 15000, 45000)
+    guiTerrainFolder.add(this.mesh.position, 'z', 0, -CONST.SceneDepth)
   }
 
   onTextureLoaded = (texture) => {
@@ -58,15 +63,12 @@ export default class Terrain extends THREE.Object3D {
   updateMaterials () {
     if (this.mesh && this.rockTexture && this.coralsTexture && this.rockTexture.image && this.coralsTexture.image) {
       this.mesh.traverse(child => {
-        switch (child.name) {
-          case 'rocks':
-            child.material.map = this.rockTexture
-            break
-          case 'corals':
-            child.material.map = this.coralsTexture
-            break
-          default:
-            break
+        if (child.name.indexOf('rock') > -1) {
+          child.material.map = this.rockTexture
+        } else if (child.name.indexOf('coral') > -1) {
+          child.material.map = this.coralsTexture
+        } else if (child.name.indexOf('sandfloor') > -1) {
+          child.material.map = this.floorTexture
         }
       })
     }

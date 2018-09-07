@@ -10,7 +10,7 @@
         <div class="other-models-section__item--description">{{ watch.description }}</div>
         <div class="other-models-section__item--price">{{ watch.price }}</div>
       </div>
-      <c-link :id="getButtonId(watch.id)" :href="$t('header_cta_2_link')" :label="$t('stage_7_cta')"></c-link>
+      <c-link :id="getButtonId(watch.id)" :href="$t('header_cta_2_link')" :label="$t('stage_7_cta')" :big="true"></c-link>
     </div>
   </div>
 </template>

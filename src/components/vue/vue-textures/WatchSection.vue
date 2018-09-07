@@ -21,7 +21,7 @@
       <div class="watch-section__details--price">{{ watchData.details.price }}</div>
     </div>
 
-    <c-link id="watch-section-details-button" :href="'#'" :label="'dive to the other models'"></c-link>
+    <c-link id="watch-section-details-button" :href="'#'" :label="'dive to the other models'" :big="true"></c-link>
     <a id="watch-section-more-button" class="watch-section__more-button" href="" @click.prevent="showGallery">+</a>
   </div>
 </template>

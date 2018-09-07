@@ -57,6 +57,11 @@ export default {
   }
 
   &__ctas {
+    text-align:center;
+
+    &--to-surface {
+      margin-bottom:20px;
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <a :href="href" class="link">
+  <a :href="href" class="link" :class="{ 'link--big' : big }">
     {{ label }}
     <span class="link__top-line"></span>
   </a>
@@ -16,6 +16,11 @@ export default {
     href: {
       type: String,
       required: true
+    },
+    big: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   }
 }
@@ -44,6 +49,30 @@ export default {
   z-index: 0;
   color:$white;
   text-decoration:none;
+
+  &--big {
+    min-width: 300px;
+    height: 80px;
+    line-height:80px;
+    font-size: $fs-buttons-big;
+    padding: 0 20px;
+    border-width: 2px;
+    &:after {
+      height: 80px;
+      border-width: 2px;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+    }
+    .link__top-line {
+      &:after,
+      &:before {
+        top: -2px;
+        bottom:-2px;
+        border-width: 2px;
+      }
+    }
+  }
 
   &:after {
     content: ' ';

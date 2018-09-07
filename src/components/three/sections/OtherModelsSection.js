@@ -31,7 +31,7 @@ export default class OtherModelsSection extends Section {
         this.add(modelMesh)
 
         let findAStoreBtn = new Button('other-models-section-button-' + watch.id)
-        findAStoreBtn.position.y = -texture.image.height * 0.6
+        findAStoreBtn.position.y = -texture.image.height * 0.55
         findAStoreBtn.setAutoDisplayMode(900)
         modelMesh.add(findAStoreBtn)
         this.resize()

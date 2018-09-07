@@ -193,7 +193,7 @@ export default class WatchSection extends Section {
         )
 
         let otherModelsBtn = new Button('watch-section-details-button')
-        otherModelsBtn.position.x = texture.image.width * 0.5
+        otherModelsBtn.position.x = otherModelsBtn.size.width * 0.5
         otherModelsBtn.position.y = -texture.image.height * 0.6
         otherModelsBtn.addEventListener('click', event => {
           event.preventDefault()

@@ -36,6 +36,8 @@ export default class StickToCamera {
     this.referenceObject3D.parent.add(this.initialObject3D)
     this.initialObject3D.position.copy(this.initialObjectPosition)
 
+    this.referenceObject3D.matrixAutoUpdate = false
+
     AnimationLoopManager.addCallback(this.updatePosition)
   }
 

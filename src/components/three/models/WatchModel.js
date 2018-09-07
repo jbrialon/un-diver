@@ -1,11 +1,14 @@
 import * as CONST from '@/Constants'
+import store from '@/store'
 import Utils from '@/utils/Utils'
 import LoadingManager from '@/utils/LoadingManager'
-import {TweenMax, Power4, Sine, Linear} from 'gsap'
+import {TweenMax, Sine, Linear} from 'gsap'
 import THREE from '@/utils/ThreeWithPlugins'
 
 export default class WatchModel extends THREE.Object3D {
-  model
+  model = new THREE.Object3D()
+  modelScale = 3
+
   modelLoader = new THREE.OBJLoader(LoadingManager.instance)
   textureLoader = new THREE.TextureLoader(LoadingManager.instance)
   material = new THREE.MeshStandardMaterial()
@@ -16,8 +19,14 @@ export default class WatchModel extends THREE.Object3D {
   minutesHand
   secondsHand
 
+  meshWidth = 0
+  meshHalfWidth = 0
+
+  marginWatch
+
   constructor () {
     super()
+    this.matrixAutoUpdate = false
     this.textureLoader.setPath(CONST.WatchTexturesPath)
     this.modelLoader.load(CONST.WatchModelPath, this.onModelLoaded)
     this.material.map = this.textureLoader.load(CONST.WatchDiffuseMap)
@@ -27,6 +36,7 @@ export default class WatchModel extends THREE.Object3D {
     this.material.metalness = 1
     this.material.emissive = new THREE.Color(0xffffff)
     this.material.emissiveIntensity = 0
+    this.marginWatch = CONST.MarginBetweenWatchAndText * store.state.viewportSizeAtCameraFocus.width
   }
 
   onModelLoaded = (group) => {
@@ -34,11 +44,21 @@ export default class WatchModel extends THREE.Object3D {
 
     Utils.applyMaterialToGroup(this.model, this.material)
 
-    this.matrixAutoUpdate = false
-    this.model.scale.set(3, 3, 3)
+    this.model.scale.set(this.modelScale, this.modelScale, this.modelScale)
     super.add(this.model)
-    this.model.updateMatrix()
-    this.model.updateMatrixWorld()
+
+    this.model.traverse(child => {
+      if (child.geometry) {
+        child.geometry.computeBoundingBox()
+        let boxSize = new THREE.Vector3()
+        child.geometry.boundingBox.getSize(boxSize)
+        if (this.meshWidth < boxSize.x) {
+          this.meshWidth = boxSize.x
+        }
+      }
+    })
+    this.meshWidth *= this.modelScale
+    this.meshHalfWidth = this.meshWidth * 0.5
 
     TweenMax.fromTo(this.model.position, 3, {x: -3}, {
       x: 3,
@@ -54,8 +74,6 @@ export default class WatchModel extends THREE.Object3D {
       ease: Sine.easeInOut,
       repeat: -1
     })
-
-    this.rotationTween = TweenMax.set(this.model.rotation, {y: 0})
 
     this.initHands()
   }
@@ -90,39 +108,11 @@ export default class WatchModel extends THREE.Object3D {
     })
   }
 
-  orientWatch (watchOrientation, reset, direction) {
-    if (this.model && this.rotationTween) {
-      const duration = reset ? 1.5 : 0.8
-      let xRot = -Math.PI * 0.1
-      let yRot = 0
-      let xPos = 0
-      this.rotationTween.kill()
-      switch (watchOrientation) {
-        case 'left':
-          yRot = Math.PI * 0.25
-          break
-        case 'right':
-          yRot = -Math.PI * 0.25
-          break
-        case 'center':
-          yRot = 0
-          xRot = 0
-          xPos = direction ? 0 : -50
-          break
-        default:
-          break
-      }
-      this.rotationTween = TweenMax.to(this.model.rotation, duration, {
-        y: reset ? 0 : yRot,
-        x: reset ? 0 : xRot,
-        ease: Power4.easeInOut
-      })
-
-      TweenMax.to(this.model.position, duration, {
-        x: reset && direction ? 0 : xPos,
-        ease: Power4.easeInOut
-      })
-    }
+  orientWatch (factor) {
+    let yRot = -factor * (Math.PI * 0.2)
+    this.model.rotation.y += (yRot - this.model.rotation.y) * 0.2 // add a bit of easing
+    let xPos = factor * (this.meshHalfWidth + this.marginWatch) // equivalent to this.position.x but with Object3D.matrixAutoUpdate === false (its faster)
+    this.matrix.elements[12] += (xPos - this.matrix.elements[12]) * 0.2 // add a bit of easing
   }
 
   setNightIntensity (intensity) {

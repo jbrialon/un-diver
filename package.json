@@ -12,6 +12,7 @@
     "dat.gui": "^0.7.2",
     "gsap": "^2.0.1",
     "html2canvas": "^1.0.0-alpha.12",
+    "interpolating-polynomial": "^1.1.2",
     "lodash": "^4.17.10",
     "stats.js": "^0.17.0",
     "three": "^0.95.0",
@@ -19,8 +20,8 @@
     "viewport-units-buggyfill": "^0.6.2",
     "vue": "^2.5.17",
     "vue-i18n": "^8.0.0",
-    "vuex": "^3.0.1",
-    "vueperslides": "^1.13.1"
+    "vueperslides": "^1.13.1",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "@kazupon/vue-i18n-loader": "^0.3.0",

@@ -11,7 +11,7 @@ import FishManager from '@/components/three/fishes/FishManager.js'
 import Animal from '@/components/three/models/Animal'
 import Terrain from '@/components/three/models/Terrain'
 import Plankton from '@/components/three/Plankton'
-import _ from 'lodash'
+import { forEach } from 'lodash'
 
 export default class Environment extends THREE.Object3D {
   clock = new THREE.Clock();
@@ -173,7 +173,7 @@ export default class Environment extends THREE.Object3D {
 
   updateEnvironment = () => {
     let delta = this.clock.getDelta()
-    _.forEach(this.animalsArray, animal => {
+    forEach(this.animalsArray, animal => {
       animal.updateAnimation(delta)
     })
 

@@ -12,7 +12,6 @@ import { TweenMax, Power2 } from 'gsap'
 export default {
   name: 'parallax',
   mounted () {
-    // const items = this.$el.querySelectorAll('.parallax__item')
     TweenMax.fromTo(this.$refs.parallax, 2.5, {
       rotationY: -22,
       rotationX: -7
@@ -23,7 +22,6 @@ export default {
       ease: Power2.easeInOut,
       repeat: -1
     })
-    // this.TweenMax(items, 1, {borderColor: '#FFFFFF'}, {borderColor: '#B5966B'}, 1)
   }
 }
 </script>

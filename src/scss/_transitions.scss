@@ -8,3 +8,13 @@
 .fade-enter, .fade-leave-active {
   opacity: 0
 }
+// ------------------------------------------------------------------------------------------
+// Fade gallery
+// ------------------------------------------------------------------------------------------
+.fade-gallery-enter-active, .fade-gallery-leave-active {
+  opacity:1;
+  transition: opacity 1s ease-out;
+}
+.fade-gallery-enter, .fade-gallery-leave-active {
+  opacity: 0
+}

@@ -156,11 +156,12 @@ export default {
       background: $gold;
       left: 50%;
       top: 50%;
-      transform: translateX(-50%) translateY(-45%);
+      transform: translateX(-50%) translateY(-50%);
+      transform-origin:center;
       height: 50px;
       width: 50px;
-      border-radius: 25px;
-      transition: all 0.1s ease-out;
+      border-radius: 50%;
+      transition: all 100ms ease-out;
     }
 
     &:hover {

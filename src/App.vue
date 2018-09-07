@@ -4,6 +4,7 @@
       <c-other-models-section v-if="sectionsData" :models-data="sectionsData[1].watches"></c-other-models-section>
       <c-final-section v-if="sectionsData" :section-data="sectionsData[2]"></c-final-section>
       <c-intro></c-intro>
+      <c-gallery></c-gallery>
       <div id="stage" ref="stage"></div>
       <c-header></c-header>
       <c-menu-mobile></c-menu-mobile>
@@ -39,6 +40,7 @@ import FinalSectionVue from '@/components/vue/vue-textures/FinalSection.vue'
 import MenuMobile from '@/components/vue/Menu-mobile.vue'
 import SocialNetworks from '@/components/vue/SocialNetworks.vue'
 import Intro from '@/components/vue/Intro/Intro.vue'
+import Gallery from '@/components/vue/Gallery/Gallery.vue'
 
 // libs
 import THREE from '@/utils/ThreeWithPlugins'
@@ -136,7 +138,8 @@ export default {
     'c-final-section': FinalSectionVue,
     'c-menu-mobile': MenuMobile,
     'c-social-networks': SocialNetworks,
-    'c-intro': Intro
+    'c-intro': Intro,
+    'c-gallery': Gallery
   },
   data () {
     return {

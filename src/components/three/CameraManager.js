@@ -195,9 +195,8 @@ export default class CameraManager extends THREE.Object3D {
   }
 
   scrollTo (depth, callback) {
-    console.log(this.scrollingElement, depth, callback)
     TweenMax.to(this.scrollingElement, 1, {
-      scrollTo: depth,
+      scrollTo: {y: depth},
       onComplete: callback
     })
   }

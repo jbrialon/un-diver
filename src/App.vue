@@ -153,9 +153,10 @@ export default {
       this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })
       this.renderer.setSize(this.stageSize.width, this.stageSize.height)
       this.renderer.autoClear = false
-      this.renderer.setPixelRatio(
-        window.devicePixelRatio || window.webkitDevicePixelRatio || 1
-      )
+      // optimization for retina screens
+      // this.renderer.setPixelRatio(
+      //   window.devicePixelRatio || window.webkitDevicePixelRatio || 1
+      // )
       this.renderer.gammaInput = true
       this.renderer.gammaOutput = true
       this.renderer.toneMapping = THREE.LinearToneMapping

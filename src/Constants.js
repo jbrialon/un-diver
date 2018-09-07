@@ -55,6 +55,7 @@ export const WatchTexturesPath = ModelsPath + 'watch/'
 export const WatchDiffuseMap = 'Watch_A.jpg'
 export const WatchMetalnessMap = 'Watch_RM.png'
 export const WatchEmissiveMap = 'Watch_EM.png'
+export const MarginBetweenWatchAndText = 0.02 // percent of screen width
 
 /*
 * FINAL SECTION

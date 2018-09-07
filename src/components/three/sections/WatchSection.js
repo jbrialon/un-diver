@@ -4,17 +4,19 @@
 */
 import store from '@/store'
 import * as THREE from 'three'
+import InterpolatingPolynomial from 'interpolating-polynomial'
 import Section from '@/components/three/Section.js'
 import Fader from '@/components/three/behaviors/Fader.js'
 import WatchModel from '@/components/three/models/WatchModel.js'
 import StickToCamera from '@/components/three/behaviors/StickToCamera.js'
 import HtmlTextureManager from '@/utils/HtmlTextureManager.js'
 import Button from '@/components/three/Button'
-// import * as CONST from '@/Constants'
+import * as CONST from '@/Constants'
 import AnimationLoopManager from '@/utils/AnimationLoopManager'
-// import _ from 'lodash'
+import { forEach } from 'lodash'
 
 export default class WatchSection extends Section {
+    showDebugLines
     featuresStickToCameraDistance
     watch3DModelPath = 'diver_watch_blue_LOW.fbx'
     watch3DModel
@@ -37,6 +39,11 @@ export default class WatchSection extends Section {
     glowEndPosition = 0
     nightIntensity = 0
 
+    watchOrientationStartPoint = 0
+    watchOrientationEndPoint = 0
+    watchRotationSteps = []
+    watchRotationInterpolation
+
     constructor (sectionData) {
       super(sectionData)
 
@@ -45,23 +52,31 @@ export default class WatchSection extends Section {
       this.addFeatures()
       this.addDetails()
 
+      this.watchOrientationStartPoint = this.watchRotationSteps[0][0]
+      this.watchOrientationEndPoint = this.watchRotationSteps[this.watchRotationSteps.length - 1][0]
+      this.watchRotationInterpolation = InterpolatingPolynomial(this.watchRotationSteps)
+
+      var geometry = new THREE.Geometry()
+      forEach(this.watchRotationSteps, item => {
+        geometry.vertices.push(new THREE.Vector3(item[1] * 100, 0, item[0]))
+      })
+      this.addDebugLine(geometry)
+      var geometryStraight = new THREE.Geometry()
+      geometryStraight.vertices = [new THREE.Vector3(0, 0, this.watchOrientationStartPoint), new THREE.Vector3(0, 0, this.watchOrientationEndPoint)]
+      this.addDebugLine(geometryStraight)
+
       AnimationLoopManager.addCallback(this.checkGlowing)
-      // AnimationLoopManager.addCallback(this.testRotation)
     }
 
-    /*
-    test = () => {
-      if (this.watch3DModel.model && this.featuresPositions.length > 0 && this.featuresPositions.length > 0) {
-        _.forEach(this.featuresPositions, (item, index) => {
-          item.distance = Math.floor(window.AppCameraDummy.position.z + item.position - CONST.CameraDistanceToSection)
-        })
-        this.featuresPositions = _.sortBy(this.featuresPositions, ['distance'])
-        let pc = (this.featuresPositions[0].distance / this.featuresPositions[0].depth * 0.5)
-        let rotation = pc * (Math.PI * 0.25)
-        this.watch3DModel.model.rotation.y = (this.featuresPositions[0].index % 2 === 0) ? rotation : -rotation
+    addDebugLine (geometry) {
+      if (this.showDebugLines) {
+        var material = new THREE.LineBasicMaterial({color: Math.random() * 0xffffff})
+        var line = new THREE.Line(geometry, material)
+        line.position.y -= 100
+        line.position.z = -this.position.z
+        this.add(line)
       }
     }
-    */
 
     /*
     * Add the main title for the watch section
@@ -97,6 +112,7 @@ export default class WatchSection extends Section {
       this.watchZPosition = this.currentZPosition
       this.watch3DModel = new WatchModel()
       this.watch3DModel.position.z = this.currentZPosition
+      this.watchRotationSteps.push([this.currentZPosition - this.sectionData.watchModel.depth, 0])
       this.add(this.watch3DModel)
       Object.assign(
         this.watch3DModel,
@@ -109,8 +125,6 @@ export default class WatchSection extends Section {
     * When a features is getting sticked / unsticked to camera
     */
     onFeatureSticked = (feature, unsticked) => {
-      this.watch3DModel.orientWatch(feature.watchOrientation, unsticked)
-
       if (feature.textId === 'details' && feature.button) {
         feature.button.setVisibility(!unsticked)
       }
@@ -139,7 +153,8 @@ export default class WatchSection extends Section {
           if (watchOrientation === 'right') translate *= -1
           textMesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(translate, 0, 0))
           textMesh.position.z = textZPos
-          textMesh.position.x = (watchOrientation === 'left') ? 85 : -85
+          textMesh.position.x = CONST.MarginBetweenWatchAndText * store.state.viewportSizeAtCameraFocus.width
+          textMesh.position.x *= (watchOrientation === 'left') ? 1 : -1
           textMesh.scale.set(0.5, 0.5, 0.5)
           textMesh.updateMatrix()
           textMesh.updateMatrixWorld()
@@ -157,13 +172,13 @@ export default class WatchSection extends Section {
             moreBtn.position.y = -texture.image.height - moreBtn.size.height * 0.5
             textMesh.add(moreBtn)
           } else if (featureObject.id === 'glowing') {
-            this.glowStartPosition = textContainerPos + this.position.z
-            this.glowEndPosition = textContainerPos - featureObject.depth + this.position.z
+            this.glowStartPosition = textContainerPos
+            this.glowEndPosition = textContainerPos - featureObject.depth
           }
-
           this.featuresPositions.push({distance: 0, index: textIndex, depth: featureObject.depth, position: this.position.z - textZPos})
           this.featuresRotations.push({position: this.position.z - textZPos, rotation: (watchOrientation === 'left') ? Math.PI * 0.25 : -Math.PI * 0.25})
         })
+        this.watchRotationSteps.push([textZPos, (watchOrientation === 'left') ? -1 : 1])
         this.currentZPosition -= featureObject.depth
         featureIndex++
       })
@@ -171,6 +186,8 @@ export default class WatchSection extends Section {
 
     addDetails () {
       this.detailsZPosition = this.currentZPosition - (this.sectionData.details.depth * 0.5)
+      this.watchRotationSteps.push([this.currentZPosition, -1])
+      this.watchRotationSteps.push([this.currentZPosition - this.sectionData.details.depth - CONST.CameraDistanceToSection, -1])
       HtmlTextureManager.loadTextureById('watch-section-details', texture => {
         const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
         const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
@@ -210,7 +227,13 @@ export default class WatchSection extends Section {
     }
 
     checkGlowing = () => {
-      let cameraPosition = window.AppCameraDummy.position.z
+      let cameraPosition = window.AppCameraDummy.position.z + this.position.z
+      let interpolationFactor = 0
+      if (cameraPosition < this.watchOrientationStartPoint && cameraPosition > this.watchOrientationEndPoint) {
+        interpolationFactor = this.watchRotationInterpolation(cameraPosition)
+        interpolationFactor = THREE.Math.smootherstep(interpolationFactor, -1, 1) * 2 - 1
+      }
+      this.watch3DModel.orientWatch(interpolationFactor)
       if (cameraPosition < this.glowStartPosition && cameraPosition > this.glowEndPosition) {
         this.nightIntensity = 1 - Math.abs((cameraPosition - this.glowStartPosition) / (this.glowEndPosition - this.glowStartPosition) * 2 - 1)
       } else {

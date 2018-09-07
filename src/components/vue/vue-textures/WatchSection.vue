@@ -161,7 +161,7 @@ export default {
       height: 50px;
       width: 50px;
       border-radius: 50%;
-      transition: all 100ms ease-out;
+      transition: all 200ms ease-out;
     }
 
     &:hover {

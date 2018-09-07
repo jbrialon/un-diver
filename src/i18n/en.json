@@ -11,7 +11,7 @@
     "footer_contact": "contact",
     "intro_title": "The Diver",
     "intro_paragraph": "An underwater exploration of the new Ulysse Nardin’s Diver Chronometer collection.<br/>Take a breath, dive...<br/>#freakmeout",
-    "slide_1_text": "<u>Changing the way</u><br><u>we see the seas…</u>",
+    "slide_1_text": "<u>Changing the way we see the seas…</u>",
     "slide_2_text": "Ulysse Nardin’s ambassador, <u>Fred Buyle</u>, free diver and photographer captures the oceans with natural light and just one breath of air",
     "slide_3_text": "“A dive watch is the most crucial accessory for a free diver.<br/>When you’re freediving, you have a special relationship to time<br/>sometimes it passes fast and other times it seems to slow down or even stop.<br/><u>I rely on my watch</u> to monitor my perception of time”<br/>",
     "slide_4_text": "Buyle and Ulysse Nardin collaboration started with the <u>Diver deep dive</u>, a robust, functional sports watch, water resistant to 1000 meters.",
@@ -28,7 +28,10 @@
     "stage_7_text_1": "Watch technical recap",
     "stage_7_text_2": "dive to the other models",
     "stage_7_cta": "Find a store",
-    "stage_final_1": "Ulysse Nardin, watchmaker of the oceans",
+    "stage_final_1": "Ulysse Nardin,<br>  watchmaker of the oceans",
     "stage_final_2": "Follow us on: Social Networks",
-    "stage_final_3": "To Surface"
+    "stage_final_3": "To Surface",
+    "gallery_close_button": "back to experience",
+    "loader_label": "Start Diving",
+    "rotate_device_message": "Please rotate your device to landscape"
 }

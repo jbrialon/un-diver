@@ -19,7 +19,8 @@
     "viewport-units-buggyfill": "^0.6.2",
     "vue": "^2.5.17",
     "vue-i18n": "^8.0.0",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "vueperslides": "^1.13.1"
   },
   "devDependencies": {
     "@kazupon/vue-i18n-loader": "^0.3.0",
@@ -31,8 +32,7 @@
     "sass-loader": "^7.1.0",
     "vue-cli-plugin-i18n": "^0.5.0",
     "vue-template-compiler": "^2.5.17",
-    "raw-loader": "^0.5.1",
-    "vueperslides": "^1.13.1"
+    "raw-loader": "^0.5.1"
   },
   "eslintConfig": {
     "root": true,

@@ -41,7 +41,7 @@
       {{ padPercent }}%
     </div>
     <div ref="text" class="loader__text">
-      Start diving
+      {{ $t("loader_label") }}
     </div>
   </div>
 </template>

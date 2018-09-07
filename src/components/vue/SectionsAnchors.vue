@@ -1,6 +1,14 @@
 <template>
   <nav class="sections" v-if="!vrModeActivated">
-    <a class="sections__title" :class="{active: item.id === currentSectionId}" v-for="item in items" :key="item.id" href="#" @click.stop.prevent="goToSection(item.id)">{{ item.title }}</a>
+    <a class="sections__title"
+      :class="{active: item.id === currentSectionId}"
+      v-for="item in items"
+      :key="item.id"
+      href="#"
+      @click.stop.prevent="goToSection(item.id)"
+    >
+      {{ $t(item.title) }}
+    </a>
   </nav>
 </template>
 

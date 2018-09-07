@@ -44,3 +44,37 @@ u {
     height:10px;
   }
 }
+
+.vueperslides {
+  top:50%;
+  transform:translateY(-50%);
+  .vueperslides__arrow {
+    background:$gold;
+    border-radius:50%;
+    width:33px;
+    height:33px;
+    @include small-only {
+      top:36vh;
+    }
+    svg {
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      width:15px;
+      height:15px;
+    }
+    &--prev {
+      left:115px;
+      @include small-only {
+        left:15px;
+      }
+    }
+    &--next {
+      right:115px;
+      @include small-only {
+        right:15px;
+      }
+    }
+  }
+}

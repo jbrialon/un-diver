@@ -1,8 +1,13 @@
 <template>
   <div class="final-section">
-    <div class="final-section__text" v-html-to-texture="'final-section-text'">{{ sectionData.text }}</div>
+    <div
+      class="final-section__text"
+      v-html-to-texture="'final-section-text'"
+      v-html="$t(sectionData.text)"
+    >
+    </div>
     <div id="final-section-ctas" class="final-section__ctas">
-      <c-link :href="'#'" :label="'to surface'" class="final-section__ctas--to-surface" @click.prevent="gotoSurface"></c-link>
+      <c-link :href="'#'" :label="$t('stage_final_3')" class="final-section__ctas--to-surface" @click.prevent="gotoSurface"></c-link>
       <c-social-networks :footer-mode="false"></c-social-networks>
     </div>
   </div>
@@ -43,9 +48,9 @@ export default {
   &__text {
     display: inline-block;
     color: $white;
-    font-size: $fs-watch-title;
+    font-size: $fs-watch-title-final;
     line-height: initial;
-    font-weight: 300;
+    font-weight: $fw-medium;
     text-align: center;
     white-space: pre;
     line-height: 1.2em;

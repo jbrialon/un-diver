@@ -12,7 +12,7 @@
       <c-meter></c-meter>
       <c-social-networks></c-social-networks>
       <div id="rotate-device-message">
-        Please rotate your device to landscape
+        {{ $t("rotate_device_message") }}
       </div>
   </div>
 </template>
@@ -92,7 +92,7 @@ const database = [
   {
     id: 1,
     type: 'other-models',
-    title: 'Other models',
+    title: 'stage_7_text_2',
     weight: 2,
     watches: [
       {
@@ -121,8 +121,8 @@ const database = [
   {
     id: 2,
     type: 'final',
-    title: 'Share the experience',
-    text: 'Ulysse Nardin\nwatchmaker of the oceans',
+    title: 'stage_final_2',
+    text: 'stage_final_1',
     weight: 0
   }
 ]

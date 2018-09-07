@@ -1,9 +1,16 @@
 <template>
-  <transition name="fade-gallery">
+  <transition name="fade-gallery" v-on:before-enter="beforeEnter" v-on:after-leave="afterLeave">
     <div class="gallery" v-if="showGallery">
       <div class="gallery__container">
+        <vueper-slides class="no-shadow" :fade="true" :bullets="false" :touchable="isMobile" fixed-height="570px" :infinite="false" :autoplay="false">
+          <vueper-slide :key="index" v-for="(slide, index) in slides">
+            <div slot="slideContent">
+              <img :src="slide" alt="closeup">
+            </div>
+          </vueper-slide>
+        </vueper-slides>
         <button class="link gallery__close" @click.prevent="hideGallery()">
-          back to experience
+          {{ $t('gallery_close_button') }}
           <span class="link__top-line"></span>
         </button>
       </div>
@@ -16,14 +23,23 @@ import { mapGetters } from 'vuex'
 import { VueperSlides, VueperSlide } from 'vueperslides'
 import 'vueperslides/dist/vueperslides.min.css'
 
-import Link from '@/components/vue/Link.vue'
+import Utils from '@/utils/Utils'
 
 export default {
   name: 'gallery',
+  data () {
+    return {
+      isMobile: Utils.isMobile(),
+      slides: [
+        require('@/assets/gallery/closeup_1.jpg'),
+        require('@/assets/gallery/closeup_2.jpg'),
+        require('@/assets/gallery/closeup_3.jpg')
+      ]
+    }
+  },
   components: {
     VueperSlides,
-    VueperSlide,
-    'c-link': Link
+    VueperSlide
   },
   computed: {
     ...mapGetters([
@@ -31,6 +47,12 @@ export default {
     ])
   },
   methods: {
+    beforeEnter () {
+      document.body.style.overflow = 'hidden'
+    },
+    afterLeave () {
+      document.body.style.overflow = ''
+    },
     hideGallery () {
       this.$store.commit('showGallery', false)
     }
@@ -44,6 +66,7 @@ export default {
 
 .gallery {
   position:fixed;
+  top:0;
   width:100vw;
   height:100vh;
   z-index:$zGallery;
@@ -55,7 +78,7 @@ export default {
   }
   &__close {
     position:absolute;
-    bottom:8vh;
+    bottom:16vh;
     left:50%;
     transform: translateX(-50%);
   }

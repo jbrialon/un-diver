@@ -2,47 +2,18 @@
   <div class="slider">
     <div class="slider__container">
       <vueper-slides class="no-shadow" :fade="true" :bullets="false" :touchable="isMobile" fixed-height="570px" :infinite="false" :autoplay="false">
-        <vueper-slide :key="1">
+        <vueper-slide :key="index" v-for="(slide, index) in slides">
           <div slot="slideContent">
-            <div class="slider__slide slider__slide--left">
-              <p class="text" v-html="$t('slide_1_text')"></p>
-              <tilt class="image" :src="image1"></tilt>
-            </div>
-          </div>
-        </vueper-slide>
-        <vueper-slide :key="2">
-          <div slot="slideContent">
-            <div class="slider__slide slider__slide--right">
-              <tilt class="image" :src="image2"></tilt>
-              <p class="text" v-html="$t('slide_2_text')"></p>
-            </div>
-          </div>
-        </vueper-slide>
-        <vueper-slide :key="3">
-          <div slot="slideContent">
-            <div class="slider__slide slider__slide--left">
-              <p class="text" v-html="$t('slide_3_text')"></p>
-              <tilt class="image" :src="image3"></tilt>
-            </div>
-          </div>
-        </vueper-slide>
-        <vueper-slide :key="4">
-          <div slot="slideContent">
-            <div class="slider__slide slider__slide--right">
-              <tilt class="image" :src="image4"></tilt>
-              <p class="text" v-html="$t('slide_4_text')"></p>
+            <div
+              class="slider__slide slider__slide--left"
+              :class="{'slider__slide--left': slide.align == 'left', 'slider__slide--right': slide.align == 'right'}"
+            >
+              <p class="text" v-html="slide.text"></p>
+              <tilt class="image" :src="slide.image"></tilt>
             </div>
           </div>
         </vueper-slide>
         <vueper-slide :key="5">
-          <div slot="slideContent">
-            <div class="slider__slide slider__slide--left">
-              <p class="text" v-html="$t('slide_5_text')"></p>
-              <tilt class="image" :src="image5"></tilt>
-            </div>
-          </div>
-        </vueper-slide>
-        <vueper-slide :key="6">
           <div slot="slideContent">
             <div class="slider__slide slider__slide--center">
               <Parallax class="slider__parallax"></Parallax>
@@ -72,12 +43,38 @@ export default {
   name: 'slider',
   data () {
     return {
-      isMobile: Utils.isMobile(),
-      image1: require('@/assets/slider/intro_01.jpg'),
-      image2: require('@/assets/slider/intro_02.jpg'),
-      image3: require('@/assets/slider/intro_03.jpg'),
-      image4: require('@/assets/slider/intro_04.jpg'),
-      image5: require('@/assets/slider/intro_05.jpg')
+      isMobile: Utils.isMobile()
+    }
+  },
+  computed: {
+    slides () {
+      return [
+        {
+          align: 'left',
+          text: this.$t('slide_1_text'),
+          image: require('@/assets/slider/intro_01.jpg')
+        },
+        {
+          align: 'right',
+          text: this.$t('slide_2_text'),
+          image: require('@/assets/slider/intro_02.jpg')
+        },
+        {
+          align: 'left',
+          text: this.$t('slide_3_text'),
+          image: require('@/assets/slider/intro_03.jpg')
+        },
+        {
+          align: 'right',
+          text: this.$t('slide_4_text'),
+          image: require('@/assets/slider/intro_04.jpg')
+        },
+        {
+          align: 'left',
+          text: this.$t('slide_5_text'),
+          image: require('@/assets/slider/intro_05.jpg')
+        }
+      ]
     }
   },
   components: {

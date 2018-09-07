@@ -21,7 +21,7 @@
         <p v-html="$t('intro_paragraph')"></p>
       </div>
       <c-slider ref="slider"></c-slider>
-      <!-- Loaded -->
+      <!-- Loader -->
       <c-loader ref="loader" class="intro__loader" @click.native="next()"></c-loader>
     </div>
   </div>
@@ -162,6 +162,7 @@ export default {
   }
   &__loader {
     cursor:pointer;
+    user-select: none;
   }
 }
 </style>

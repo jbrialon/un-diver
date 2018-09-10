@@ -5,11 +5,12 @@
 import store from '@/store'
 import * as CONST from '@/Constants'
 import * as THREE from 'three'
-import {TweenMax, Sine, Power4} from 'gsap'
-import 'gsap/ScrollToPlugin'
+import {TweenMax, Sine, Power4, ScrollToPlugin} from 'gsap/all'
 import AnimationLoopManager from '@/utils/AnimationLoopManager'
 import Utils from '@/utils/Utils'
 import GuiManager from '@/utils/GuiManager'
+// eslint-disable-next-line
+const plugins = [ScrollToPlugin]
 
 export default class CameraManager extends THREE.Object3D {
   autonomous = false
@@ -195,7 +196,7 @@ export default class CameraManager extends THREE.Object3D {
   }
 
   scrollTo (depth, callback) {
-    TweenMax.to(window, 1, {
+    TweenMax.to(this.scrollingElement, 1, {
       scrollTo: {y: depth},
       onComplete: callback
     })

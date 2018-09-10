@@ -2,15 +2,15 @@ const database = [
   {
     id: 0,
     type: 'watch',
-    title: 'The New Diver',
+    title: 'intro_title',
     weight: 11,
     intro: {
       weight: 3,
       items: [
-        {id: 0, text: 'A diving watch collection', weight: 1},
-        {id: 1, text: 'crafted to withstand up to', weight: 1},
-        {id: 2, text: 'three hundred meters of', weight: 1},
-        {id: 3, text: 'potentially deadly water pressure', weight: 1}
+        {id: 0, text: 'stage_1_text_1', weight: 1},
+        {id: 1, text: 'stage_1_text_2', weight: 1},
+        {id: 2, text: 'stage_1_text_3', weight: 1},
+        {id: 3, text: 'stage_1_text_4', weight: 1}
       ]
     },
     watchModel: {
@@ -19,25 +19,25 @@ const database = [
     features: {
       weight: 7,
       items: [
-        {id: 'bluedial', text: 'Inverted, concave bezel\nwith domed sapphire glass', weight: 1},
-        {id: 'diameter', text: '42 and 44 mm diameters\nSturdy, blue rubber guards protect the crown', weight: 1},
-        {id: 'caliber', text: 'UN-118 movement - silicium technology\nVisible through the open back', weight: 1},
-        {id: 'glowing', text: 'Superluminova makes the hours and minutes\nvisible at great depths', weight: 4},
-        {id: 'waterproof', text: 'Waterproof\nup to 300m', weight: 1}
+        {id: 'bluedial', text: 'stage_2_text', weight: 1},
+        {id: 'diameter', text: 'stage_3_text', weight: 1},
+        {id: 'caliber', text: 'stage_4_text_1', weight: 1},
+        {id: 'glowing', text: 'stage_5_text_1', weight: 4},
+        {id: 'waterproof', text: 'stage_6_text', weight: 1}
       ]
     },
     details: {
       weight: 1,
-      title: 'Diver Blue Dial',
-      sku: '1183-170-3/93',
-      movementLabel: 'movement',
-      movementText: 'UN-1180 manufacture w. power reserve, small second and date\nUN certificate, Silicium technology',
-      caseLabel: 'case',
-      caseDiameter: 'Diameter 44mm',
-      caseHeight: 'Height 10.75 mm',
-      caseWater: 'Water resistance 300 m',
-      price: '5\'800 CHF',
-      buyLink: 'www.google.com'
+      title: 'stage_7_watch_detail_title',
+      sku: 'stage_7_watch_detail_sku',
+      movementLabel: 'stage_7_watch_detail_movementlabel',
+      movementText: 'stage_7_watch_detail_movementtext',
+      caseLabel: 'stage_7_watch_detail_caselabel',
+      caseDiameter: 'stage_7_watch_detail_casediameter',
+      caseHeight: 'stage_7_watch_detail_caseheight',
+      caseWater: 'stage_7_watch_detail_Water',
+      price: 'stage_7_watch_detail_price',
+      buyLink: 'stage_7_watch_detail_link'
     }
   },
   {
@@ -48,24 +48,24 @@ const database = [
     watches: [
       {
         id: 'black',
-        title: 'Black dial',
-        description: 'Rubber\n44 mm',
-        price: '5\'800 CHF',
-        buyLink: 'www.google.com'
+        title: 'stage_7_other_1_title',
+        description: 'stage_7_other_1_description',
+        price: 'stage_7_other_1_price',
+        buyLink: 'stage_7_other_1_price'
       },
       {
         id: 'gold',
-        title: 'Gold Black dial',
-        description: 'Rubber\n44 mm',
-        price: '7\'900 CHF',
-        buyLink: 'www.google.com'
+        title: 'stage_7_other_1_title',
+        description: 'stage_7_other_2_description',
+        price: 'stage_7_other_2_price',
+        buyLink: 'stage_7_other_2_price'
       },
       {
         id: 'white',
-        title: 'Great White',
-        description: 'Rubber\n44 mm',
-        price: '8\'900 CHF',
-        buyLink: 'www.google.com'
+        title: 'stage_7_other_3_title',
+        description: 'stage_7_other_3_description',
+        price: 'stage_7_other_3_price',
+        buyLink: 'stage_7_other_3_price'
       }
     ]
   },

@@ -3,12 +3,11 @@
     <div class="other-models-section__item" v-for="watch in modelsData" :key="watch.id">
       <div v-html-to-texture="getModelId(watch.id)">
         <div class="other-models-section__item--image">
-          <img :src="getImageUrl(watch.id)" :alt="watch.title">
+          <img :src="getImageUrl(watch.id)" :alt="$t(watch.title)">
         </div>
-        <div class="other-models-section__item--title">{{ watch.title }}</div>
-        <div class="other-models-section__item--descriptionlabel">{{ 'description' }}</div>
-        <div class="other-models-section__item--description">{{ watch.description }}</div>
-        <div class="other-models-section__item--price">{{ watch.price }}</div>
+        <div class="other-models-section__item--title" v-html="$t(watch.title)"></div>
+        <div class="other-models-section__item--description" v-html="$t(watch.description)">{{ watch.description }}</div>
+        <div class="other-models-section__item--price" v-html="$t(watch.price)"></div>
       </div>
       <c-link :id="getButtonId(watch.id)" :href="$t('header_cta_2_link')" :label="$t('stage_7_cta')" :big="true"></c-link>
     </div>

@@ -4,14 +4,14 @@
       <!-- LOGO -->
       <img ref="logo" src="@/assets/logo_un.png" alt="Ulysse Nardin" class="intro__logo">
       <!-- SVG markup for the mask -->
-      <svg class="intro__background" width="1920" height="1080" viewBox="0 0 1920 1080" preserveAspectRatio="xMinYMin slice">
+      <svg class="intro__background" width="2132" height="1200" viewBox="0 0 2132 1200" preserveAspectRatio="xMinYMin slice">
         <defs>
-          <mask id="mask" x="0" y="0" width="1920" height="1080" >
-            <circle ref="mask1" cx="960" cy="540" r="0" fill="white" stroke="none"/>
-            <circle ref="mask2" cx="960" cy="540" r="0" fill="black" stroke="none"/>
+          <mask id="mask" x="0" y="0" width="2132" height="1200" >
+            <circle ref="mask1" cx="1066" cy="600" r="0" fill="white" stroke="none"/>
+            <circle ref="mask2" cx="1066" cy="600" r="0" fill="black" stroke="none"/>
           </mask>
         </defs>
-        <image xlink:href="@/assets/bg.jpg" width="1920px" height="1080px" />
+        <image xlink:href="@/assets/bg.jpg" width="2132px" height="1200px" />
       </svg>
       <!-- Intro Paragraph -->
       <div ref="paragraph" class="intro__paragraph">

@@ -51,25 +51,28 @@ export default {
   text-decoration:none;
 
   &--big {
-    min-width: 300px;
-    height: 80px;
-    line-height:80px;
-    font-size: $fs-buttons-big;
-    padding: 0 20px;
-    border-width: 2px;
-    &:after {
+    // only display button bigger on retina screens
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+      min-width: 300px;
       height: 80px;
+      line-height:80px;
+      font-size: $fs-buttons-big;
+      padding: 0 20px;
       border-width: 2px;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-    }
-    .link__top-line {
-      &:after,
-      &:before {
-        top: -2px;
-        bottom:-2px;
+      &:after {
+        height: 80px;
         border-width: 2px;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+      }
+      .link__top-line {
+        &:after,
+        &:before {
+          top: -2px;
+          bottom:-2px;
+          border-width: 2px;
+        }
       }
     }
   }

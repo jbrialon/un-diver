@@ -2,7 +2,10 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 
 Vue.use(VueI18n)
+
 let localesList = []
+let currentLng = process.env.VUE_APP_I18N_LOCALE
+
 function loadLocaleMessages () {
   const locales = require.context('./i18n', true, /[A-Za-z0-9-_,\s]+\.json$/i)
   const messages = {}
@@ -17,10 +20,26 @@ function loadLocaleMessages () {
   return messages
 }
 
+function getCurrentLng () {
+  let lng = window.location.pathname.replace(/^\/+/g, '')
+  if (!lng) {
+    lng = navigator.language || navigator.userLanguage
+  }
+  for (var i = 0; i < localesList.length; i++) {
+    if (lng.indexOf(localesList[i]) === 0) {
+      currentLng = localesList[i]
+    }
+  }
+  return currentLng
+}
+
+const messages = loadLocaleMessages()
+currentLng = getCurrentLng()
+
 const i18n = new VueI18n({
-  locale: process.env.VUE_APP_I18N_LOCALE || 'en',
-  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
-  messages: loadLocaleMessages()
+  locale: currentLng,
+  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || currentLng,
+  messages: messages
 })
 
 export { i18n, localesList }

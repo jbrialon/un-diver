@@ -55,7 +55,7 @@ const database = [
       },
       {
         id: 'gold',
-        title: 'stage_7_other_1_title',
+        title: 'stage_7_other_2_title',
         description: 'stage_7_other_2_description',
         price: 'stage_7_other_2_price',
         buyLink: 'stage_7_other_2_price'

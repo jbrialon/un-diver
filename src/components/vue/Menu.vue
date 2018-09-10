@@ -9,15 +9,17 @@
       </button>
     </transition>
     <transition name="fade">
-      <button v-if="displayButton" class="menu__item menu__item--lang" type="button">
+      <button v-if="displayButton" class="menu__item menu__item--lang" type="button" @click="dropIt()">
         {{ currentLocale }}
-        <ul>
-          <li v-for="(locale, index) in localesList" :key="index">
-            <a href="#" :hreflang="locale" @click="setLang(locale)">
-              {{ locale }}
-            </a>
-          </li>
-        </ul>
+        <transition name="slide">
+          <ul v-if="isDroppped">
+            <li v-for="(locale, index) in localesList" :key="index">
+              <a :href="getUrl(locale)" :hreflang="locale" @click="setLang(locale)">
+                {{ locale }}
+              </a>
+            </li>
+          </ul>
+        </transition>
       </button>
     </transition>
     <button class="menu__item menu__item--vr hide-for-mobile" type="button" @click="toggleVrMode()" :class="{'active': vrModeActivated}">
@@ -38,6 +40,7 @@ export default {
   name: 'Menu',
   data () {
     return {
+      isDroppped: false,
       sound: true,
       isMobile: Utils.isMobile(),
       localesList: localesList,
@@ -58,9 +61,11 @@ export default {
     }
   },
   methods: {
-    setLang (locale) {
-      this.currentLocale = locale
-      this.$i18n.locale = locale
+    dropIt () {
+      this.isDroppped = !this.isDroppped
+    },
+    getUrl (locale) {
+      return `/${locale}`
     },
     toggleSound () {
       this.sound = !this.sound
@@ -108,6 +113,10 @@ export default {
     &--lang {
       position:relative;
       padding-right:15px;
+      transition:opacity 300ms ease-out;
+      &:hover {
+        opacity:0.8;
+      }
       &:after {
         position:absolute;
         content:'';
@@ -121,12 +130,6 @@ export default {
           background:url('../../assets/arrow-blue.png');
         }
       }
-      &:active,
-      &:hover {
-        ul {
-          height:90px;
-        }
-      }
       ul {
         position:absolute;
         background:$darkblue;
@@ -134,6 +137,7 @@ export default {
         left:-10px;
         height:0;
         overflow:hidden;
+        height:105px;
         transition:height 300ms ease-out;
         li {
           margin-bottom:2px;
@@ -175,6 +179,9 @@ export default {
         }
       }
     }
+  }
+  .slide-enter, .slide-leave-to{
+    height: 0px;
   }
 }
 </style>

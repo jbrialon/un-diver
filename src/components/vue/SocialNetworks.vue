@@ -82,7 +82,6 @@ export default {
 @import '@/scss/_mixins.scss';
 
 .social-networks {
-
   &.footer-mode {
     position:fixed;
     right:4vw;
@@ -94,6 +93,15 @@ export default {
       left:8vw;
       right:8vw;
       bottom:8vw;
+      ul li {
+        &:first-child {
+          position:absolute;
+          left:0;
+        }
+        svg path {
+          fill:$darkblue;
+        }
+      }
     }
   }
 
@@ -119,9 +127,6 @@ export default {
           height: 18px;
           path {
             fill: $white;
-            @include small-only {
-              fill:$darkblue;
-            }
           }
         }
       }
@@ -130,10 +135,6 @@ export default {
         text-transform:uppercase;
         font-weight:$fw-bold;
         letter-spacing:$ls-buttons;
-        @include small-only {
-          position:absolute;
-          left:0;
-        }
       }
       &:first-child {
         margin-left:0;

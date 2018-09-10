@@ -31,7 +31,9 @@ export default {
 
 .link {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-width: 150px;
   height: 40px;
   padding: 0 10px;
@@ -40,7 +42,7 @@ export default {
   cursor: pointer;
   color: #1c264a;
   text-transform: uppercase;
-  line-height: 40px;
+  line-height:12px;
   font-size: $fs-buttons;
   letter-spacing: $ls-buttons;
   font-weight:$fw-bold;
@@ -55,8 +57,8 @@ export default {
     @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
       min-width: 300px;
       height: 80px;
-      line-height:80px;
       font-size: $fs-buttons-big;
+      line-height:22px;
       padding: 0 20px;
       border-width: 2px;
       &:after {

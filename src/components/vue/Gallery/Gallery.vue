@@ -5,7 +5,7 @@
         <vueper-slides class="no-shadow" :fade="true" :bullets="false" :touchable="isMobile" fixed-height="570px" :infinite="false" :autoplay="false">
           <vueper-slide :key="index" v-for="(slide, index) in slides">
             <div slot="slideContent">
-              <img :src="slide" alt="closeup">
+              <img class="gallery__image" :src="slide" alt="closeup">
             </div>
           </vueper-slide>
         </vueper-slides>
@@ -75,6 +75,11 @@ export default {
     position:relative;
     width:100vw;
     height:100vh;
+  }
+  &__image {
+    @include small-only {
+      width:80vw;
+    }
   }
   &__close {
     position:absolute;

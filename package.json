@@ -17,7 +17,6 @@
     "stats.js": "^0.17.0",
     "three": "^0.95.0",
     "three-fbxloader-offical": "^1.0.0",
-    "viewport-units-buggyfill": "^0.6.2",
     "vue": "^2.5.17",
     "vue-i18n": "^8.0.0",
     "vueperslides": "^1.13.1",

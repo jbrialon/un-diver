@@ -113,10 +113,13 @@ export default {
     @include small-only {
       position:relative;
       top:auto;
-      font-size: 24px;
+      font-size: 16px;
       margin-top:20px;
-      line-height:27px;
+      line-height:22px;
       text-align:center;
+      u:before {
+        height:5px;
+      }
     }
   }
   .image {
@@ -161,12 +164,12 @@ export default {
     width:60vw;
     @include small-only {
       width:80vw;
+      flex-direction: column-reverse;
     }
     &--left {
       justify-content:flex-end;
       @include small-only {
         justify-content: flex-start;
-        flex-direction: column-reverse;
       }
       .text {
         left:0;
@@ -181,7 +184,6 @@ export default {
       justify-content: flex-start;
       @include small-only {
         justify-content: flex-start;
-        flex-direction: column;
       }
       .text {
         right:0;

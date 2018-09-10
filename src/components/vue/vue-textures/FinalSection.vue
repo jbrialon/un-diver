@@ -1,5 +1,5 @@
 <template>
-  <div class="final-section">
+  <div class="final-section" v-if="!initDiving">
     <div
       class="final-section__text"
       v-html-to-texture="'final-section-text'"
@@ -16,6 +16,7 @@
 <script>
 import Link from '@/components/vue/Link.vue'
 import SocialNetworks from '@/components/vue/SocialNetworks.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'FinalSection',
@@ -28,6 +29,11 @@ export default {
       type: Object,
       required: true
     }
+  },
+  computed: {
+    ...mapGetters([
+      'initDiving'
+    ])
   },
   methods: {
     gotoSurface () {

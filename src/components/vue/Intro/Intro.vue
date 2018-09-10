@@ -70,10 +70,12 @@ export default {
       this.$refs.loader.hide()
     },
     leaveIntro () {
+      document.body.style.overflow = ''
       this.show = false
     }
   },
   mounted () {
+    document.body.style.overflow = 'hidden'
     this.tl.pause()
     this.tl.set(this.$refs.loader.$el, {xPercent: -50, yPercent: -50, left: '50%', top: '50%'})
     this.tl.to(this.$refs.logo, 3, {autoAlpha: 1, ease: Power1.easeOut})
@@ -99,10 +101,18 @@ export default {
   height:100vh;
   z-index:$zIntro;
   background:#031A27;
+  /* CSS specific to iOS devices */
+  @supports (-webkit-overflow-scrolling: touch) {
+    height:calc(100vh - 74px);
+  }
   &__container {
     position:relative;
     width:100vw;
     height:100vh;
+    /* CSS specific to iOS devices */
+    @supports (-webkit-overflow-scrolling: touch) {
+      height:calc(100vh - 74px);
+    }
   }
   &__logo {
     position: absolute;

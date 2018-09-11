@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     gotoSurface () {
-      this.$store.commit('goToSectionId', {id: 0, time: Date.now()})
+      this.$store.commit('goToSectionId', { id: 0, time: Date.now() })
     }
   }
 }
@@ -43,7 +43,7 @@ export default {
 .final-section {
   position: fixed;
   top: 0;
-  width: 10000px;
+  width: 2000px;
 
   &__text {
     display: inline-block;
@@ -52,7 +52,7 @@ export default {
     line-height: initial;
     font-weight: $fw-medium;
     text-align: center;
-    white-space: pre;
+    white-space:pre;
     line-height: 1.2em;
   }
 

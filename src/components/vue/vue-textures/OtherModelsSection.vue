@@ -48,7 +48,7 @@ export default {
 .other-models-section {
   position: fixed;
   top: 0;
-  width: 10000px;
+  width: 2000px;
 
   &__item {
     text-align: center;

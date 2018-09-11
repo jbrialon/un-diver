@@ -4,7 +4,6 @@
 
     <div class="watch-section__features">
       <div class="watch-section__features--container" v-html-to-texture="getFeatureId(item.id)" v-for="item in watchData.features.items" :key="item.id">
-        <div v-if="item.title" class="watch-section__features--title" v-html="$t(item.title)"></div>
         <div class="watch-section__features--text" v-html="$t(item.text)"></div>
       </div>
     </div>
@@ -59,7 +58,7 @@ export default {
 .watch-section {
   position: fixed;
   top: 0;
-  width: 200vw;
+  width: 2000px;
 
   &__intro {
     display: inline-block;
@@ -68,25 +67,19 @@ export default {
     line-height: initial;
     font-weight: 300;
     text-align: center;
+    white-space:pre;
   }
 
   &__features {
     &--container {
       display: inline-block;
     }
-    &--title {
-      text-transform: uppercase;
-      font-size: $fs-watch-feature-title;
-      font-weight:$fw-light;
-      color: $gold;
-      line-height: 2em;
-    }
     &--text {
       font-size: $fs-watch-feature-text;
       font-weight: $fw-medium;
       color: $white;
-      white-space: pre;
       line-height: 1.2em;
+      white-space: pre;
     }
   }
 

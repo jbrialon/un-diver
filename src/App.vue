@@ -1,19 +1,19 @@
 <template>
   <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation, started: render3dExperience}">
-      <c-watch-section v-if="sectionsData" :watch-data="sectionsData[0]"></c-watch-section>
-      <c-other-models-section v-if="sectionsData" :models-data="sectionsData[1].watches"></c-other-models-section>
-      <c-final-section v-if="sectionsData" :section-data="sectionsData[2]"></c-final-section>
-      <c-intro></c-intro>
-      <c-gallery></c-gallery>
-      <div id="stage" ref="stage"></div>
-      <c-header></c-header>
-      <c-menu-mobile></c-menu-mobile>
-      <c-sections v-if="sectionsData" :items="sectionsData"></c-sections>
-      <c-meter></c-meter>
-      <c-social-networks></c-social-networks>
-      <div id="rotate-device-message">
-        {{ $t("rotate_device_message") }}
-      </div>
+    <c-watch-section v-if="sectionsData" :watch-data="sectionsData[0]"></c-watch-section>
+    <c-other-models-section v-if="sectionsData" :models-data="sectionsData[1].watches"></c-other-models-section>
+    <c-final-section v-if="sectionsData" :section-data="sectionsData[2]"></c-final-section>
+    <c-intro></c-intro>
+    <c-gallery></c-gallery>
+    <div id="stage" ref="stage"></div>
+    <c-header></c-header>
+    <c-menu-mobile></c-menu-mobile>
+    <c-sections v-if="sectionsData" :items="sectionsData"></c-sections>
+    <c-meter></c-meter>
+    <c-social-networks></c-social-networks>
+    <div id="rotate-device-message">
+      {{ $t("rotate_device_message") }}
+    </div>
   </div>
 </template>
 
@@ -182,8 +182,8 @@ export default {
       window.AppNightIntensity = 0
 
       let renderOptionFolder = GuiManager.addFolder('Render Options')
-      let toneMappingOptions = {None: THREE.NoToneMapping, Linear: THREE.LinearToneMapping, Reinhard: THREE.ReinhardToneMapping, Uncharted2: THREE.Uncharted2ToneMapping, Cineon: THREE.CineonToneMapping}
-      let currentToneMapping = {value: 'Linear'}
+      let toneMappingOptions = { None: THREE.NoToneMapping, Linear: THREE.LinearToneMapping, Reinhard: THREE.ReinhardToneMapping, Uncharted2: THREE.Uncharted2ToneMapping, Cineon: THREE.CineonToneMapping }
+      let currentToneMapping = { value: 'Linear' }
       renderOptionFolder.add(currentToneMapping, 'value', Object.keys(toneMappingOptions)).onChange((value) => {
         this.renderer.toneMapping = toneMappingOptions[value]
         this.onRendererSettingsChanged()
@@ -241,7 +241,7 @@ export default {
         item.zpos = currentZPos
         currentZPos += item.depth
         currentZPos += this.sectionMargin
-        this.sectionsDepthList.push({id: item.id, start: -item.zpos + this.sectionMargin, end: -currentZPos})
+        this.sectionsDepthList.push({ id: item.id, start: -item.zpos + this.sectionMargin, end: -currentZPos })
         this.scene.add(section)
         this.sections.push(section)
       })

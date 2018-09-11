@@ -10,7 +10,7 @@
   "dependencies": {
     "canvas-text-wrapper": "^0.10.2",
     "dat.gui": "^0.7.2",
-    "gsap": "^2.0.1",
+    "gsap": "^2.0.2",
     "html2canvas": "^1.0.0-alpha.12",
     "interpolating-polynomial": "^1.1.2",
     "lodash": "^4.17.10",
@@ -18,21 +18,21 @@
     "three": "^0.95.0",
     "three-fbxloader-offical": "^1.0.0",
     "vue": "^2.5.17",
-    "vue-i18n": "^8.0.0",
-    "vueperslides": "^1.13.1",
+    "vue-i18n": "^8.1.0",
+    "vueperslides": "^1.13.4",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
     "@kazupon/vue-i18n-loader": "^0.3.0",
-    "@vue/cli-plugin-babel": "^3.0.0",
-    "@vue/cli-plugin-eslint": "^3.0.0",
-    "@vue/cli-service": "^3.0.0",
-    "@vue/eslint-config-standard": "^3.0.0",
+    "@vue/cli-plugin-babel": "^3.0.1",
+    "@vue/cli-plugin-eslint": "^3.0.1",
+    "@vue/cli-service": "^3.0.1",
+    "@vue/eslint-config-standard": "^3.0.1",
     "node-sass": "^4.9.3",
+    "raw-loader": "^0.5.1",
     "sass-loader": "^7.1.0",
     "vue-cli-plugin-i18n": "^0.5.0",
-    "vue-template-compiler": "^2.5.17",
-    "raw-loader": "^0.5.1"
+    "vue-template-compiler": "^2.5.17"
   },
   "eslintConfig": {
     "root": true,

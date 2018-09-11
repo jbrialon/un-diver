@@ -177,7 +177,6 @@ export default {
       $radius: 48;
       $circumference: 2 * $pi * $radius;
       stroke-dasharray: calc(#{$circumference} * 0 / 100), #{$circumference};
-      transition:all 2s ease-out;
     }
     svg.circleTrack {
       z-index: 0;

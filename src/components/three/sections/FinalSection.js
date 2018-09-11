@@ -6,7 +6,7 @@ import THREE from '@/utils/ThreeWithPlugins'
 import HtmlTextureManager from '@/utils/HtmlTextureManager.js'
 import AnimationLoopManager from '@/utils/AnimationLoopManager'
 import Utils from '@/utils/Utils'
-import {TweenMax, Power4} from 'gsap'
+import { TweenMax, Power4 } from 'gsap'
 
 export default class FinalSection extends Section {
   extraScale = 0.1 // ensure image is in screen event with camera wiggle
@@ -58,7 +58,7 @@ export default class FinalSection extends Section {
     if (this.ctasVisible !== visible) {
       this.ctasVisible = visible
       if (this.ctasDomElement) {
-        TweenMax.to(this.ctasDomElement, 0.3, {autoAlpha: visible ? 1 : 0, ease: Power4.easeOut})
+        TweenMax.to(this.ctasDomElement, 0.3, { autoAlpha: visible ? 1 : 0, ease: Power4.easeOut })
       }
     }
   }

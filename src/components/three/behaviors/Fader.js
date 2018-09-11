@@ -2,7 +2,7 @@
 * Fades the object material opacity
 * when object is close or far away from Camera
 */
-import AnimationLoopManager from '../../../utils/AnimationLoopManager'
+import AnimationLoopManager from '@/utils/AnimationLoopManager'
 import * as THREE from 'three'
 
 export default class Fader {

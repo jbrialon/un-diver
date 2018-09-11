@@ -66,6 +66,9 @@ export default {
         this.$store.commit('initDiving')
       }
     },
+    startCount () {
+      this.$refs.loader.startCount()
+    },
     hideLoader () {
       this.$refs.loader.hide()
     },
@@ -82,11 +85,15 @@ export default {
     this.tl.to(this.$refs.logo, 2, {autoAlpha: 0, ease: Power1.easeOut})
     this.tl.to(this.$refs.mask1, 1.7, {attr: {r: 1150}, onComplete: this.showUI, ease: Power2.easeIn})
     this.tl.to(this.$refs.loader.$el, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=1.7')
-    this.tl.to(this.$refs.loader.$el, 1.5, {xPercent: -50, yPercent: -50, left: '50%', top: '85%', ease: Power2.easeInOut})
+    this.tl.to(this.$refs.loader.$el, 1.5, {xPercent: -50, yPercent: -50, left: '50%', top: '85%', onComplete: this.startCount, ease: Power2.easeInOut})
     this.tl.to(this.$refs.paragraph, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=1')
-    this.tl.to(this.$refs.paragraph, 1, {autoAlpha: 0, ease: Power1.easeOut}, 20)
+    this.tl.to(this.$refs.paragraph, 1, {autoAlpha: 0, ease: Power1.easeOut}, 15)
     this.tl.to(this.$refs.slider.$el, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=1')
     this.tl.play()
+  },
+  beforeDestroy () {
+    this.tl.kill()
+    this.tlLeave.kill()
   }
 }
 </script>

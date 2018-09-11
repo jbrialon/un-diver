@@ -1,5 +1,5 @@
 <template>
-  <div class="other-models-section" v-if="!initDiving">
+  <div class="other-models-section">
     <div class="other-models-section__item" v-for="watch in modelsData" :key="watch.id">
       <div v-html-to-texture="getModelId(watch.id)">
         <div class="other-models-section__item--image">
@@ -16,7 +16,6 @@
 
 <script>
 import Link from '@/components/vue/Link.vue'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'OtherModelsSection',
@@ -28,11 +27,6 @@ export default {
       type: Array,
       required: true
     }
-  },
-  computed: {
-    ...mapGetters([
-      'initDiving'
-    ])
   },
   methods: {
     getButtonId (id) {

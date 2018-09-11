@@ -1,5 +1,5 @@
 <template>
-  <div class="watch-section" v-if="!initDiving">
+  <div class="watch-section">
     <div v-for="item in watchData.intro.items" :key="item.id" v-html-to-texture="getIntroId(item.id)" class="watch-section__intro" v-html="$t(item.text)"></div>
 
     <div class="watch-section__features">
@@ -27,7 +27,6 @@
 
 <script>
 import Link from '@/components/vue/Link.vue'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'WatchSection',
@@ -39,11 +38,6 @@ export default {
       type: Object,
       required: true
     }
-  },
-  computed: {
-    ...mapGetters([
-      'initDiving'
-    ])
   },
   methods: {
     getFeatureId (id) {
@@ -119,13 +113,9 @@ export default {
       word-break: normal;
       width: 340px;
     }
-    &--caseLabel {}
     &--caseDiameter, &--caseHeight, &--caseWater {
       line-height: 3em;
     }
-    &--caseDiameter {}
-    &--caseHeight {}
-    &--caseWater {}
     &--price {
       display: inline-block;
       position: relative;

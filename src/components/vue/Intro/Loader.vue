@@ -32,7 +32,7 @@
 
       <svg class="circleFill" width="236" height="236" viewBox="0 0 236 236" :style="strokeDashoffset">
         <circle ref="circlefill" cx="118" cy="118" r="48" stroke="#B5966B" stroke-width="3" fill="none"></circle>
-      </svg>
+      </svg> 
       <svg class="circleTrack" width="236" height="236" viewBox="0 0 236 236">
         <circle ref="circletrack" cx="118" cy="118" r="48" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="3" fill="none"></circle>
       </svg>
@@ -102,7 +102,7 @@ export default {
       }
     },
     padPercent () {
-      return Utils.pad(this.loadingPercent * 100, 2)
+      return Math.floor(Utils.pad(this.loadingPercent * 100, 2))
     }
   },
   watch: {

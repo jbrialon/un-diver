@@ -96,6 +96,7 @@ export default class Environment extends THREE.Object3D {
     this.sharkModel.position.z = -6300
     this.sharkModel.cruisingRadius = 2000
     this.sharkModel.speed = 1
+    this.sharkModel.mesh.scale.multiplyScalar(1.8)
     this.sharkModel.setOrientation(new THREE.Euler(THREE.Math.degToRad(30), THREE.Math.degToRad(45), 0))
     this.sharkModel.setAnimationPath(null)
     this.add(this.sharkModel)
@@ -123,6 +124,7 @@ export default class Environment extends THREE.Object3D {
     otherSharkModel.position.z = -CONST.SceneDepth * 0.8
     otherSharkModel.cruisingRadius = 2000
     otherSharkModel.speed = 1
+    otherSharkModel.mesh.scale.multiplyScalar(1.8)
     otherSharkModel.setOrientation(new THREE.Euler(THREE.Math.degToRad(30), THREE.Math.degToRad(60), 0))
     otherSharkModel.setAnimationPath(null)
     this.add(otherSharkModel)

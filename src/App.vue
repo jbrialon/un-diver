@@ -52,6 +52,17 @@ import data from '@/data/data.js'
 
 export default {
   name: 'Ulysse-Nardin-App',
+  metaInfo () {
+    return {
+      title: this.$t('meta_title'),
+      meta: [
+        { description: this.$t('meta_description') }
+      ],
+      htmlAttrs: {
+        lang: this.$i18n.locale
+      }
+    }
+  },
   components: {
     'c-header': Header,
     'c-meter': Meter,

@@ -14,7 +14,7 @@
         <transition name="slide">
           <ul v-if="isDroppped">
             <li v-for="(locale, index) in localesList" :key="index">
-              <a :href="getUrl(locale)" :hreflang="locale" @click="setLang(locale)">
+              <a :href="getUrl(locale)" :hreflang="locale">
                 {{ locale }}
               </a>
             </li>

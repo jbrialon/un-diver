@@ -38,7 +38,7 @@
       </svg>
     </div>
     <div ref="number" class="loader__number">
-      {{ fakePercent }}%
+      {{ Math.round(fakePercent) }}%
     </div>
     <div ref="text" class="loader__text">
       {{ $t("loader_label") }}
@@ -55,37 +55,37 @@ export default {
   data () {
     return {
       tl: new TimelineMax(),
-      tlRepeat: new TimelineMax({repeat: -1}),
+      tlRepeat: new TimelineMax({ repeat: -1 }),
       fakePercent: 0
     }
   },
   methods: {
     animate () {
-      this.tl.to(this.$refs.background, 1, {attr: {r: 48}, ease: Power2.easeOut})
-      this.tl.to(this.$refs.number, 1.5, {autoAlpha: 0, ease: Power2.easeOut})
-      this.tl.to(this.$refs.text, 1.5, {autoAlpha: 1, ease: Power2.easeOut})
-      this.tl.to(this.$refs.gradient, 1, {attr: {'fill-opacity': 1}, ease: Power2.easeOut}, '-=1.5')
-      this.tl.to(this.$refs.borderOne, 1.5, {attr: {r: 74, 'stroke-opacity': 0.4}, ease: Power2.easeOut}, '-=0.5')
-      this.tl.to(this.$refs.borderTwo, 1.5, {attr: {r: 116, 'stroke-opacity': 0.2}, onComplete: this.launchSonar, ease: Power2.easeOut}, '-=1.5')
+      this.tl.to(this.$refs.background, 1, { attr: { r: 48 }, ease: Power2.easeOut })
+      this.tl.to(this.$refs.number, 1.5, { autoAlpha: 0, ease: Power2.easeOut })
+      this.tl.to(this.$refs.text, 1.5, { autoAlpha: 1, ease: Power2.easeOut })
+      this.tl.to(this.$refs.gradient, 1, { attr: { 'fill-opacity': 1 }, ease: Power2.easeOut }, '-=1.5')
+      this.tl.to(this.$refs.borderOne, 1.5, { attr: { r: 74, 'stroke-opacity': 0.4 }, ease: Power2.easeOut }, '-=0.5')
+      this.tl.to(this.$refs.borderTwo, 1.5, { attr: { r: 116, 'stroke-opacity': 0.2 }, onComplete: this.launchSonar, ease: Power2.easeOut }, '-=1.5')
     },
     launchSonar () {
-      this.tlRepeat.fromTo(this.$refs.sonar1, 1, {attr: {r: 48, 'stroke-opacity': 0.8}, ease: Power2.easeOut}, {attr: {r: 74, 'stroke-opacity': 0}, ease: Power2.easeOut})
-      this.tlRepeat.fromTo(this.$refs.sonar2, 1.5, {attr: {r: 48, 'stroke-opacity': 0.8}, ease: Power2.easeOut}, {attr: {r: 116, 'stroke-opacity': 0}, ease: Power2.easeOut}, '-=1')
+      this.tlRepeat.fromTo(this.$refs.sonar1, 1, { attr: { r: 48, 'stroke-opacity': 0.8 }, ease: Power2.easeOut }, { attr: { r: 74, 'stroke-opacity': 0 }, ease: Power2.easeOut })
+      this.tlRepeat.fromTo(this.$refs.sonar2, 1.5, { attr: { r: 48, 'stroke-opacity': 0.8 }, ease: Power2.easeOut }, { attr: { r: 116, 'stroke-opacity': 0 }, ease: Power2.easeOut }, '-=1')
     },
     startCount () {
-      TweenMax.to(this, 10, {fakePercent: 100, roundProps: 'fakePercent', ease: Power2.easeInOut})
+      TweenMax.to(this, 10, { fakePercent: 100, ease: Power2.easeInOut })
     },
     hide () {
       this.tlRepeat.pause()
-      TweenMax.to(this.$refs.circlefill, 1, {attr: {'stroke-opacity': 0}, ease: Power2.easeOut})
-      TweenMax.to(this.$refs.circletrack, 1, {attr: {'stroke-opacity': 0}, ease: Power2.easeOut})
-      TweenMax.to(this.$refs.borderOne, 1, {attr: {'stroke-opacity': 0}, ease: Power2.easeOut})
-      TweenMax.to(this.$refs.borderTwo, 1, {attr: {'stroke-opacity': 0}, ease: Power2.easeOut})
-      TweenMax.to(this.$refs.sonar1, 1, {attr: {'stroke-opacity': 0}, ease: Power2.easeOut})
-      TweenMax.to(this.$refs.sonar2, 1, {attr: {'stroke-opacity': 0}, ease: Power2.easeOut})
-      TweenMax.to(this.$refs.background, 1.5, {attr: {r: 0}, ease: Power2.easeOut})
-      TweenMax.to(this.$refs.text, 1, {autoAlpha: 0, ease: Power2.easeOut})
-      TweenMax.to(this.$refs.gradient, 1, {attr: {'fill-opacity': 0}, ease: Power2.easeOut})
+      TweenMax.to(this.$refs.circlefill, 1, { attr: { 'stroke-opacity': 0 }, ease: Power2.easeOut })
+      TweenMax.to(this.$refs.circletrack, 1, { attr: { 'stroke-opacity': 0 }, ease: Power2.easeOut })
+      TweenMax.to(this.$refs.borderOne, 1, { attr: { 'stroke-opacity': 0 }, ease: Power2.easeOut })
+      TweenMax.to(this.$refs.borderTwo, 1, { attr: { 'stroke-opacity': 0 }, ease: Power2.easeOut })
+      TweenMax.to(this.$refs.sonar1, 1, { attr: { 'stroke-opacity': 0 }, ease: Power2.easeOut })
+      TweenMax.to(this.$refs.sonar2, 1, { attr: { 'stroke-opacity': 0 }, ease: Power2.easeOut })
+      TweenMax.to(this.$refs.background, 1.5, { attr: { r: 0 }, ease: Power2.easeOut })
+      TweenMax.to(this.$refs.text, 1, { autoAlpha: 0, ease: Power2.easeOut })
+      TweenMax.to(this.$refs.gradient, 1, { attr: { 'fill-opacity': 0 }, ease: Power2.easeOut })
     }
   },
   computed: {

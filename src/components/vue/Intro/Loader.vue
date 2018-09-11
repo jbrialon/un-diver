@@ -1,5 +1,5 @@
 <template>
-  <div class="loader">
+  <div class="loader" :class="{'loaded': appLoaded}">
     <div class="circle">
       <svg class="circleGradient" width="236" height="236" viewBox="0 0 236 236">
           <defs>
@@ -124,6 +124,9 @@ export default {
 .loader {
   position:absolute;
   opacity:0;
+  &.loaded {
+    cursor:pointer;
+  }
   &__number {
     position:absolute;
     top:50%;
@@ -132,18 +135,6 @@ export default {
     color:$white;
     font-weight:$fw-medium;
     transform:translate(-50%, -50%);
-  }
-  &__button {
-    display:block;
-    width: 104px;
-    height: 104px;
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%, -50%);
-    border-radius:50%;
-    cursor:pointer;
-    z-index:2;
   }
   &__text {
     position:absolute;

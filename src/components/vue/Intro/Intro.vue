@@ -57,7 +57,7 @@ export default {
       this.$store.commit('toggleUI')
     },
     next () {
-      if (this.loadingPercent === 1 && this.uiActivated) {
+      if (this.loadingPercent === 1 && this.uiActivated && this.$refs.loader.fakePercent === 100) {
         TweenMax.set(this.$el, { background: 'transparent' })
         TweenMax.to(this.$refs.paragraph, 1, { autoAlpha: 0, ease: Power1.easeOut })
         this.tlLeave.to(this.$refs.slider.$el, 2, { autoAlpha: 0, ease: Power1.easeOut })
@@ -178,7 +178,6 @@ export default {
     }
   }
   &__loader {
-    cursor:pointer;
     user-select: none;
   }
 }

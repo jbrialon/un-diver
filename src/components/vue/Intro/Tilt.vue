@@ -67,6 +67,8 @@ export default {
 .tilt {
   img {
     display:block;
+    position:relative;
+    z-index:-1;
     width:100%;
   }
 }

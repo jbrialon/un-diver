@@ -123,6 +123,7 @@ export default {
     }
   }
   .image {
+    position:relative;
     width:60%;
     z-index:-1;
     @include small-only {

@@ -2,7 +2,7 @@ import * as CONST from '@/Constants'
 import store from '@/store'
 import Utils from '@/utils/Utils'
 import LoadingManager from '@/utils/LoadingManager'
-import {TweenMax, Sine, Linear} from 'gsap'
+import { TweenMax, Sine, Linear } from 'gsap'
 import THREE from '@/utils/ThreeWithPlugins'
 
 export default class WatchModel extends THREE.Object3D {
@@ -60,14 +60,14 @@ export default class WatchModel extends THREE.Object3D {
     this.meshWidth *= this.modelScale
     this.meshHalfWidth = this.meshWidth * 0.5
 
-    TweenMax.fromTo(this.model.position, 3, {x: -3}, {
+    TweenMax.fromTo(this.model.position, 3, { x: -3 }, {
       x: 3,
       yoyo: true,
       yoyoEase: true,
       ease: Sine.easeInOut,
       repeat: -1
     })
-    TweenMax.fromTo(this.model.position, 5, {x: -3}, {
+    TweenMax.fromTo(this.model.position, 5, { x: -3 }, {
       y: 3,
       yoyo: true,
       yoyoEase: true,

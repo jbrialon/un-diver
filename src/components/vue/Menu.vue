@@ -76,7 +76,9 @@ export default {
       this.sound = !this.sound
     },
     toggleVrMode () {
-      this.$store.commit('toggleVrMode')
+      if (this.initDiving) {
+        this.$store.commit('toggleVrMode')
+      }
     }
   }
 }

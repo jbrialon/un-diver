@@ -5,7 +5,7 @@
 import * as CONST from '@/Constants'
 import LoadingManager from '@/utils/LoadingManager'
 import THREE from '@/utils/ThreeWithPlugins'
-import GuiManager from '@/utils/GuiManager'
+// import GuiManager from '@/utils/GuiManager'
 import AnimationLoopManager from '@/utils/AnimationLoopManager'
 import FishManager from '@/components/three/fishes/FishManager.js'
 import Animal from '@/components/three/models/Animal'
@@ -68,9 +68,9 @@ export default class Environment extends THREE.Object3D {
     this.directionalLight.intensity = 1
     super.add(this.directionalLight)
 
-    let guiLightFolder = GuiManager.addFolder('Lights')
-    guiLightFolder.add(this, 'ambientLightFactor', 0, 3).name('Ambient')
-    guiLightFolder.add(this, 'directionnalLightFactor', 0, 2).name('Directionnal')
+    // let guiLightFolder = GuiManager.addFolder('Lights')
+    // guiLightFolder.add(this, 'ambientLightFactor', 0, 3).name('Ambient')
+    // guiLightFolder.add(this, 'directionnalLightFactor', 0, 2).name('Directionnal')
   }
 
   addTerrain () {
@@ -93,7 +93,7 @@ export default class Environment extends THREE.Object3D {
     this.sharkModel.loadGlossinessMap(CONST.SharkGlossinessMap)
     this.sharkModel.position.y = 500
     this.sharkModel.position.x = 500
-    this.sharkModel.position.z = -6300
+    this.sharkModel.position.z = -1300
     this.sharkModel.cruisingRadius = 2000
     this.sharkModel.speed = 1
     this.sharkModel.mesh.scale.multiplyScalar(1.8)
@@ -129,6 +129,19 @@ export default class Environment extends THREE.Object3D {
     otherSharkModel.setAnimationPath(null)
     this.add(otherSharkModel)
     this.animalsArray.push(otherSharkModel)
+
+    let otherTurtleModel = new Animal()
+    otherTurtleModel.loadModel(CONST.TurtleModelPath)
+    otherTurtleModel.loadDiffuseMap(CONST.TurtleDiffuseMap)
+    otherTurtleModel.position.y = 0
+    otherTurtleModel.position.x = 0
+    otherTurtleModel.position.z = -6300
+    otherTurtleModel.speed = -1
+    otherTurtleModel.mesh.scale.multiplyScalar(2.2)
+    otherTurtleModel.setOrientation(new THREE.Euler(THREE.Math.degToRad(-25), THREE.Math.degToRad(-45), 0))
+    otherTurtleModel.setAnimationPath(null)
+    this.add(otherTurtleModel)
+    this.animalsArray.push(otherTurtleModel)
   }
 
   addEnvironmentMap () {
@@ -166,7 +179,7 @@ export default class Environment extends THREE.Object3D {
     pmremGenerator.update(this.renderer)
     let pmremCubeUVPacker = new THREE.PMREMCubeUVPacker(pmremGenerator.cubeLods)
     pmremCubeUVPacker.update(this.renderer)
-    this.dispatchEvent({type: CONST.ENVIRONMENT_MAP_LOADED, texture: pmremCubeUVPacker.CubeUVRenderTarget.texture})
+    this.dispatchEvent({ type: CONST.ENVIRONMENT_MAP_LOADED, texture: pmremCubeUVPacker.CubeUVRenderTarget.texture })
     this.sharkModel.setEnvironmentMap(pmremCubeUVPacker.CubeUVRenderTarget.texture)
     cubeMap.dispose()
     pmremGenerator.dispose()

@@ -3,7 +3,7 @@ import FBXLoader from 'three-fbxloader-offical'
 import * as CONST from '@/Constants'
 import LoadingManager from '@/utils/LoadingManager'
 // import Utils from '@/utils/Utils'
-import GuiManager from '@/utils/GuiManager'
+// import GuiManager from '@/utils/GuiManager'
 
 export default class Terrain extends THREE.Object3D {
   rockTexture
@@ -45,10 +45,10 @@ export default class Terrain extends THREE.Object3D {
     this.searchAnimalPaths()
     this.updateMaterials()
 
-    let guiTerrainFolder = GuiManager.addFolder('Terrain position')
-    guiTerrainFolder.add(this.mesh.position, 'x', -3000, 2000)
-    guiTerrainFolder.add(this.mesh.position, 'y', 1000, 4000)
-    guiTerrainFolder.add(this.mesh.position, 'z', 15000, 45000)
+    // let guiTerrainFolder = GuiManager.addFolder('Terrain position')
+    // guiTerrainFolder.add(this.mesh.position, 'x', -3000, 2000)
+    // guiTerrainFolder.add(this.mesh.position, 'y', 1000, 4000)
+    // guiTerrainFolder.add(this.mesh.position, 'z', 15000, 45000)
   }
 
   onTextureLoaded = (texture) => {
@@ -88,12 +88,12 @@ export default class Terrain extends THREE.Object3D {
 
     if (this.sharkPathSpline) {
       this.mesh.remove(this.sharkPathSpline)
-      this.dispatchEvent({type: CONST.SHARK_PATH_LOADED, spline: this.sharkPathSpline})
+      this.dispatchEvent({ type: CONST.SHARK_PATH_LOADED, spline: this.sharkPathSpline })
     }
 
     if (this.turtlePathSpline) {
       this.mesh.remove(this.turtlePathSpline)
-      this.dispatchEvent({type: CONST.TURTLE_PATH_LOADED, spline: this.turtlePathSpline})
+      this.dispatchEvent({ type: CONST.TURTLE_PATH_LOADED, spline: this.turtlePathSpline })
     }
   }
 

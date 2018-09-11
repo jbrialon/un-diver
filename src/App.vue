@@ -44,7 +44,7 @@ import Gallery from '@/components/vue/Gallery/Gallery.vue'
 
 // libs
 import THREE from '@/utils/ThreeWithPlugins'
-import GuiManager from '@/utils/GuiManager'
+// import GuiManager from '@/utils/GuiManager'
 import Utils from '@/utils/Utils'
 
 // data
@@ -181,28 +181,28 @@ export default {
       window.AppScene = this.scene
       window.AppNightIntensity = 0
 
-      let renderOptionFolder = GuiManager.addFolder('Render Options')
-      let toneMappingOptions = { None: THREE.NoToneMapping, Linear: THREE.LinearToneMapping, Reinhard: THREE.ReinhardToneMapping, Uncharted2: THREE.Uncharted2ToneMapping, Cineon: THREE.CineonToneMapping }
-      let currentToneMapping = { value: 'Linear' }
-      renderOptionFolder.add(currentToneMapping, 'value', Object.keys(toneMappingOptions)).onChange((value) => {
-        this.renderer.toneMapping = toneMappingOptions[value]
-        this.onRendererSettingsChanged()
-      })
-      renderOptionFolder.add(this.renderer, 'toneMappingExposure', 0, 10).name('Exposure').onChange(this.onRendererSettingsChanged)
-      renderOptionFolder.add(this.renderer, 'toneMappingWhitePoint', 0, 2).name('White point').onChange(this.onRendererSettingsChanged)
-      renderOptionFolder.add(this.renderer, 'gammaInput').name('Gamma Input').onChange(this.onRendererSettingsChanged)
-      renderOptionFolder.add(this.renderer, 'gammaOutput').name('Gamma Output').onChange(this.onRendererSettingsChanged)
-      renderOptionFolder.add(this.renderer, 'gammaFactor', 0, 5).name('Gamma Factor').onChange(this.onRendererSettingsChanged)
+      // let renderOptionFolder = GuiManager.addFolder('Render Options')
+      // let toneMappingOptions = { None: THREE.NoToneMapping, Linear: THREE.LinearToneMapping, Reinhard: THREE.ReinhardToneMapping, Uncharted2: THREE.Uncharted2ToneMapping, Cineon: THREE.CineonToneMapping }
+      // let currentToneMapping = { value: 'Linear' }
+      // renderOptionFolder.add(currentToneMapping, 'value', Object.keys(toneMappingOptions)).onChange((value) => {
+      //   this.renderer.toneMapping = toneMappingOptions[value]
+      //   this.onRendererSettingsChanged()
+      // })
+      // renderOptionFolder.add(this.renderer, 'toneMappingExposure', 0, 10).name('Exposure').onChange(this.onRendererSettingsChanged)
+      // renderOptionFolder.add(this.renderer, 'toneMappingWhitePoint', 0, 2).name('White point').onChange(this.onRendererSettingsChanged)
+      // renderOptionFolder.add(this.renderer, 'gammaInput').name('Gamma Input').onChange(this.onRendererSettingsChanged)
+      // renderOptionFolder.add(this.renderer, 'gammaOutput').name('Gamma Output').onChange(this.onRendererSettingsChanged)
+      // renderOptionFolder.add(this.renderer, 'gammaFactor', 0, 5).name('Gamma Factor').onChange(this.onRendererSettingsChanged)
     },
     onRendererSettingsChanged (value) {
       /* eslint-disable */
-      console.log('-----------------------')
-      console.log('toneMapping', this.renderer.toneMapping)
-      console.log('toneMappingExposure', this.renderer.toneMappingExposure)
-      console.log('toneMappingWhitePoint', this.renderer.toneMappingWhitePoint)
-      console.log('gammaInput', this.renderer.gammaInput)
-      console.log('gammaOutput', this.renderer.gammaOutput)
-      console.log('gammaFactor', this.renderer.gammaFactor)
+      // console.log('-----------------------')
+      // console.log('toneMapping', this.renderer.toneMapping)
+      // console.log('toneMappingExposure', this.renderer.toneMappingExposure)
+      // console.log('toneMappingWhitePoint', this.renderer.toneMappingWhitePoint)
+      // console.log('gammaInput', this.renderer.gammaInput)
+      // console.log('gammaOutput', this.renderer.gammaOutput)
+      // console.log('gammaFactor', this.renderer.gammaFactor)
       /* eslint-enable */
       this.scene.traverse((child) => {
         if (child instanceof THREE.Mesh) {
@@ -367,15 +367,19 @@ export default {
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -ms-overflow-style: none;
+    overflow: -moz-scrollbars-none;
   }
 
+  html::-webkit-scrollbar {
+    width:0 !important;
+  }
   body {
     position:relative;
     width:100vw;
     min-height: 100vh;
     background: black;
     overflow-x: hidden;
-
     &.vr {
       .stats, .gui {
         display: none;

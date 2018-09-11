@@ -5,10 +5,10 @@
 import store from '@/store'
 import * as CONST from '@/Constants'
 import * as THREE from 'three'
-import {TweenMax, Sine, Power4, ScrollToPlugin} from 'gsap/all'
+import { TweenMax, Sine, Power4, ScrollToPlugin } from 'gsap/all'
 import AnimationLoopManager from '@/utils/AnimationLoopManager'
 import Utils from '@/utils/Utils'
-import GuiManager from '@/utils/GuiManager'
+// import GuiManager from '@/utils/GuiManager'
 // eslint-disable-next-line
 const plugins = [ScrollToPlugin]
 
@@ -44,7 +44,7 @@ export default class CameraManager extends THREE.Object3D {
     this.setCameraWiggleX()
     this.setCameraWiggleY()
 
-    GuiManager.add(this, 'resetOrientation').name('Reset Orientation')
+    // GuiManager.add(this, 'resetOrientation').name('Reset Orientation')
 
     AnimationLoopManager.addFirstCallback(this.updateCameraRotation) // Only update Camera rotation before initial tween is ended
     if (store.state.initDiving) this.initDiving()
@@ -197,7 +197,7 @@ export default class CameraManager extends THREE.Object3D {
 
   scrollTo (depth, callback) {
     TweenMax.to(this.scrollingElement, 1, {
-      scrollTo: {y: depth},
+      scrollTo: { y: depth },
       onComplete: callback
     })
   }

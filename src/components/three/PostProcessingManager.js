@@ -1,7 +1,7 @@
 /*
 * Adds postprocessing shaders to the scene
 */
-import GuiManager from '../../utils/GuiManager'
+// import GuiManager from '@/utils/GuiManager'
 import THREE from './PostProcessingImports.js'
 
 export default class PostProcessingManager {
@@ -45,7 +45,7 @@ export default class PostProcessingManager {
     this.composerSceneEffects.addPass(effectVignette)
     // this.composerScene.addPass(antiAliasing)
 
-    GuiManager.add(this, 'visible').name('Post processing')
+    // GuiManager.add(this, 'visible').name('Post processing')
   }
 
   setSize (stageSize) {

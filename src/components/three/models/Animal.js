@@ -26,7 +26,7 @@ export default class Animal extends THREE.Object3D {
 
   constructor () {
     super()
-    this.mesh.mixer = {update: () => {}}
+    this.mesh.mixer = { update: () => {} }
     this.material.skinning = true
     this.material.shininess = 0
   }
@@ -123,7 +123,7 @@ export default class Animal extends THREE.Object3D {
     this.animationSpline = new THREE.CatmullRomCurve3(points3d)
     if (this.showAnimationSpline) {
       let geometry = new THREE.BufferGeometry().setFromPoints(points3d)
-      let material = new THREE.LineBasicMaterial({color: 0xff0000})
+      let material = new THREE.LineBasicMaterial({ color: 0xff0000 })
       let curveObject = new THREE.Line(geometry, material)
       this.add(curveObject)
     }

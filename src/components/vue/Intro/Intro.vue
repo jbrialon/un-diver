@@ -58,11 +58,11 @@ export default {
     },
     next () {
       if (this.loadingPercent === 1 && this.uiActivated) {
-        TweenMax.set(this.$el, {background: 'transparent'})
-        TweenMax.to(this.$refs.paragraph, 1, {autoAlpha: 0, ease: Power1.easeOut})
-        this.tlLeave.to(this.$refs.slider.$el, 2, {autoAlpha: 0, ease: Power1.easeOut})
-        this.tlLeave.to(this.$refs.loader.$el, 1.5, {xPercent: -50, yPercent: -50, left: '50%', top: '50%', ease: Power2.easeInOut}, '-=2')
-        this.tlLeave.to(this.$refs.mask2, 2.3, {attr: {r: 1150}, onStart: this.hideLoader, onComplete: this.leaveIntro, ease: Power2.easeOut})
+        TweenMax.set(this.$el, { background: 'transparent' })
+        TweenMax.to(this.$refs.paragraph, 1, { autoAlpha: 0, ease: Power1.easeOut })
+        this.tlLeave.to(this.$refs.slider.$el, 2, { autoAlpha: 0, ease: Power1.easeOut })
+        this.tlLeave.to(this.$refs.loader.$el, 1.5, { xPercent: -50, yPercent: -50, left: '50%', top: '50%', ease: Power2.easeInOut }, '-=2')
+        this.tlLeave.to(this.$refs.mask2, 2.3, { attr: { r: 1150 }, onStart: this.hideLoader, onComplete: this.leaveIntro, ease: Power2.easeOut })
         this.$store.commit('initDiving')
       }
     },
@@ -80,15 +80,15 @@ export default {
   mounted () {
     document.body.style.overflow = 'hidden'
     this.tl.pause()
-    this.tl.set(this.$refs.loader.$el, {xPercent: -50, yPercent: -50, left: '50%', top: '50%'})
-    this.tl.to(this.$refs.logo, 3, {autoAlpha: 1, ease: Power1.easeOut})
-    this.tl.to(this.$refs.logo, 2, {autoAlpha: 0, ease: Power1.easeOut})
-    this.tl.to(this.$refs.mask1, 1.7, {attr: {r: 1150}, onComplete: this.showUI, ease: Power2.easeIn})
-    this.tl.to(this.$refs.loader.$el, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=1.7')
-    this.tl.to(this.$refs.loader.$el, 1.5, {xPercent: -50, yPercent: -50, left: '50%', top: '85%', onComplete: this.startCount, ease: Power2.easeInOut})
-    this.tl.to(this.$refs.paragraph, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=1')
-    this.tl.to(this.$refs.paragraph, 1, {autoAlpha: 0, ease: Power1.easeOut}, 15)
-    this.tl.to(this.$refs.slider.$el, 2, {autoAlpha: 1, ease: Power1.easeOut}, '-=1')
+    this.tl.set(this.$refs.loader.$el, { xPercent: -50, yPercent: -50, left: '50%', top: '50%' })
+    this.tl.to(this.$refs.logo, 3, { autoAlpha: 1, ease: Power1.easeOut })
+    this.tl.to(this.$refs.logo, 2, { autoAlpha: 0, ease: Power1.easeOut })
+    this.tl.to(this.$refs.mask1, 1.7, { attr: { r: 1150 }, onComplete: this.showUI, ease: Power2.easeIn })
+    this.tl.to(this.$refs.loader.$el, 2, { autoAlpha: 1, ease: Power1.easeOut }, '-=1.7')
+    this.tl.to(this.$refs.loader.$el, 1.5, { xPercent: -50, yPercent: -50, left: '50%', top: '85%', onComplete: this.startCount, ease: Power2.easeInOut })
+    this.tl.to(this.$refs.paragraph, 2, { autoAlpha: 1, ease: Power1.easeOut }, '-=1')
+    this.tl.to(this.$refs.paragraph, 1, { autoAlpha: 0, ease: Power1.easeOut }, 15)
+    this.tl.to(this.$refs.slider.$el, 2, { autoAlpha: 1, ease: Power1.easeOut }, '-=1')
     this.tl.play()
   },
   beforeDestroy () {

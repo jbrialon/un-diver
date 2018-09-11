@@ -22,7 +22,11 @@
         </transition>
       </button>
     </transition>
-    <button class="menu__item menu__item--vr hide-for-mobile" type="button" @click="toggleVrMode()" :class="{'active': vrModeActivated}">
+    <button
+      class="menu__item menu__item--vr hide-for-mobile"
+      type="button" @click="toggleVrMode()"
+      :class="{'active': vrModeActivated, 'show': initDiving}"
+    >
       <icon-vr></icon-vr>
     </button>
   </nav>
@@ -54,7 +58,8 @@ export default {
   computed: {
     ...mapGetters([
       'vrModeActivated',
-      'menuMobileActivated'
+      'menuMobileActivated',
+      'initDiving'
     ]),
     displayButton () {
       return ((this.menuMobileActivated && this.isMobile) || (!this.menuMobileActivated && !this.isMobile)) && !this.vrModeActivated
@@ -98,7 +103,10 @@ export default {
       margin-left:0;
     }
     &--vr {
-      opacity: .4;
+      opacity: 0;
+      &.show {
+        opacity: 0.4;
+      }
       &.active {
         opacity: 1;
       }

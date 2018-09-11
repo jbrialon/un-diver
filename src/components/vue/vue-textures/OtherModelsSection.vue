@@ -36,7 +36,7 @@ export default {
       return 'other-models-section-' + id
     },
     getImageUrl (id) {
-      return require('@/assets/watches/' + id + '.png')
+      return 'images/watches/' + id + '.png'
     }
   }
 }

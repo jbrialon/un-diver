@@ -111,7 +111,8 @@ export default {
 
   .text {
     position:absolute;
-    top:25%;
+    top:50%;
+    transform:translateY(-50%);
     color:$white;
     font-size:35px;
     font-weight:$fw-medium;
@@ -122,6 +123,7 @@ export default {
     @include small-only {
       position:relative;
       top:auto;
+      transform:none;
       font-size: 16px;
       margin-top:20px;
       line-height:22px;

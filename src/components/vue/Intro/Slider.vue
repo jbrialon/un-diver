@@ -1,7 +1,16 @@
 <template>
   <div class="slider">
     <div class="slider__container">
-      <vueper-slides class="no-shadow" :fade="true" :bullets="false" :touchable="isMobile" fixed-height="570px" :infinite="false" :autoplay="false">
+      <vueper-slides
+        class="no-shadow"
+        :fade="true"
+        :bullets="false"
+        :touchable="isMobile"
+        fixed-height="570px"
+        :infinite="false"
+        :autoplay="false"
+        disableArrowsOnEdges="true"
+      >
         <vueper-slide :key="index" v-for="(slide, index) in slides">
           <div slot="slideContent">
             <div
@@ -52,27 +61,27 @@ export default {
         {
           align: 'left',
           text: this.$t('slide_1_text'),
-          image: require('@/assets/slider/intro_01.jpg')
+          image: `images/slider/intro_01.jpg`
         },
         {
           align: 'right',
           text: this.$t('slide_2_text'),
-          image: require('@/assets/slider/intro_02.jpg')
+          image: `/images/slider/intro_02.jpg`
         },
         {
           align: 'left',
           text: this.$t('slide_3_text'),
-          image: require('@/assets/slider/intro_03.jpg')
+          image: `images/slider/intro_03.jpg`
         },
         {
           align: 'right',
           text: this.$t('slide_4_text'),
-          image: require('@/assets/slider/intro_04.jpg')
+          image: `images/slider/intro_04.jpg`
         },
         {
           align: 'left',
           text: this.$t('slide_5_text'),
-          image: require('@/assets/slider/intro_05.jpg')
+          image: `images/slider/intro_05.jpg`
         }
       ]
     }

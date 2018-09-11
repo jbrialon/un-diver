@@ -8,16 +8,6 @@ module.exports = {
     ]
   },
 
-  chainWebpack: config => {
-    // GraphQL Loader
-    config.module
-      .rule('fbx')
-      .test(/\.fbx$/)
-      .use('raw-loader')
-        .loader('raw-loader')
-        .end()
-  },
-
   pluginOptions: {
     i18n: {
       locale: 'en',

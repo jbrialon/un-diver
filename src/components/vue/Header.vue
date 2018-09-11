@@ -12,7 +12,7 @@
         <c-link v-if="!vrModeActivated" :href="$t('header_cta_1_link')" :label="$t('header_cta_1')" class="header__link"></c-link>
       </transition>
       <a href="/" class="header__logo" v-if="!menuMobileActivated">
-        <img src="@/assets/logo_un.png" alt="Ulysse Nardin">
+        <img src="images/logo_un.png" alt="Ulysse Nardin">
       </a>
       <c-menu class="header__menu"></c-menu>
       <button class="header__button-vr" type="button" name="button" @click="toggleVrMode()" :class="{'active': vrModeActivated}">

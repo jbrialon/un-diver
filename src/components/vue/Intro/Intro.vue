@@ -2,7 +2,7 @@
   <div class="intro" v-if="show">
     <div class="intro__container">
       <!-- LOGO -->
-      <img ref="logo" src="@/assets/logo_un.png" alt="Ulysse Nardin" class="intro__logo">
+      <img ref="logo" src="images/logo_un.png" alt="Ulysse Nardin" class="intro__logo">
       <!-- SVG markup for the mask -->
       <svg class="intro__background" width="2132" height="1200" viewBox="0 0 2132 1200" preserveAspectRatio="xMinYMin slice">
         <defs>
@@ -11,7 +11,7 @@
             <circle ref="mask2" cx="1066" cy="600" r="0" fill="black" stroke="none"/>
           </mask>
         </defs>
-        <image xlink:href="@/assets/bg.jpg" width="2132px" height="1200px" />
+        <image xlink:href="images/bg.jpg" width="2132px" height="1200px" />
       </svg>
       <!-- Intro Paragraph -->
       <div ref="paragraph" class="intro__paragraph">

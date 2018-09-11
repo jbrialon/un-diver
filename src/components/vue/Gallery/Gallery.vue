@@ -2,16 +2,24 @@
   <transition name="fade-gallery" v-on:before-enter="beforeEnter" v-on:after-leave="afterLeave">
     <div class="gallery" v-if="showGallery">
       <div class="gallery__container">
-        <vueper-slides class="no-shadow" :fade="true" :bullets="false" :touchable="isMobile" fixed-height="570px" :infinite="false" :autoplay="false">
+        <vueper-slides
+          class="no-shadow"
+          :fade="true"
+          :bullets="false"
+          :touchable="isMobile"
+          fixed-height="570px"
+          :infinite="false"
+          :autoplay="false"
+          :arrowsOutside="true"
+        >
           <vueper-slide :key="index" v-for="(slide, index) in slides">
             <div slot="slideContent">
               <img class="gallery__image" :src="slide" alt="closeup">
             </div>
           </vueper-slide>
         </vueper-slides>
-        <button class="link gallery__close" @click.prevent="hideGallery()">
+        <button class="gallery__close" @click.prevent="hideGallery()">
           {{ $t('gallery_close_button') }}
-          <span class="link__top-line"></span>
         </button>
       </div>
     </div>
@@ -31,9 +39,9 @@ export default {
     return {
       isMobile: Utils.isMobile(),
       slides: [
-        require('@/assets/gallery/closeup_1.jpg'),
-        require('@/assets/gallery/closeup_2.jpg'),
-        require('@/assets/gallery/closeup_3.jpg')
+        'images/gallery/closeup_1.jpg',
+        'images/gallery/closeup_2.jpg',
+        'images/gallery/closeup_3.jpg'
       ]
     }
   },
@@ -60,7 +68,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '@/scss/_vars.scss';
 @import '@/scss/_mixins.scss';
 
@@ -71,10 +79,20 @@ export default {
   height:100vh;
   z-index:$zGallery;
   background:#031A27;
+  .vueperslides .vueperslides__arrow--next {
+    right:-80px;
+  }
+   .vueperslides .vueperslides__arrow--prev {
+    left:-80px;
+  }
   &__container {
     position:relative;
     width:100vw;
     height:100vh;
+    @include medium {
+      width:60vw;
+      margin:auto;
+    }
   }
   &__image {
     @include small-only {
@@ -84,8 +102,6 @@ export default {
   &__close {
     position:absolute;
     bottom:16vh;
-    left:50%;
-    transform: translateX(-50%);
   }
 }
 </style>

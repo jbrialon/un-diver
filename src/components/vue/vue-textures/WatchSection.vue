@@ -54,6 +54,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/scss/_vars.scss';
+@import '@/scss/_mixins.scss';
 
 .watch-section {
   position: fixed;
@@ -65,9 +66,12 @@ export default {
     color: $white;
     font-size: $fs-watch-title;
     line-height: initial;
-    font-weight: 300;
+    font-weight: $fw-medium;
     text-align: center;
-    white-space:pre;
+    @include small-only {
+      width:550px;
+      font-size: $fs-watch-title-mobile;
+    }
   }
 
   &__features {
@@ -80,6 +84,9 @@ export default {
       color: $white;
       line-height: 1.2em;
       white-space: pre;
+      @include small-only {
+        font-size: $fs-watch-feature-text-mobile;
+      }
     }
   }
 

@@ -121,7 +121,7 @@ export default class WatchModel extends THREE.Object3D {
     })
     let date = new Date()
     let day = date.getUTCDate()
-    this.dayDisc.rotation.z = -THREE.Math.degToRad(11.25 * (day - 1))
+    this.dayDisc.rotation.z = -THREE.Math.degToRad(11.25 * (day - 1)) // 11.25 = 360 / 32 (number of slice for days on the dial)
   }
 
   orientWatch (factor) {

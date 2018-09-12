@@ -19,6 +19,8 @@ export default class WatchModel extends THREE.Object3D {
   minutesHand
   secondsHand
 
+  dayDisc
+
   meshWidth = 0
   meshHalfWidth = 0
 
@@ -76,6 +78,7 @@ export default class WatchModel extends THREE.Object3D {
     })
 
     this.initHands()
+    this.initDays()
   }
 
   initHands () {
@@ -106,6 +109,19 @@ export default class WatchModel extends THREE.Object3D {
       repeat: -1,
       ease: Linear.easeNone
     })
+  }
+
+  initDays () {
+    this.model.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        if (child.name === 'Disc_DATE') {
+          this.dayDisc = child
+        }
+      }
+    })
+    let date = new Date()
+    let day = date.getUTCDate()
+    this.dayDisc.rotation.z = -THREE.Math.degToRad(11.25 * (day - 1))
   }
 
   orientWatch (factor) {

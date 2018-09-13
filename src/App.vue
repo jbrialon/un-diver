@@ -379,7 +379,6 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -ms-overflow-style: none;
-    overflow: -moz-scrollbars-none;
   }
 
   html::-webkit-scrollbar {

@@ -98,7 +98,8 @@ export default {
           position:absolute;
           left:0;
         }
-        svg path {
+        svg path,
+        svg circle {
           fill:$darkblue;
         }
       }

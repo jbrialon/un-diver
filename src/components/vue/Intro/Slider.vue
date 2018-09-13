@@ -125,7 +125,7 @@ export default {
       top:auto;
       transform:none;
       font-size: 16px;
-      margin-top:20px;
+      margin-top:12px;
       line-height:22px;
       text-align:center;
       u:before {
@@ -167,7 +167,17 @@ export default {
     height:100%;
     .vueperslides {
       top:50%;
-      transform:translateY(-50%)
+      transform:translateY(-50%);
+      @include small-only {
+        top:0;
+        transform:none;
+      }
+    }
+    .vueperslide__content-wrapper:not(.vueperslide__content-wrapper--outside-top):not(.vueperslide__content-wrapper--outside-bottom) {
+      @include small-only {
+        top:16vh;
+        transform: translate(-50%, 0);
+      }
     }
   }
 

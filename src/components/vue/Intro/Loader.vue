@@ -120,6 +120,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/scss/_vars.scss';
+@import '@/scss/_mixins.scss';
 
 .loader {
   position:absolute;
@@ -135,6 +136,9 @@ export default {
     color:$white;
     font-weight:$fw-medium;
     transform:translate(-50%, -50%);
+    @include small-only {
+      font-size:25px;
+    }
   }
   &__text {
     position:absolute;
@@ -148,12 +152,19 @@ export default {
     color:$white;
     font-weight:$fw-medium;
     transform:translate(-50%, -50%);
-
+    @include small-only {
+      width:86px;
+      font-size:18px;
+      line-height:22px;
+    }
   }
   .circle {
     position: relative;
     width: 236px;
     height: 236px;
+    @include small-only {
+      transform: scale(0.8);
+    }
     svg {
       position:absolute;
       top:0;

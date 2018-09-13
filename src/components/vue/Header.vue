@@ -9,7 +9,7 @@
         </button>
       </transition>
       <transition name="fade">
-        <c-link v-if="!vrModeActivated" :href="$t('header_cta_1_link')" :label="$t('header_cta_1')" class="header__link"></c-link>
+        <a class="header__link" :href="$t('header_cta_1_link')" v-html="$t('header_cta_1')"></a>
       </transition>
       <a href="/" class="header__logo" v-if="!menuMobileActivated">
         <img src="images/logo_un.png" alt="Ulysse Nardin">
@@ -153,6 +153,30 @@ export default {
     }
   }
   &__link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+    height: 40px;
+    padding: 0 10px;
+    outline: none;
+    text-align: center;
+    cursor: pointer;
+    text-transform: uppercase;
+    line-height:12px;
+    font-size: $fs-buttons;
+    letter-spacing: $ls-buttons;
+    font-weight:$fw-bold;
+    background-color: transparent;
+    color:$white;
+    text-decoration:none;
+    border: none;
+    color: $gold;
+    transition: color 300ms ease;
+    &:hover {
+      color:$white;
+    }
     @include small-only {
       display:none;
     }

@@ -19,7 +19,7 @@
           </vueper-slide>
         </vueper-slides>
         <button class="gallery__close" @click.prevent="hideGallery()">
-          {{ $t('gallery_close_button') }}
+          +
         </button>
       </div>
     </div>
@@ -81,9 +81,19 @@ export default {
   background:#031A27;
   .vueperslides .vueperslides__arrow--next {
     right:-80px;
+    @include small-only {
+      top: 50%;
+      right:15px;
+      transform: translateY(-50%);
+    }
   }
    .vueperslides .vueperslides__arrow--prev {
     left:-80px;
+    @include small-only {
+      top: 50%;
+      left:15px;
+      transform: translateY(-50%);
+    }
   }
   &__container {
     position:relative;
@@ -101,7 +111,40 @@ export default {
   }
   &__close {
     position:absolute;
-    bottom:16vh;
+    bottom:8vh;
+    left:50%;
+    transform: translateX(-50%);
+    text-decoration: none;
+    font-weight: $fw-light;
+    color: $white;
+    font-size: 0;
+    z-index:1;
+    opacity:0.7;
+    width:33px;
+    height:33px;
+    transition:opacity 0.3s ease-in-out;
+    background:$gold;
+    border-radius:50%;
+    @include small-only {
+      bottom:16vh;
+    }
+    &::before {
+      content: '+';
+      display: block;
+      position: absolute;
+      z-index: -1;
+      font-size:25px;
+      width:33px;
+      height:33px;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%) rotate(45deg);
+      transform-origin:center;
+    }
+
+    &:hover {
+      opacity:1;
+    }
   }
 }
 </style>

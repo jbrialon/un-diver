@@ -54,7 +54,8 @@ u {
     width:33px;
     height:33px;
     @include small-only {
-      top:36vh;
+      top:50%;
+      transform: translateY(-50%);
     }
     svg {
       position:absolute;
@@ -67,12 +68,16 @@ u {
     &--prev {
       left:115px;
       @include small-only {
+        top:31%;
+        transform:none;
         left:15px;
       }
     }
     &--next {
       right:115px;
       @include small-only {
+        top:31%;
+        transform:none;
         right:15px;
       }
     }

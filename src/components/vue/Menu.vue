@@ -41,61 +41,6 @@ import Utils from '@/utils/Utils'
 import { localesList } from '@/i18n'
 // import GuiManager from '@/utils/GuiManager'
 
-const context = new AudioContext()
-const ambianceAudio = new Audio('audio/ambiance.mp3')
-const sourceNode = context.createMediaElementSource(ambianceAudio)
-
-// EQ Properties
-//
-var gainDb = -40.0
-var bandSplit = [360, 3600]
-
-var hBand = context.createBiquadFilter()
-hBand.type = 'lowshelf'
-hBand.frequency.value = bandSplit[0]
-hBand.gain.value = gainDb
-
-var hInvert = context.createGain()
-hInvert.gain.value = -1.0
-
-var mBand = context.createGain()
-
-var lBand = context.createBiquadFilter()
-lBand.type = 'highshelf'
-lBand.frequency.value = bandSplit[1]
-lBand.gain.value = gainDb
-
-var lInvert = context.createGain()
-lInvert.gain.value = -1.0
-
-sourceNode.connect(lBand)
-sourceNode.connect(mBand)
-sourceNode.connect(hBand)
-
-hBand.connect(hInvert)
-lBand.connect(lInvert)
-
-hInvert.connect(mBand)
-lInvert.connect(mBand)
-
-var lGain = context.createGain()
-var mGain = context.createGain()
-var hGain = context.createGain()
-
-lBand.connect(lGain)
-mBand.connect(mGain)
-hBand.connect(hGain)
-
-var sum = context.createGain()
-lGain.connect(sum)
-mGain.connect(sum)
-hGain.connect(sum)
-sum.connect(context.destination)
-
-// let guiSoundFolder = GuiManager.addFolder('EQ')
-// guiSoundFolder.add(lGain.gain, 'value', 0, 1)
-// guiSoundFolder.add(mGain.gain, 'value', 0, 1)
-
 export default {
   name: 'Menu',
   data () {
@@ -105,6 +50,7 @@ export default {
       isMobile: Utils.isMobile(),
       localesList: localesList,
       currentLocale: this.$i18n.locale,
+      ambianceAudio: new Audio('audio/ambiance.mp3'),
       startdiveAudio: new Audio('audio/startdive.mp3')
     }
   },
@@ -126,7 +72,7 @@ export default {
     initDiving () {
       if (this.initDiving) {
         setTimeout(() => {
-          ambianceAudio.play()
+          this.ambianceAudio.play()
           this.startdiveAudio.play()
         }, 2000)
       }
@@ -142,9 +88,9 @@ export default {
     toggleSound () {
       this.sound = !this.sound
       if (this.sound) {
-        ambianceAudio.play()
+        this.ambianceAudio.play()
       } else {
-        ambianceAudio.pause()
+        this.ambianceAudio.pause()
       }
     },
     toggleVrMode () {
@@ -152,6 +98,12 @@ export default {
         this.$store.commit('toggleVrMode')
       }
     }
+  },
+  mounted () {
+    this.ambianceAudio.addEventListener('ended',() => {
+      this.ambianceAudio.currentTime = 0
+      this.ambianceAudio.play()
+    }, false)
   }
 }
 </script>

@@ -2,8 +2,7 @@ import THREE from '@/utils/ThreeWithPlugins'
 import FBXLoader from 'three-fbxloader-offical'
 import * as CONST from '@/Constants'
 import LoadingManager from '@/utils/LoadingManager'
-// import Utils from '@/utils/Utils'
-// import GuiManager from '@/utils/GuiManager'
+import GuiManager from '@/utils/GuiManager'
 
 export default class Terrain extends THREE.Object3D {
   rockTexture
@@ -45,10 +44,10 @@ export default class Terrain extends THREE.Object3D {
     this.searchAnimalPaths()
     this.updateMaterials()
 
-    // let guiTerrainFolder = GuiManager.addFolder('Terrain position')
-    // guiTerrainFolder.add(this.mesh.position, 'x', -3000, 2000)
-    // guiTerrainFolder.add(this.mesh.position, 'y', 1000, 4000)
-    // guiTerrainFolder.add(this.mesh.position, 'z', 15000, 45000)
+    let guiTerrainFolder = GuiManager.addFolder('Terrain position')
+    guiTerrainFolder.add(this.mesh.position, 'x', -3000, 2000)
+    guiTerrainFolder.add(this.mesh.position, 'y', 1000, 4000)
+    guiTerrainFolder.add(this.mesh.position, 'z', 15000, 45000)
   }
 
   onTextureLoaded = (texture) => {

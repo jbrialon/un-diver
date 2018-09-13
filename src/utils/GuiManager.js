@@ -24,7 +24,7 @@ class GuiManager {
   }
 }
 
-GuiManager.gui = new dat.GUI({closed: true})
+GuiManager.gui = new dat.GUI({ closed: true })
 GuiManager.gui.close()
 GuiManager.gui.domElement.className = GuiManager.gui.domElement.className + ' gui'
 

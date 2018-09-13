@@ -32,7 +32,13 @@ export const PlanktonParticleCount = 5000
 export const PlanktonParticleMapCount = 3
 export const TerrainModelPath = ModelsPath + 'environment/environment.fbx'
 export const TerrainRockMap = ModelsPath + 'environment/rock.jpg'
-export const TerrainCoralMap = ModelsPath + 'environment/coral.jpg'
+export const TerrainCoralMapOne = TexturesPath + 'coral/coral01.png'
+export const TerrainCoralAlphaOne = TexturesPath + 'coral/coral01_alpha.png'
+export const TerrainCoralMapTwo = TexturesPath + 'coral/coral02.png'
+export const TerrainCoralAlphaTwo = TexturesPath + 'coral/coral02_alpha.png'
+export const TerrainCoralMapThree = TexturesPath + 'coral/coral03.png'
+export const TerrainCoralAlphaThree = TexturesPath + 'coral/coral03_alpha.png'
+export const SandCoralMap = ModelsPath + 'environment/sand.jpg'
 export const SharkPathName = 'shark_spline'
 export const TurtlePathName = 'turtle_spline'
 

@@ -100,7 +100,7 @@ export default {
     }
   },
   mounted () {
-    this.ambianceAudio.addEventListener('ended',() => {
+    this.ambianceAudio.addEventListener('ended', () => {
       this.ambianceAudio.currentTime = 0
       this.ambianceAudio.play()
     }, false)

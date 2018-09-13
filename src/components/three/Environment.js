@@ -105,8 +105,8 @@ export default class Environment extends THREE.Object3D {
     this.turtleModel = new Animal()
     this.turtleModel.loadModel(CONST.TurtleModelPath)
     this.turtleModel.loadDiffuseMap(CONST.TurtleDiffuseMap)
-    this.turtleModel.position.y = -300
-    this.turtleModel.position.x = 0
+    this.turtleModel.position.y = -50
+    this.turtleModel.position.x = 280
     this.turtleModel.position.z = -13000
     this.turtleModel.speed = -1
     this.turtleModel.mesh.scale.multiplyScalar(2)
@@ -136,7 +136,7 @@ export default class Environment extends THREE.Object3D {
     otherTurtleModel.position.y = 0
     otherTurtleModel.position.x = 0
     otherTurtleModel.position.z = -6300
-    otherTurtleModel.speed = -1
+    otherTurtleModel.speed = -1.2
     otherTurtleModel.mesh.scale.multiplyScalar(2.2)
     otherTurtleModel.setOrientation(new THREE.Euler(THREE.Math.degToRad(-25), THREE.Math.degToRad(-45), 0))
     otherTurtleModel.setAnimationPath(null)

@@ -18,16 +18,27 @@ export default class Terrain extends THREE.Object3D {
   constructor () {
     super()
     this.objLoader.load(CONST.TerrainModelPath, this.onModelLoaded, () => {}, this.onError)
+    // ROCK
     this.rockTexture = this.textureLoader.load(CONST.TerrainRockMap, this.onTextureLoaded)
-    this.coralsTexture = this.textureLoader.load(CONST.TerrainCoralMap, this.onTextureLoaded)
+    // CORAL ONE
+    this.coralsTextureOne = this.textureLoader.load(CONST.TerrainCoralMapOne, this.onTextureLoaded)
+    this.coralsAlphaTextureOne = this.textureLoader.load(CONST.TerrainCoralAlphaOne, this.onTextureLoaded)
+    // CORAL TWO
+    this.coralsTextureTwo = this.textureLoader.load(CONST.TerrainCoralMapTwo, this.onTextureLoaded)
+    this.coralsAlphaTextureTwo = this.textureLoader.load(CONST.TerrainCoralAlphaTwo, this.onTextureLoaded)
+    // CORAL THREE
+    this.coralsTextureThree = this.textureLoader.load(CONST.TerrainCoralMapThree, this.onTextureLoaded)
+    this.coralsAlphaTextureThree = this.textureLoader.load(CONST.TerrainCoralAlphaThree, this.onTextureLoaded)
+    // SAND
+    this.sandTexture = this.textureLoader.load(CONST.SandCoralMap, this.onTextureLoaded)
 
     this.rockTexture.wrapS = THREE.RepeatWrapping
     this.rockTexture.wrapT = THREE.RepeatWrapping
     this.rockTexture.repeat.set(25, 125)
 
-    this.coralsTexture.wrapS = THREE.RepeatWrapping
-    this.coralsTexture.wrapT = THREE.RepeatWrapping
-    this.coralsTexture.repeat.set(7.5, 50)
+    // this.coralsTexture.wrapS = THREE.RepeatWrapping
+    // this.coralsTexture.wrapT = THREE.RepeatWrapping
+    // this.coralsTexture.repeat.set(7.5, 50)
 
     Object.assign(this, THREE.EventDispatcher)
   }
@@ -55,14 +66,42 @@ export default class Terrain extends THREE.Object3D {
   }
 
   updateMaterials () {
-    if (this.mesh && this.rockTexture && this.coralsTexture && this.rockTexture.image && this.coralsTexture.image) {
+    if (
+      this.mesh && this.rockTexture && this.rockTexture.image &&
+      this.sandTexture && this.sandTexture.image &&
+      this.coralsTextureOne && this.coralsTextureOne.image &&
+      this.coralsAlphaTextureOne && this.coralsAlphaTextureOne.image &&
+      this.coralsTextureTwo && this.coralsTextureTwo.image &&
+      this.coralsAlphaTextureTwo && this.coralsAlphaTextureTwo.image &&
+      this.coralsTextureThree && this.coralsTextureThree.image &&
+      this.coralsAlphaTextureThree && this.coralsAlphaTextureThree.image
+    ) {
       this.mesh.traverse(child => {
+        console.log(child.name)
         switch (child.name) {
           case 'rocks':
             child.material.map = this.rockTexture
             break
-          case 'corals':
-            child.material.map = this.coralsTexture
+          case 'rocks2':
+            child.material.map = this.rockTexture
+            break
+          case 'coral1':
+            child.material.map = this.coralsTextureOne
+            child.material.transparent = true
+            child.material.alphaMap = this.coralsAlphaTextureOne
+            break
+          case 'coral2':
+            child.material.map = this.coralsTextureTwo
+            child.material.transparent = true
+            child.material.alphaMap = this.coralsAlphaTextureTwo
+            break
+          case 'coral3':
+            child.material.map = this.coralsTextureThree
+            child.material.transparent = true
+            child.material.alphaMap = this.coralsAlphaTextureThree
+            break
+          case 'sand':
+            child.material.map = this.sandTexture
             break
           default:
             break

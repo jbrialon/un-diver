@@ -7,7 +7,7 @@
         </div>
         <div class="other-models-section__item--title" v-html="$t(watch.title)"></div>
         <div class="other-models-section__item--description" v-html="$t(watch.description)">{{ watch.description }}</div>
-        <div class="other-models-section__item--price" v-html="$t(watch.price)"></div>
+        <div class="other-models-section__item--price"><u v-html="$t(watch.price)"></u></div>
       </div>
       <c-link :id="getButtonId(watch.id)" :href="$t('header_cta_2_link')" :label="$t(watch.buyLink)" :big="true"></c-link>
     </div>
@@ -87,18 +87,6 @@ export default {
       font-size: $fs-other-models-price;
       margin-top: 1em;
       margin-bottom: 1em;
-      padding: 0 5px;
-
-      &::before {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 10px;
-        background: $gold;
-        bottom: 4px;
-        left: 0;
-        z-index: -1;
-      }
     }
   }
 }

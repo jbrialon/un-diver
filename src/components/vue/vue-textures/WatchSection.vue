@@ -17,7 +17,7 @@
       <div class="watch-section__details--caseDiameter" v-html="$t(watchData.details.caseDiameter)"></div>
       <div class="watch-section__details--caseHeight" v-html="$t(watchData.details.caseHeight)"></div>
       <div class="watch-section__details--caseWater" v-html="$t(watchData.details.caseWater)"></div>
-      <div class="watch-section__details--price" v-html="$t(watchData.details.price)"></div>
+      <div class="watch-section__details--price"><u v-html="$t(watchData.details.price)"></u></div>
     </div>
     <c-link id="watch-section-details-button" :href="'#'" :label="$t('stage_7_text_2')" :big="true"></c-link>
     <a id="watch-section-more-button" class="watch-section__more-button" href="#" @click.prevent="showGallery">+</a>
@@ -123,17 +123,6 @@ export default {
       font-size: $fs-watch-price;
       margin-top: 1em;
       padding: 0 5px;
-
-      &::before {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 20px;
-        background: $gold;
-        bottom: 4px;
-        left: 0;
-        z-index: -1;
-      }
     }
   }
 

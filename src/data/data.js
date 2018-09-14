@@ -7,10 +7,10 @@ const database = [
     intro: {
       weight: 3,
       items: [
-        {id: 0, text: 'stage_1_text_1', weight: 1},
-        {id: 1, text: 'stage_1_text_2', weight: 1},
-        {id: 2, text: 'stage_1_text_3', weight: 1},
-        {id: 3, text: 'stage_1_text_4', weight: 1}
+        { id: 0, text: 'stage_1_text_1', weight: 1 },
+        { id: 1, text: 'stage_1_text_2', weight: 1 },
+        { id: 2, text: 'stage_1_text_3', weight: 1 },
+        { id: 3, text: 'stage_1_text_4', weight: 1 }
       ]
     },
     watchModel: {
@@ -19,11 +19,11 @@ const database = [
     features: {
       weight: 7,
       items: [
-        {id: 'bluedial', text: 'stage_2_text', weight: 1},
-        {id: 'diameter', text: 'stage_3_text', weight: 1},
-        {id: 'caliber', text: 'stage_4_text_1', weight: 1},
-        {id: 'glowing', text: 'stage_5_text_1', weight: 4},
-        {id: 'waterproof', text: 'stage_6_text', weight: 1}
+        { id: 'bluedial', text: 'stage_2_text', weight: 1 },
+        { id: 'diameter', text: 'stage_3_text', weight: 1 },
+        { id: 'caliber', text: 'stage_4_text_1', weight: 1 },
+        { id: 'glowing', text: 'stage_5_text_1', weight: 4 },
+        { id: 'waterproof', text: 'stage_6_text', weight: 1 }
       ]
     },
     details: {
@@ -51,21 +51,21 @@ const database = [
         title: 'stage_7_other_1_title',
         description: 'stage_7_other_1_description',
         price: 'stage_7_other_1_price',
-        buyLink: 'stage_7_other_1_price'
+        buyLink: 'header_cta_2'
       },
       {
         id: 'gold',
         title: 'stage_7_other_2_title',
         description: 'stage_7_other_2_description',
         price: 'stage_7_other_2_price',
-        buyLink: 'stage_7_other_2_price'
+        buyLink: 'header_cta_2'
       },
       {
         id: 'white',
         title: 'stage_7_other_3_title',
         description: 'stage_7_other_3_description',
         price: 'stage_7_other_3_price',
-        buyLink: 'stage_7_other_3_price'
+        buyLink: 'header_cta_2'
       }
     ]
   },

@@ -23,7 +23,7 @@ function loadLocaleMessages () {
 function getCurrentLng () {
   let lng = window.location.pathname.replace(/^\/+/g, '')
   if (!lng) {
-    lng = navigator.language || navigator.userLanguage
+    lng = window.location.hash.substring(1)
   }
   for (var i = 0; i < localesList.length; i++) {
     if (lng.indexOf(localesList[i]) === 0) {

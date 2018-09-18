@@ -136,8 +136,8 @@ export default {
       font-size:25px;
       width:33px;
       height:33px;
-      left: 50%;
-      top: 50%;
+      left: 46%;
+      top: 54%;
       transform: translateX(-50%) translateY(-50%) rotate(45deg);
       transform-origin:center;
     }

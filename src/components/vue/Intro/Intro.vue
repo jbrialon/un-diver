@@ -170,6 +170,9 @@ export default {
         margin-bottom:20px;
         line-height:47px;
       }
+      &:before {
+        bottom:10px;
+      }
     }
     p {
       font-size:20px;

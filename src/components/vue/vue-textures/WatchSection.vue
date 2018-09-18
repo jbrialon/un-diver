@@ -112,9 +112,11 @@ export default {
       white-space: pre-line;
       word-break: normal;
       width: 340px;
+      margin-bottom:1em;
     }
     &--caseDiameter, &--caseHeight, &--caseWater {
-      line-height: 3em;
+      // line-height: 3em;
+      margin-bottom:0.5em;
     }
     &--price {
       display: inline-block;

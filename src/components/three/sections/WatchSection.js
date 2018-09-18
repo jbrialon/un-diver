@@ -70,7 +70,7 @@ export default class WatchSection extends Section {
 
     addDebugLine (geometry) {
       if (this.showDebugLines) {
-        var material = new THREE.LineBasicMaterial({color: Math.random() * 0xffffff})
+        var material = new THREE.LineBasicMaterial({ color: Math.random() * 0xffffff })
         var line = new THREE.Line(geometry, material)
         line.position.y -= 100
         line.position.z = -this.position.z
@@ -169,14 +169,14 @@ export default class WatchSection extends Section {
             let moreBtn = new Button('watch-section-more-button')
             moreBtn.setAutoDisplayMode(900)
             moreBtn.position.x = moreBtn.size.width
-            moreBtn.position.y = -texture.image.height - moreBtn.size.height * 0.5
+            moreBtn.position.y = -texture.image.height
             textMesh.add(moreBtn)
           } else if (featureObject.id === 'glowing') {
             this.glowStartPosition = textContainerPos
             this.glowEndPosition = textContainerPos - featureObject.depth
           }
-          this.featuresPositions.push({distance: 0, index: textIndex, depth: featureObject.depth, position: this.position.z - textZPos})
-          this.featuresRotations.push({position: this.position.z - textZPos, rotation: (watchOrientation === 'left') ? Math.PI * 0.25 : -Math.PI * 0.25})
+          this.featuresPositions.push({ distance: 0, index: textIndex, depth: featureObject.depth, position: this.position.z - textZPos })
+          this.featuresRotations.push({ position: this.position.z - textZPos, rotation: (watchOrientation === 'left') ? Math.PI * 0.25 : -Math.PI * 0.25 })
         })
         this.watchRotationSteps.push([textZPos, (watchOrientation === 'left') ? -1 : 1])
         this.currentZPosition -= featureObject.depth
@@ -216,7 +216,7 @@ export default class WatchSection extends Section {
         otherModelsBtn.addEventListener('click', event => {
           event.preventDefault()
           event.stopPropagation()
-          store.commit('goToSectionId', {id: store.state.currentSectionId + 1, time: Date.now()})
+          store.commit('goToSectionId', { id: store.state.currentSectionId + 1, time: Date.now() })
         })
         detailsMesh.add(otherModelsBtn)
         detailsMesh.button = otherModelsBtn

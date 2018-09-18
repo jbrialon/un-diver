@@ -123,15 +123,11 @@ export default {
     }
   }
   &__button-vr {
-    display:none;
     position:absolute;
     top:50%;
     transform:translateY(-50%);
     right:0;
     opacity: 0.4;
-    @include small-only {
-      display:block;
-    }
     &.active {
       opacity: 1;
     }

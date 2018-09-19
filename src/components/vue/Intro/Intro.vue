@@ -23,6 +23,9 @@
       <c-slider ref="slider"></c-slider>
       <!-- Loader -->
       <c-loader ref="loader" class="intro__loader" @click.native="next()"></c-loader>
+      <a v-if="!webgl" ref="nowebgl" class="intro__nowebgl" href="https://get.webgl.org/" target="_blank">
+        Your browser doesn't have WebGL enabled
+      </a>
     </div>
   </div>
 </template>
@@ -32,6 +35,7 @@ import { mapGetters } from 'vuex'
 import Loader from '@/components/vue/Intro/Loader.vue'
 import Slider from '@/components/vue/Intro/Slider.vue'
 import { TweenMax, TimelineMax, Power1, Power2 } from 'gsap'
+import Utils from '@/utils/Utils'
 
 export default {
   name: 'intro',
@@ -39,7 +43,8 @@ export default {
     return {
       show: true,
       tl: new TimelineMax(),
-      tlLeave: new TimelineMax()
+      tlLeave: new TimelineMax(),
+      webgl: Utils.hasWebGL()
     }
   },
   components: {
@@ -55,6 +60,10 @@ export default {
   methods: {
     showUI () {
       this.$store.commit('toggleUI')
+      if (!this.hasWebGL()) {
+        TweenMax.to(this.$refs.loader.$el, 2, { autoAlpha: 0, ease: Power1.easeOut })
+        TweenMax.to(this.$refs.nowebgl, 2, { autoAlpha: 1, ease: Power1.easeOut })
+      }
     },
     next () {
       if (this.loadingPercent === 1 && this.uiActivated && this.$refs.loader.fakePercent === 100) {
@@ -185,6 +194,19 @@ export default {
   &__loader {
     z-index:10;
     user-select: none;
+  }
+  &__nowebgl {
+    position:absolute;
+    top:85%;
+    left:50%;
+    font-size:10px;
+    color:$gold;
+    font-weight:$fw-bold;
+    transform:translateX(-50%);
+    text-transform:uppercase;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    opacity:0;
   }
 }
 </style>

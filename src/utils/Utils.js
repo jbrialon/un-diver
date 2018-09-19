@@ -43,6 +43,17 @@ class Utils {
     return window.matchMedia('(max-width: 768px)').matches
   }
 
+  static hasWebGL () {
+    var canvas = document.createElement('canvas')
+    var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
+
+    if (gl && gl instanceof WebGLRenderingContext) {
+      return true
+    } else {
+      return false
+    }
+  }
+
   static removeObjectShininess (object) {
     object.traverse((child) => {
       if (child.material && child.material.type === 'MeshPhongMaterial') {

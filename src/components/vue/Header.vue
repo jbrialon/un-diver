@@ -66,7 +66,7 @@ export default {
       'initDiving'
     ]),
     displayVr () {
-      return Utils.isMobile && this.initDiving
+      return Utils.isMobile() && this.initDiving
     }
   }
 }

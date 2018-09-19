@@ -77,7 +77,6 @@ export default class Terrain extends THREE.Object3D {
       this.coralsAlphaTextureThree && this.coralsAlphaTextureThree.image
     ) {
       this.mesh.traverse(child => {
-        console.log(child.name)
         switch (child.name) {
           case 'rocks':
             child.material.map = this.rockTexture

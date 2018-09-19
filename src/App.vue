@@ -10,6 +10,7 @@
     <c-menu-mobile></c-menu-mobile>
     <c-sections v-if="sectionsData" :items="sectionsData"></c-sections>
     <c-meter></c-meter>
+    <c-mouse-helper></c-mouse-helper>
     <c-social-networks></c-social-networks>
     <div id="rotate-device-message">
       {{ $t("rotate_device_message") }}
@@ -41,6 +42,7 @@ import MenuMobile from '@/components/vue/Menu-mobile.vue'
 import SocialNetworks from '@/components/vue/SocialNetworks.vue'
 import Intro from '@/components/vue/Intro/Intro.vue'
 import Gallery from '@/components/vue/Gallery/Gallery.vue'
+import MouseHelper from '@/components/vue/MouseHelper.vue'
 
 // libs
 import THREE from '@/utils/ThreeWithPlugins'
@@ -73,7 +75,8 @@ export default {
     'c-menu-mobile': MenuMobile,
     'c-social-networks': SocialNetworks,
     'c-intro': Intro,
-    'c-gallery': Gallery
+    'c-gallery': Gallery,
+    'c-mouse-helper': MouseHelper
   },
   data () {
     return {

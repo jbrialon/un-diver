@@ -119,7 +119,7 @@ export default class Environment extends THREE.Object3D {
     otherSharkModel.loadModel(CONST.SharkModelPath)
     otherSharkModel.loadDiffuseMap(CONST.SharkDiffuseMap)
     otherSharkModel.loadGlossinessMap(CONST.SharkGlossinessMap)
-    otherSharkModel.position.y = 400
+    otherSharkModel.position.y = 500
     otherSharkModel.position.x = 400
     otherSharkModel.position.z = -CONST.SceneDepth * 0.8
     otherSharkModel.cruisingRadius = 2000

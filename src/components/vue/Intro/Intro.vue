@@ -70,7 +70,9 @@ export default {
       this.$refs.loader.startCount()
     },
     hideLoader () {
-      this.$refs.loader.hide()
+      if (this.$refs.loader) {
+        this.$refs.loader.hide()
+      }
     },
     leaveIntro () {
       document.body.style.overflow = ''

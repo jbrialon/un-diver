@@ -5,7 +5,7 @@
     <c-final-section v-if="sectionsData" :section-data="sectionsData[2]"></c-final-section>
     <c-intro></c-intro>
     <c-gallery></c-gallery>
-    <div id="stage" ref="stage"></div>
+    <div id="stage" ref="stage" @touchstart="dive()"></div>
     <c-header></c-header>
     <c-menu-mobile></c-menu-mobile>
     <c-sections v-if="sectionsData" :items="sectionsData"></c-sections>
@@ -80,7 +80,8 @@ export default {
   },
   data () {
     return {
-      sectionsData: null
+      sectionsData: null,
+      scrollVR: 500
     }
   },
   computed: {
@@ -341,6 +342,15 @@ export default {
       this.renderer.forceContextLoss()
       this.renderer.context = undefined
       this.renderer.domElement = undefined
+    },
+    dive () {
+      if (this.initDiving && this.vrModeActivated) {
+        this.sceneIsAutoScrolling = true
+        this.cameraManager.scrollTo(this.scrollVR, () => {
+          this.scrollVR += 500
+          this.sceneIsAutoScrolling = false
+        })
+      }
     }
   },
   watch: {

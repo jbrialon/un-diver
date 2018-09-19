@@ -41,7 +41,9 @@ export default {
       slides: [
         'images/gallery/closeup_1.jpg',
         'images/gallery/closeup_2.jpg',
-        'images/gallery/closeup_3.jpg'
+        'images/gallery/closeup_3.jpg',
+        'images/gallery/closeup_4.jpg',
+        'images/gallery/closeup_5.jpg'
       ]
     }
   },

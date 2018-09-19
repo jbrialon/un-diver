@@ -60,7 +60,7 @@ export default {
   methods: {
     showUI () {
       this.$store.commit('toggleUI')
-      if (!this.hasWebGL()) {
+      if (!this.webgl) {
         TweenMax.to(this.$refs.loader.$el, 2, { autoAlpha: 0, ease: Power1.easeOut })
         TweenMax.to(this.$refs.nowebgl, 2, { autoAlpha: 1, ease: Power1.easeOut })
       }

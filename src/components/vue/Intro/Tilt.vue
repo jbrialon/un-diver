@@ -32,8 +32,8 @@ export default {
       }
     },
     tilt (event) {
-      let posX = event.pageX
-      let posY = event.pageY
+      let posX = event.clientX
+      let posY = event.clientY
       let left = window.innerWidth / 2 - posX
       let top = window.innerHeight / 2 - posY
       TweenMax.to(this.$refs.image, 0.6, {

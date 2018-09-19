@@ -7,14 +7,14 @@
           :fade="true"
           :bullets="false"
           :touchable="isMobile"
-          fixed-height="570px"
+          fixed-height="100vh"
           :infinite="false"
           :autoplay="false"
-          :arrowsOutside="true"
+          :arrowsOutside="false"
         >
           <vueper-slide :key="index" v-for="(slide, index) in slides">
             <div slot="slideContent">
-              <img class="gallery__image" :src="slide" alt="closeup">
+              <c-tilt class="gallery__image" :src="slide"></c-tilt>
             </div>
           </vueper-slide>
         </vueper-slides>
@@ -30,6 +30,7 @@
 import { mapGetters } from 'vuex'
 import { VueperSlides, VueperSlide } from 'vueperslides'
 import 'vueperslides/dist/vueperslides.min.css'
+import Tilt from '@/components/vue/Intro/Tilt.vue'
 
 import Utils from '@/utils/Utils'
 
@@ -49,7 +50,8 @@ export default {
   },
   components: {
     VueperSlides,
-    VueperSlide
+    VueperSlide,
+    'c-tilt': Tilt
   },
   computed: {
     ...mapGetters([
@@ -82,18 +84,14 @@ export default {
   z-index:$zGallery;
   background:#031A27;
   .vueperslides .vueperslides__arrow--next {
-    right:-80px;
     @include small-only {
       top: 50%;
-      right:15px;
       transform: translateY(-50%);
     }
   }
    .vueperslides .vueperslides__arrow--prev {
-    left:-80px;
     @include small-only {
       top: 50%;
-      left:15px;
       transform: translateY(-50%);
     }
   }
@@ -102,11 +100,15 @@ export default {
     width:100vw;
     height:100vh;
     @include medium {
-      width:60vw;
-      margin:auto;
+      width:100vw;
+      height:100vh;
     }
   }
   &__image {
+    width:60vw;
+    margin:auto;
+    padding-top:100px;
+    padding-bottom:100px;
     @include small-only {
       width:80vw;
     }

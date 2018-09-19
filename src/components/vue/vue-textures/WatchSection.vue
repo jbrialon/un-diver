@@ -115,8 +115,22 @@ export default {
       margin-bottom:1em;
     }
     &--caseDiameter, &--caseHeight, &--caseWater {
-      // line-height: 3em;
+      line-height: 3em;
       margin-bottom:0.5em;
+      padding-left:60px;
+      background-repeat:no-repeat;
+    }
+    &--caseDiameter {
+      background-image:url('../../../assets/diameter.png');
+      background-position: center left;
+    }
+    &--caseHeight {
+      background-image:url('../../../assets/height.png');
+      background-position: center left;
+    }
+    &--caseWater {
+      background-image:url('../../../assets/water-resistance.png');
+      background-position: center left;
     }
     &--price {
       display: inline-block;

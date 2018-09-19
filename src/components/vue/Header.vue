@@ -15,9 +15,18 @@
         <img src="images/logo_un.png" alt="Ulysse Nardin">
       </a>
       <c-menu class="header__menu"></c-menu>
-      <button class="header__button-vr" type="button" name="button" @click="toggleVrMode()" :class="{'active': vrModeActivated}">
-        <icon-vr></icon-vr>
-      </button>
+      <transition name="fade">
+        <button
+          v-if="displayVr"
+          class="header__button-vr"
+          type="button"
+          name="button"
+          @click="toggleVrMode()"
+          :class="{'active': vrModeActivated}"
+        >
+          <icon-vr></icon-vr>
+        </button>
+      </transition>
     </header>
   </transition>
 </template>
@@ -27,6 +36,7 @@ import { mapGetters } from 'vuex'
 import Menu from '@/components/vue/Menu.vue'
 import Link from '@/components/vue/Link.vue'
 import iconVr from '@/components/icon/icon-vr.vue'
+import Utils from '@/utils/Utils'
 
 export default {
   name: 'Header',
@@ -52,8 +62,12 @@ export default {
     ...mapGetters([
       'vrModeActivated',
       'menuMobileActivated',
-      'uiActivated'
-    ])
+      'uiActivated',
+      'initDiving'
+    ]),
+    displayVr () {
+      return Utils.isMobile && this.initDiving
+    }
   }
 }
 </script>

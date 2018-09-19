@@ -22,13 +22,6 @@
         </transition>
       </button>
     </transition>
-    <button
-      class="menu__item menu__item--vr hide-for-mobile"
-      type="button" @click="toggleVrMode()"
-      :class="{'active': vrModeActivated, 'show': initDiving}"
-    >
-      <icon-vr></icon-vr>
-    </button>
   </nav>
 </template>
 

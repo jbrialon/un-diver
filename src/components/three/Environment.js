@@ -20,6 +20,7 @@ export default class Environment extends THREE.Object3D {
   terrainModel
   sharkModel
   turtleModel
+  breamModel
 
   animalsArray = []
 
@@ -114,6 +115,20 @@ export default class Environment extends THREE.Object3D {
     this.turtleModel.setAnimationPath(null)
     this.add(this.turtleModel)
     this.animalsArray.push(this.turtleModel)
+
+    this.breamModel = new Animal()
+    this.breamModel.loadModel(CONST.BreamModelPath)
+    this.breamModel.loadDiffuseMap(CONST.FishTexture)
+    this.breamModel.position.y = 500
+    this.breamModel.position.x = 500
+    this.breamModel.position.z = -4300
+    this.breamModel.cruisingRadius = 2000
+    this.breamModel.speed = 1
+    this.breamModel.mesh.scale.multiplyScalar(3)
+    this.breamModel.setOrientation(new THREE.Euler(THREE.Math.degToRad(30), THREE.Math.degToRad(45), 0))
+    this.breamModel.setAnimationPath(null)
+    this.add(this.breamModel)
+    this.animalsArray.push(this.breamModel)
 
     let otherSharkModel = new Animal()
     otherSharkModel.loadModel(CONST.SharkModelPath)

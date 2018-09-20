@@ -131,7 +131,9 @@ export default class Animal extends THREE.Object3D {
 
   initModelAnimation () {
     this.mesh.mixer = new THREE.AnimationMixer(this.mesh)
-    this.mesh.mixer.clipAction(this.mesh.animations[0]).setDuration(5).play()
+    if (this.mesh.animations.length > 0) {
+      this.mesh.mixer.clipAction(this.mesh.animations[0]).setDuration(5).play()
+    }
   }
 
   updateAnimation (delta) {

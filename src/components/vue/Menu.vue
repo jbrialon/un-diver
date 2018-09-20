@@ -14,7 +14,7 @@
         <transition name="slide">
           <ul v-if="isDroppped">
             <li v-for="(locale, index) in localesList" :key="index">
-              <a :hreflang="locale" @click.prevent="setLocale(locale)">
+              <a :href="getUrl(locale)" :hreflang="locale">
                 {{ locale }}
               </a>
             </li>
@@ -80,7 +80,7 @@ export default {
       this.isDroppped = !this.isDroppped
     },
     getUrl (locale) {
-      return `#${locale}`
+      return `/${locale}`
     },
     toggleSound () {
       this.sound = !this.sound

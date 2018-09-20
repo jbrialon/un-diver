@@ -32,12 +32,6 @@ export const PlanktonParticleCount = 5000
 export const PlanktonParticleMapCount = 3
 export const TerrainModelPath = ModelsPath + 'environment/environment.fbx'
 export const TerrainRockMap = ModelsPath + 'environment/rock.jpg'
-export const TerrainCoralMapOne = TexturesPath + 'coral/coral01.png'
-export const TerrainCoralAlphaOne = TexturesPath + 'coral/coral01_alpha.png'
-export const TerrainCoralMapTwo = TexturesPath + 'coral/coral02.png'
-export const TerrainCoralAlphaTwo = TexturesPath + 'coral/coral02_alpha.png'
-export const TerrainCoralMapThree = TexturesPath + 'coral/coral03.png'
-export const TerrainCoralAlphaThree = TexturesPath + 'coral/coral03_alpha.png'
 export const SandCoralMap = ModelsPath + 'environment/sand.jpg'
 export const SharkPathName = 'shark_spline'
 export const TurtlePathName = 'turtle_spline'
@@ -49,6 +43,9 @@ export const SharkGlossinessMap = ModelsPath + 'shark/shark_glossiness.gif'
 export const TurtleModelPath = ModelsPath + 'turtle/riggedturtle.fbx'
 export const TurtleDiffuseMap = ModelsPath + 'turtle/turtle_diffuse.jpg'
 export const TurtleGlossinessMap = ModelsPath + 'turtle/turtle_glossiness.gif'
+
+export const BreamModelPath = ModelsPath + 'bream/riggedbream.fbx'
+export const BreamDiffuseMap = ModelsPath + 'bream/bream_diffuse.jpg'
 
 export const FishModelPath = ModelsPath + 'fish/fish.obj'
 export const FishTexture = ModelsPath + 'fish/fish.jpg'

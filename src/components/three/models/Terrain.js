@@ -2,7 +2,7 @@ import THREE from '@/utils/ThreeWithPlugins'
 import FBXLoader from 'three-fbxloader-offical'
 import * as CONST from '@/Constants'
 import LoadingManager from '@/utils/LoadingManager'
-import GuiManager from '@/utils/GuiManager'
+// import GuiManager from '@/utils/GuiManager'
 
 export default class Terrain extends THREE.Object3D {
   rockTexture
@@ -20,15 +20,6 @@ export default class Terrain extends THREE.Object3D {
     this.objLoader.load(CONST.TerrainModelPath, this.onModelLoaded, () => {}, this.onError)
     // ROCK
     this.rockTexture = this.textureLoader.load(CONST.TerrainRockMap, this.onTextureLoaded)
-    // CORAL ONE
-    this.coralsTextureOne = this.textureLoader.load(CONST.TerrainCoralMapOne, this.onTextureLoaded)
-    this.coralsAlphaTextureOne = this.textureLoader.load(CONST.TerrainCoralAlphaOne, this.onTextureLoaded)
-    // CORAL TWO
-    this.coralsTextureTwo = this.textureLoader.load(CONST.TerrainCoralMapTwo, this.onTextureLoaded)
-    this.coralsAlphaTextureTwo = this.textureLoader.load(CONST.TerrainCoralAlphaTwo, this.onTextureLoaded)
-    // CORAL THREE
-    this.coralsTextureThree = this.textureLoader.load(CONST.TerrainCoralMapThree, this.onTextureLoaded)
-    this.coralsAlphaTextureThree = this.textureLoader.load(CONST.TerrainCoralAlphaThree, this.onTextureLoaded)
     // SAND
     this.sandTexture = this.textureLoader.load(CONST.SandCoralMap, this.onTextureLoaded)
 
@@ -55,10 +46,10 @@ export default class Terrain extends THREE.Object3D {
     this.searchAnimalPaths()
     this.updateMaterials()
 
-    let guiTerrainFolder = GuiManager.addFolder('Terrain position')
-    guiTerrainFolder.add(this.mesh.position, 'x', -3000, 2000)
-    guiTerrainFolder.add(this.mesh.position, 'y', 1000, 4000)
-    guiTerrainFolder.add(this.mesh.position, 'z', 15000, 45000)
+    // let guiTerrainFolder = GuiManager.addFolder('Terrain position')
+    // guiTerrainFolder.add(this.mesh.position, 'x', -3000, 2000)
+    // guiTerrainFolder.add(this.mesh.position, 'y', 1000, 4000)
+    // guiTerrainFolder.add(this.mesh.position, 'z', 15000, 45000)
   }
 
   onTextureLoaded = (texture) => {
@@ -68,13 +59,7 @@ export default class Terrain extends THREE.Object3D {
   updateMaterials () {
     if (
       this.mesh && this.rockTexture && this.rockTexture.image &&
-      this.sandTexture && this.sandTexture.image &&
-      this.coralsTextureOne && this.coralsTextureOne.image &&
-      this.coralsAlphaTextureOne && this.coralsAlphaTextureOne.image &&
-      this.coralsTextureTwo && this.coralsTextureTwo.image &&
-      this.coralsAlphaTextureTwo && this.coralsAlphaTextureTwo.image &&
-      this.coralsTextureThree && this.coralsTextureThree.image &&
-      this.coralsAlphaTextureThree && this.coralsAlphaTextureThree.image
+      this.sandTexture && this.sandTexture.image
     ) {
       this.mesh.traverse(child => {
         switch (child.name) {
@@ -83,21 +68,6 @@ export default class Terrain extends THREE.Object3D {
             break
           case 'rocks2':
             child.material.map = this.rockTexture
-            break
-          case 'coral1':
-            child.material.map = this.coralsTextureOne
-            child.material.transparent = true
-            child.material.alphaMap = this.coralsAlphaTextureOne
-            break
-          case 'coral2':
-            child.material.map = this.coralsTextureTwo
-            child.material.transparent = true
-            child.material.alphaMap = this.coralsAlphaTextureTwo
-            break
-          case 'coral3':
-            child.material.map = this.coralsTextureThree
-            child.material.transparent = true
-            child.material.alphaMap = this.coralsAlphaTextureThree
             break
           case 'sand':
             child.material.map = this.sandTexture

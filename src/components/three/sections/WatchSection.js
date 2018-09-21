@@ -212,7 +212,7 @@ export default class WatchSection extends Section {
         let otherModelsBtn = new Button('watch-section-details-button')
         otherModelsBtn.position.x = otherModelsBtn.size.width * 0.5
         otherModelsBtn.position.y = -texture.image.height * 0.6
-        otherModelsBtn.setAutoDisplayMode(1700)
+        otherModelsBtn.setAutoDisplayMode(1450)
         otherModelsBtn.addEventListener('click', event => {
           event.preventDefault()
           event.stopPropagation()

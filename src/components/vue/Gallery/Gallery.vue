@@ -121,28 +121,31 @@ export default {
     text-decoration: none;
     font-weight: $fw-light;
     color: $white;
-    font-size: 0;
+    font-size: 25px;
+    line-height:33px;
     z-index:1;
     opacity:0.7;
     width:33px;
     height:33px;
     transition:opacity 0.3s ease-in-out;
-    background:$gold;
-    border-radius:50%;
+    transform:rotate(45deg);
+
     @include small-only {
       bottom:16vh;
     }
     &::before {
-      content: '+';
+      content: '';
       display: block;
       position: absolute;
       z-index: -1;
       font-size:25px;
       width:33px;
       height:33px;
-      left: 46%;
+      left: 47%;
       top: 54%;
-      transform: translateX(-50%) translateY(-50%) rotate(45deg);
+      background:$gold;
+      border-radius:50%;
+      transform: translateX(-50%) translateY(-50%);
       transform-origin:center;
     }
 

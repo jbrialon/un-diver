@@ -32,7 +32,6 @@ import iconVr from '@/components/icon/icon-vr.vue'
 
 import Utils from '@/utils/Utils'
 import { localesList } from '@/i18n'
-// import GuiManager from '@/utils/GuiManager'
 
 export default {
   name: 'Menu',

@@ -119,18 +119,20 @@ export default {
       margin-bottom:0.5em;
       padding-left:60px;
       background-repeat:no-repeat;
+      background-position: center left;
+      @supports (-webkit-overflow-scrolling: touch) {
+        padding-left:0;
+        background-image:none !important;
+      }
     }
     &--caseDiameter {
       background-image:url('../../../assets/diameter.png');
-      background-position: center left;
     }
     &--caseHeight {
       background-image:url('../../../assets/height.png');
-      background-position: center left;
     }
     &--caseWater {
       background-image:url('../../../assets/water-resistance.png');
-      background-position: center left;
     }
     &--price {
       display: inline-block;

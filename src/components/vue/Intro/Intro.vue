@@ -121,7 +121,9 @@ export default {
   background:#031A27;
   /* CSS specific to iOS devices */
   @supports (-webkit-overflow-scrolling: touch) {
-    height:calc(100vh - 74px);
+    @include small-only {
+      height:calc(100vh - 74px);
+    }
   }
   &__container {
     position:relative;
@@ -129,7 +131,9 @@ export default {
     height:100vh;
     /* CSS specific to iOS devices */
     @supports (-webkit-overflow-scrolling: touch) {
-      height:calc(100vh - 74px);
+      @include small-only {
+        height:calc(100vh - 74px);
+      }
     }
   }
   &__logo {

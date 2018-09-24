@@ -12,6 +12,7 @@
     <c-meter></c-meter>
     <c-mouse-helper></c-mouse-helper>
     <c-social-networks></c-social-networks>
+    <c-cookie></c-cookie>
     <div id="rotate-device-message">
       {{ $t("rotate_device_message") }}
     </div>
@@ -43,6 +44,7 @@ import SocialNetworks from '@/components/vue/SocialNetworks.vue'
 import Intro from '@/components/vue/Intro/Intro.vue'
 import Gallery from '@/components/vue/Gallery/Gallery.vue'
 import MouseHelper from '@/components/vue/MouseHelper.vue'
+import Cookie from '@/components/vue/Cookie.vue'
 
 // libs
 import THREE from '@/utils/ThreeWithPlugins'
@@ -76,7 +78,8 @@ export default {
     'c-social-networks': SocialNetworks,
     'c-intro': Intro,
     'c-gallery': Gallery,
-    'c-mouse-helper': MouseHelper
+    'c-mouse-helper': MouseHelper,
+    'c-cookie': Cookie
   },
   data () {
     return {

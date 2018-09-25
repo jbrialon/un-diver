@@ -22,16 +22,6 @@
             </div>
           </div>
         </vueper-slide>
-        <vueper-slide :key="5">
-          <div slot="slideContent">
-            <div class="slider__slide slider__slide--center">
-              <Parallax class="slider__parallax"></Parallax>
-              <icon-mouse class="slider__icon slider__icon--mouse"></icon-mouse>
-              <icon-hand class="slider__icon slider__icon--hand"></icon-hand>
-              <p class="text" v-html="$t('slide_6_text')"></p>
-            </div>
-          </div>
-        </vueper-slide>
       </vueper-slides>
     </div>
   </div>
@@ -42,10 +32,6 @@ import { VueperSlides, VueperSlide } from 'vueperslides'
 import 'vueperslides/dist/vueperslides.min.css'
 
 import Tilt from '@/components/vue/Intro/Tilt.vue'
-import Parallax from '@/components/vue/Intro/Parallax.vue'
-import iconMouse from '@/components/icon/icon-mouse.vue'
-import iconHand from '@/components/icon/icon-hand.vue'
-
 import Utils from '@/utils/Utils'
 
 export default {
@@ -89,10 +75,7 @@ export default {
   components: {
     Tilt,
     VueperSlides,
-    VueperSlide,
-    Parallax,
-    iconMouse,
-    iconHand
+    VueperSlide
   }
 }
 </script>
@@ -141,26 +124,6 @@ export default {
       width:100%;
     }
   }
-  &__parallax {
-    margin:auto;
-  }
-  &__icon {
-    margin:20px auto 0 auto;
-    &--mouse {
-      @include small-only {
-        display:none;
-      }
-    }
-    &--hand {
-      display:none;
-      animation-name: handAnim;
-      animation-duration: 1s;
-      animation-iteration-count: infinite;
-      @include small-only {
-        display:block;
-      }
-    }
-  }
   &__container {
     position:relative;
     width:100%;
@@ -180,7 +143,6 @@ export default {
       }
     }
   }
-
   &__slide {
     display:flex;
     width:60vw;

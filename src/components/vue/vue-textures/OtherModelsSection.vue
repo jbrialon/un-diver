@@ -83,7 +83,7 @@ export default {
     &--price {
       display: inline-block;
       position: relative;
-      font-weight:$fw-bold;
+      font-weight: $fw-light;
       font-size: $fs-other-models-price;
       margin-top: 1em;
       margin-bottom: 1em;

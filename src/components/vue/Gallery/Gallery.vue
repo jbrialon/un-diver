@@ -43,8 +43,7 @@ export default {
         'images/gallery/closeup_1.jpg',
         'images/gallery/closeup_2.jpg',
         'images/gallery/closeup_3.jpg',
-        'images/gallery/closeup_4.jpg',
-        'images/gallery/closeup_5.jpg'
+        'images/gallery/closeup_4.jpg'
       ]
     }
   },
@@ -117,7 +116,6 @@ export default {
     position:absolute;
     bottom:8vh;
     left:50%;
-    transform: translateX(-50%);
     text-decoration: none;
     font-weight: $fw-light;
     color: $white;
@@ -128,7 +126,7 @@ export default {
     width:33px;
     height:33px;
     transition:opacity 0.3s ease-in-out;
-    transform:rotate(45deg);
+    transform:rotate(45deg) translateX(-50%);
 
     @include small-only {
       bottom:16vh;

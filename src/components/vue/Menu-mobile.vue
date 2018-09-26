@@ -5,8 +5,8 @@
         <h2 class="menu-mobile__title">
           {{ $t('header_mobile_title') }}
         </h2>
-        <c-link class="menu-mobile__item" :href="$t('header_cta_1_link')" :label="$t('header_cta_1')"></c-link>
-        <c-link class="menu-mobile__item" :href="$t('header_cta_2_link')" :label="$t('header_cta_2')"></c-link>
+        <c-link class="menu-mobile__item" :href="$t('header_cta_1_link')" :label="$t('header_cta_1')" target="_blank"></c-link>
+        <c-link class="menu-mobile__item" :href="$t('header_cta_2_link')" :label="$t('header_cta_2')" target="_blank"></c-link>
       </div>
     </div>
   </transition>

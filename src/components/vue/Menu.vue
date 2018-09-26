@@ -1,7 +1,7 @@
 <template>
   <nav class="menu">
     <transition name="fade">
-      <c-link v-if="!vrModeActivated" class="menu__item hide-for-mobile" :href="$t('header_cta_2_link')" :label="$t('header_cta_2')"></c-link>
+      <c-link v-if="!vrModeActivated" class="menu__item hide-for-mobile" :href="$t('header_cta_2_link')" :label="$t('header_cta_2')" target="_blank"></c-link>
     </transition>
     <transition name="fade">
       <button v-if="displayButton" class="menu__item menu__item--sound" :class="{'disabled': !sound}" type="button" name="sound" @click="toggleSound()">

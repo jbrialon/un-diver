@@ -9,9 +9,9 @@
         </button>
       </transition>
       <transition name="fade">
-        <a class="header__link" :href="$t('header_cta_1_link')" v-html="$t('header_cta_1')"></a>
+        <a class="header__link" :href="$t('header_cta_1_link')" v-html="$t('header_cta_1')" target="_blank"></a>
       </transition>
-      <a href="/" class="header__logo" v-if="!menuMobileActivated">
+      <a href="/" class="header__logo" v-if="!menuMobileActivated" @click.prevent="reload()">
         <img src="images/logo_un.png" alt="Ulysse Nardin">
       </a>
       <c-menu class="header__menu"></c-menu>
@@ -46,6 +46,9 @@ export default {
     'icon-vr': iconVr
   },
   methods: {
+    reload () {
+      window.location.reload()
+    },
     toggleMenuMobile () {
       this.$store.commit('toggleMenuMobile')
       if (this.menuMobileActivated) {

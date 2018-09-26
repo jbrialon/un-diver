@@ -9,7 +9,7 @@
         <div class="other-models-section__item--description" v-html="$t(watch.description)">{{ watch.description }}</div>
         <div class="other-models-section__item--price"><u v-html="$t(watch.price)"></u></div>
       </div>
-      <c-link :id="getButtonId(watch.id)" :href="$t('header_cta_2_link')" :label="$t(watch.buyLink)" :big="true"></c-link>
+      <c-link :id="getButtonId(watch.id)" :href="$t('header_cta_2_link')" :label="$t(watch.buyLink)" :big="true" target="_blank"></c-link>
     </div>
   </div>
 </template>

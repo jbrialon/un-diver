@@ -21,7 +21,7 @@ function loadLocaleMessages () {
 }
 
 function getCurrentLng () {
-  let lng = window.location.pathname.replace(/^\/+/g, '')
+  let lng = window.location.pathname.replace(`${process.env.BASE_URL}`, '')
   if (!lng) {
     lng = window.location.hash.substring(1)
   }

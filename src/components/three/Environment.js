@@ -118,7 +118,7 @@ export default class Environment extends THREE.Object3D {
 
     this.breamModel = new Animal()
     this.breamModel.loadModel(CONST.BreamModelPath)
-    this.breamModel.loadDiffuseMap(CONST.FishTexture)
+    this.breamModel.loadDiffuseMap(CONST.BreamDiffuseMap)
     this.breamModel.position.y = 500
     this.breamModel.position.x = 500
     this.breamModel.position.z = -4300

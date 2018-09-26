@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="{vr: vrModeActivated, portrait: portraitOrientation, started: render3dExperience}">
+  <div id="app" :class="{vr: vrModeActivated, started: render3dExperience}">
     <c-watch-section v-if="sectionsData" :watch-data="sectionsData[0]"></c-watch-section>
     <c-other-models-section v-if="sectionsData" :models-data="sectionsData[1].watches"></c-other-models-section>
     <c-final-section v-if="sectionsData" :section-data="sectionsData[2]"></c-final-section>
@@ -88,12 +88,6 @@ export default {
     }
   },
   computed: {
-    landscapeOrientation () {
-      return this.screenOrientation === 90
-    },
-    portraitOrientation () {
-      return this.screenOrientation === 0
-    },
     ...mapGetters([
       'loadingPercent',
       'loadingComplete',
@@ -427,7 +421,7 @@ export default {
         display: none;
       }
 
-      &.portrait {
+      @media screen and (orientation: portrait) {
         #rotate-device-message {
           display: block;
         }

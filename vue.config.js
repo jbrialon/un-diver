@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 module.exports = {
+  baseUrl: '/un-diver/',
   configureWebpack: {
     plugins: [
       new webpack.ProvidePlugin({

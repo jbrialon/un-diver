@@ -44,8 +44,8 @@ export const TurtleModelPath = ModelsPath + 'turtle/riggedturtle.fbx'
 export const TurtleDiffuseMap = ModelsPath + 'turtle/turtle_diffuse.jpg'
 export const TurtleGlossinessMap = ModelsPath + 'turtle/turtle_glossiness.gif'
 
-export const BreamModelPath = ModelsPath + 'bream/riggedbream.fbx'
-export const BreamDiffuseMap = ModelsPath + 'bream/bream_diffuse.jpg'
+export const BreamModelPath = ModelsPath + 'bream/fish.fbx'
+export const BreamDiffuseMap = ModelsPath + 'bream/fish.jpg'
 
 export const FishModelPath = ModelsPath + 'fish/fish.obj'
 export const FishTexture = ModelsPath + 'fish/fish.jpg'

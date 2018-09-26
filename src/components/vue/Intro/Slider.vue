@@ -6,7 +6,7 @@
         :fade="true"
         :bullets="false"
         :touchable="isMobile"
-        fixed-height="570px"
+        fixed-height="100vh"
         :infinite="false"
         :autoplay="false"
         disableArrowsOnEdges="true"
@@ -52,7 +52,7 @@ export default {
         {
           align: 'right',
           text: this.$t('slide_2_text'),
-          image: `/images/slider/intro_02.jpg`
+          image: `images/slider/intro_02.jpg`
         },
         {
           align: 'left',

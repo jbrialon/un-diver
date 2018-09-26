@@ -70,7 +70,6 @@ export default {
     text-align: center;
     white-space: pre;
     @include small-only {
-      width:550px;
       font-size: $fs-watch-title-mobile;
     }
   }

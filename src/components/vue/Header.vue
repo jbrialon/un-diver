@@ -11,7 +11,7 @@
       <transition name="fade">
         <a class="header__link" :href="$t('header_cta_1_link')" v-html="$t('header_cta_1')" target="_blank"></a>
       </transition>
-      <a href="/" class="header__logo" v-if="!menuMobileActivated" @click.prevent="reload()">
+      <a href="/" class="header__logo" v-if="!menuMobileActivated">
         <img src="images/logo_un.png" alt="Ulysse Nardin">
       </a>
       <c-menu class="header__menu"></c-menu>

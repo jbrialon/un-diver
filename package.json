@@ -5,7 +5,8 @@
   "scripts": {
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "dev": "vue-cli-service serve"
+    "dev": "vue-cli-service serve",
+    "screenshot": "node screenshots.js & vue-cli-service serve --mode screenshot --port 8091"
   },
   "dependencies": {
     "canvas-text-wrapper": "^0.10.2",
@@ -29,7 +30,9 @@
     "@vue/cli-plugin-eslint": "^3.0.1",
     "@vue/cli-service": "^3.0.1",
     "@vue/eslint-config-standard": "^3.0.1",
+    "await-sleep": "0.0.1",
     "node-sass": "^4.9.3",
+    "puppeteer": "^1.8.0",
     "sass-loader": "^7.1.0",
     "vue-cli-plugin-i18n": "^0.5.0",
     "vue-template-compiler": "^2.5.17"

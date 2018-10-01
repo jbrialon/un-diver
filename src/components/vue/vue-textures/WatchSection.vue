@@ -57,9 +57,11 @@ export default {
 @import '@/scss/_mixins.scss';
 
 .watch-section {
-  position: fixed;
-  top: 0;
-  width: 2000px;
+  #app:not(.is-screenshot) & {
+    position: fixed;
+    top: 0;
+    width: 2000px;
+  }
 
   &__intro {
     display: inline-block;

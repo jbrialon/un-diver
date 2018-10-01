@@ -1,21 +1,23 @@
 <template>
-  <div id="app" :class="{vr: vrModeActivated, started: render3dExperience}">
+  <div id="app" :class="{vr: vrModeActivated, started: render3dExperience, 'is-screenshot': isScreenshot}">
     <c-watch-section v-if="sectionsData" :watch-data="sectionsData[0]"></c-watch-section>
     <c-other-models-section v-if="sectionsData" :models-data="sectionsData[1].watches"></c-other-models-section>
     <c-final-section v-if="sectionsData" :section-data="sectionsData[2]"></c-final-section>
-    <c-intro></c-intro>
-    <c-gallery></c-gallery>
-    <div id="stage" ref="stage" @touchstart="dive()"></div>
-    <c-header></c-header>
-    <c-menu-mobile></c-menu-mobile>
-    <c-sections v-if="sectionsData" :items="sectionsData"></c-sections>
-    <c-meter></c-meter>
-    <c-mouse-helper></c-mouse-helper>
-    <c-social-networks></c-social-networks>
-    <c-cookie></c-cookie>
-    <div id="rotate-device-message">
-      {{ $t("rotate_device_message") }}
-    </div>
+    <template v-if="!isScreenshot">
+      <c-intro></c-intro>
+      <c-gallery></c-gallery>
+      <div id="stage" ref="stage" @touchstart="dive()"></div>
+      <c-header></c-header>
+      <c-menu-mobile></c-menu-mobile>
+      <c-sections v-if="sectionsData" :items="sectionsData"></c-sections>
+      <c-meter></c-meter>
+      <c-mouse-helper></c-mouse-helper>
+      <c-social-networks></c-social-networks>
+      <c-cookie></c-cookie>
+      <div id="rotate-device-message">
+        {{ $t("rotate_device_message") }}
+      </div>
+    </template>
   </div>
 </template>
 
@@ -84,7 +86,8 @@ export default {
   data () {
     return {
       sectionsData: null,
-      scrollVR: 500
+      scrollVR: 500,
+      isScreenshot: process.env.VUE_APP_SCREENSHOT
     }
   },
   computed: {

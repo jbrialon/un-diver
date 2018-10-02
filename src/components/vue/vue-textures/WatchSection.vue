@@ -122,10 +122,6 @@ export default {
       padding-left:60px;
       background-repeat:no-repeat;
       background-position: center left;
-      @supports (-webkit-overflow-scrolling: touch) {
-        padding-left:0;
-        background-image:none !important;
-      }
     }
     &--caseDiameter {
       background-image:url('../../../assets/diameter.png');

@@ -9,10 +9,8 @@
     "screenshot": "node node/screenshots.js & vue-cli-service serve --mode screenshot --port 8091"
   },
   "dependencies": {
-    "canvas-text-wrapper": "^0.10.2",
     "dat.gui": "^0.7.2",
     "gsap": "^2.0.2",
-    "html2canvas": "^1.0.0-alpha.12",
     "interpolating-polynomial": "^1.1.2",
     "lodash": "^4.17.10",
     "stats.js": "^0.17.0",

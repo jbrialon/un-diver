@@ -4,21 +4,23 @@
 import store from '@/store'
 import * as THREE from 'three'
 import Section from '@/components/three/Section.js'
-import HtmlTextureManager from '@/utils/HtmlTextureManager.js'
 import Fader from '@/components/three/behaviors/Fader.js'
 import Button from '@/components/three/Button'
+import LoadingManager from '@/utils/LoadingManager'
 
 export default class OtherModelsSection extends Section {
   sectionWidth = 0.45 // 75% of screen width
   modelScaleFactor = 0.7
   models = []
   modelsMesh = []
+  textureLoader = new THREE.TextureLoader(LoadingManager.instance)
 
   constructor (sectionData) {
     super(sectionData)
     this.models = this.sectionData.watches
     this.models.forEach(watch => {
-      HtmlTextureManager.loadTextureById('other-models-section-' + watch.id, texture => {
+      this.textureLoader.load(watch.texture, texture => {
+        texture.minFilter = THREE.LinearFilter
         const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
         const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
         const modelMesh = new THREE.Mesh(geometry, material)
@@ -38,7 +40,6 @@ export default class OtherModelsSection extends Section {
       })
     })
   }
-
   resize () {
     super.resize()
     let xPos = 0

@@ -46,9 +46,11 @@ export default {
 @import '@/scss/_vars.scss';
 
 .other-models-section {
-  position: fixed;
-  top: 0;
-  width: 2000px;
+  #app:not(.is-screenshot) & {
+    position: fixed;
+    top: 0;
+    width: 2000px;
+  }
 
   &__item {
     text-align: center;

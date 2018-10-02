@@ -28,6 +28,7 @@ export default {
 
 <style lang="scss">
 @import '@/scss/_vars.scss';
+@import '@/scss/_mixins.scss';
 
 .link {
   position: relative;
@@ -53,27 +54,29 @@ export default {
   text-decoration:none;
 
   &--big {
-    // only display button bigger on retina screens
+    // only display button bigger on retina screens and mobile
     @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-      min-width: 300px;
-      height: 80px;
-      font-size: $fs-buttons-big;
-      line-height:22px;
-      padding: 0 20px;
-      border-width: 2px;
-      &:after {
+      @include small-only {
+        min-width: 300px;
         height: 80px;
+        font-size: $fs-buttons-big;
+        line-height:22px;
+        padding: 0 20px;
         border-width: 2px;
-        top: -2px;
-        left: -2px;
-        right: -2px;
-      }
-      .link__top-line {
-        &:after,
-        &:before {
-          top: -2px;
-          bottom:-2px;
+        &:after {
+          height: 80px;
           border-width: 2px;
+          top: -2px;
+          left: -2px;
+          right: -2px;
+        }
+        .link__top-line {
+          &:after,
+          &:before {
+            top: -2px;
+            bottom:-2px;
+            border-width: 2px;
+          }
         }
       }
     }

@@ -57,9 +57,11 @@ export default {
 @import '@/scss/_mixins.scss';
 
 .watch-section {
-  position: fixed;
-  top: 0;
-  width: 2000px;
+  #app:not(.is-screenshot) & {
+    position: fixed;
+    top: 0;
+    width: 2000px;
+  }
 
   &__intro {
     display: inline-block;
@@ -68,7 +70,6 @@ export default {
     line-height: initial;
     font-weight: $fw-medium;
     text-align: center;
-    white-space: pre;
     @include small-only {
       font-size: $fs-watch-title-mobile;
     }
@@ -83,7 +84,6 @@ export default {
       font-weight: $fw-medium;
       color: $white;
       line-height: 1.2em;
-      white-space: pre;
       @include small-only {
         font-size: $fs-watch-feature-text-mobile;
       }
@@ -120,10 +120,6 @@ export default {
       padding-left:60px;
       background-repeat:no-repeat;
       background-position: center left;
-      @supports (-webkit-overflow-scrolling: touch) {
-        padding-left:0;
-        background-image:none !important;
-      }
     }
     &--caseDiameter {
       background-image:url('../../../assets/diameter.png');

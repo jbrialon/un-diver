@@ -3,10 +3,10 @@
 */
 import Section from '@/components/three/Section.js'
 import THREE from '@/utils/ThreeWithPlugins'
-import HtmlTextureManager from '@/utils/HtmlTextureManager.js'
 import AnimationLoopManager from '@/utils/AnimationLoopManager'
 import Utils from '@/utils/Utils'
 import { TweenMax, Power4 } from 'gsap'
+import LoadingManager from '@/utils/LoadingManager'
 
 export default class FinalSection extends Section {
   extraScale = 0.1 // ensure image is in screen event with camera wiggle
@@ -17,12 +17,15 @@ export default class FinalSection extends Section {
   ctasDistanceToCamera
   ctasVisible = true
 
+  textureLoader = new THREE.TextureLoader(LoadingManager.instance)
+
   constructor (sectionData) {
     super(sectionData)
-    HtmlTextureManager.loadTextureById('final-section-text', this.onTextureLoaded)
+    this.textureLoader.load(sectionData.texture, this.onTextureLoaded)
   }
 
   onTextureLoaded = (texture) => {
+    texture.minFilter = THREE.LinearFilter
     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
     const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
     const textMesh = new THREE.Mesh(geometry, material)

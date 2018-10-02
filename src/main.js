@@ -4,15 +4,15 @@ import Vue from 'vue'
 import App from '@/App.vue'
 import store from '@/store/index.js'
 import { i18n } from '@/i18n'
-import html2canvas from 'html2canvas'
-import HtmlTextureManager from '@/utils/HtmlTextureManager'
 import Meta from 'vue-meta'
 
 Vue.config.productionTip = false
 
 Vue.use(Meta)
 Vue.directive('html-to-texture', (element, binding) => {
-  HtmlTextureManager.setCanvasPromise(binding.value, html2canvas(element, { backgroundColor: null, logging: false }))
+  if (process.env.VUE_APP_SCREENSHOT) {
+    element.setAttribute('data-screenshot', binding.value)
+  }
 })
 
 new Vue({

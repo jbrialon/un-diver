@@ -9,11 +9,11 @@ import Section from '@/components/three/Section.js'
 import Fader from '@/components/three/behaviors/Fader.js'
 import WatchModel from '@/components/three/models/WatchModel.js'
 import StickToCamera from '@/components/three/behaviors/StickToCamera.js'
-import HtmlTextureManager from '@/utils/HtmlTextureManager.js'
 import Button from '@/components/three/Button'
 import * as CONST from '@/Constants'
 import AnimationLoopManager from '@/utils/AnimationLoopManager'
 import { forEach } from 'lodash'
+import LoadingManager from '@/utils/LoadingManager'
 
 export default class WatchSection extends Section {
     showDebugLines
@@ -43,6 +43,8 @@ export default class WatchSection extends Section {
     watchOrientationEndPoint = 0
     watchRotationSteps = []
     watchRotationInterpolation
+
+    textureLoader = new THREE.TextureLoader(LoadingManager.instance)
 
     constructor (sectionData) {
       super(sectionData)
@@ -82,11 +84,11 @@ export default class WatchSection extends Section {
     * Add the main title for the watch section
     */
     addIntroTexts () {
-      let introIndex = 0
       this.introTextsZPosition = this.currentZPosition
       this.sectionData.intro.items.forEach(introText => {
         const textZPos = this.currentZPosition
-        HtmlTextureManager.loadTextureById('watch-section-intro-' + introIndex, texture => {
+        this.textureLoader.load(introText.texture, texture => {
+          texture.minFilter = THREE.LinearFilter
           const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
           const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
           const introMesh = new THREE.Mesh(geometry, material)
@@ -101,7 +103,6 @@ export default class WatchSection extends Section {
           )
         })
         this.currentZPosition -= introText.depth
-        introIndex++
       })
     }
 
@@ -142,7 +143,9 @@ export default class WatchSection extends Section {
         const textZPos = this.currentZPosition - (featureObject.depth * 0.5)
         const textContainerPos = this.currentZPosition
         const textIndex = featureIndex
-        HtmlTextureManager.loadTextureById('watch-section-feature-' + featureObject.id, texture => {
+
+        this.textureLoader.load(featureObject.texture, texture => {
+          texture.minFilter = THREE.LinearFilter
           const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
           const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
           const textMesh = new THREE.Mesh(geometry, material)
@@ -188,7 +191,9 @@ export default class WatchSection extends Section {
       this.detailsZPosition = this.currentZPosition - (this.sectionData.details.depth * 0.5)
       this.watchRotationSteps.push([this.currentZPosition, -1])
       this.watchRotationSteps.push([this.currentZPosition - this.sectionData.details.depth - CONST.CameraDistanceToSection, -1])
-      HtmlTextureManager.loadTextureById('watch-section-details', texture => {
+
+      this.textureLoader.load(this.sectionData.details.texture, texture => {
+        texture.minFilter = THREE.LinearFilter
         const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
         const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
         const detailsMesh = new THREE.Mesh(geometry, material)

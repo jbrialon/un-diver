@@ -16,5 +16,10 @@ module.exports = {
       localeDir: 'i18n',
       enableInSFC: true
     }
+  },
+  devServer: {
+    watchOptions: {
+      ignored: process.env.VUE_APP_SCREENSHOT ? /public/ : []
+    }
   }
 }

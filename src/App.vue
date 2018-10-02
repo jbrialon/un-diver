@@ -131,6 +131,9 @@ export default {
       Utils.computeChildDepths(data, sceneDepthWithoutMargins)
       this.sectionsData = data
 
+      // Do not initialize 3d part for screenshots only
+      if (process.env.VUE_APP_SCREENSHOT) return
+
       this.stageDOMElement = this.$refs.stage
       this.initScene()
       this.buildSections()

@@ -12,7 +12,9 @@ Vue.config.productionTip = false
 
 Vue.use(Meta)
 Vue.directive('html-to-texture', (element, binding) => {
-  element.classList.add('js-screenshot')
+  if (process.env.VUE_APP_SCREENSHOT) {
+    element.setAttribute('data-screenshot', binding.value)
+  }
   HtmlTextureManager.setCanvasPromise(binding.value, html2canvas(element, { backgroundColor: null, logging: false }))
 })
 

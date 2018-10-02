@@ -37,8 +37,8 @@ class AnimationLoopManager {
 }
 
 AnimationLoopManager.callbacks = []
-AnimationLoopManager.stats = {update: () => {}}
-if (process.env.NODE_ENV === 'development') {
+AnimationLoopManager.stats = { update: () => {} }
+if (process.env.NODE_ENV === 'development' && !process.env.VUE_APP_SCREENSHOT) {
   AnimationLoopManager.stats = new Stats()
   AnimationLoopManager.stats.domElement.className = 'stats'
   document.body.appendChild(AnimationLoopManager.stats.dom)

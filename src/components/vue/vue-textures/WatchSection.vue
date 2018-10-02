@@ -70,7 +70,6 @@ export default {
     line-height: initial;
     font-weight: $fw-medium;
     text-align: center;
-    white-space: pre;
     @include small-only {
       font-size: $fs-watch-title-mobile;
     }
@@ -85,7 +84,6 @@ export default {
       font-weight: $fw-medium;
       color: $white;
       line-height: 1.2em;
-      white-space: pre;
       @include small-only {
         font-size: $fs-watch-feature-text-mobile;
       }

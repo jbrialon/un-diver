@@ -6,7 +6,7 @@
     <template v-if="!isScreenshot">
       <c-intro></c-intro>
       <c-gallery></c-gallery>
-      <div id="stage" ref="stage" @touchstart="dive()"></div>
+      <div id="stage" ref="stage"></div>
       <c-header></c-header>
       <c-menu-mobile></c-menu-mobile>
       <c-sections v-if="sectionsData" :items="sectionsData"></c-sections>
@@ -14,6 +14,7 @@
       <c-mouse-helper></c-mouse-helper>
       <c-social-networks></c-social-networks>
       <c-cookie></c-cookie>
+      <c-vr-hud :dive="dive"></c-vr-hud>
       <div id="rotate-device-message">
         {{ $t("rotate_device_message") }}
       </div>
@@ -47,6 +48,7 @@ import Intro from '@/components/vue/Intro/Intro.vue'
 import Gallery from '@/components/vue/Gallery/Gallery.vue'
 import MouseHelper from '@/components/vue/MouseHelper.vue'
 import Cookie from '@/components/vue/Cookie.vue'
+import VrHud from '@/components/vue/Vr-hud.vue'
 
 // libs
 import THREE from '@/utils/ThreeWithPlugins'
@@ -81,7 +83,8 @@ export default {
     'c-intro': Intro,
     'c-gallery': Gallery,
     'c-mouse-helper': MouseHelper,
-    'c-cookie': Cookie
+    'c-cookie': Cookie,
+    'c-vr-hud': VrHud
   },
   data () {
     return {
@@ -190,7 +193,7 @@ export default {
 
       this.vrRenderer = new VrRenderer(this.renderer)
       this.vrRenderer.setSize(this.stageSize.width, this.stageSize.height)
-      this.vrRenderer.setEyeSeparation(1.3)
+      // this.vrRenderer.setEyeSeparation(1.3)
 
       this.scene.add(this.cameraManager)
       window.AppCameraDummy = this.cameraManager
@@ -348,11 +351,16 @@ export default {
     },
     dive () {
       if (this.initDiving && this.vrModeActivated) {
-        this.sceneIsAutoScrolling = true
-        this.cameraManager.scrollTo(this.scrollVR, () => {
+        if (this.scrollVR === 9500) {
+          this.$store.commit('goToSectionId', { id: 0, time: Date.now() })
+          this.scrollVR = 500
+        } else {
+          this.sceneIsAutoScrolling = true
+          this.cameraManager.scrollTo(this.scrollVR, () => {
+            this.sceneIsAutoScrolling = false
+          })
           this.scrollVR += 500
-          this.sceneIsAutoScrolling = false
-        })
+        }
       }
     }
   },
@@ -423,7 +431,17 @@ export default {
       overflow: auto;
     }
     &.vr {
-      #logo, #menu-about, #menu-help, #sections {
+      #logo,
+      #menu-about,
+      #menu-help,
+      #sections,
+      #watch-section-details-button,
+      #watch-section-more-button,
+      .final-section__ctas--to-surface,
+      #other-models-section-button-black,
+      #other-models-section-button-gold,
+      #other-models-section-button-white,
+      #footer-final-section {
         display: none;
       }
 

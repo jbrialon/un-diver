@@ -20,7 +20,7 @@ npm run build
 npm run lint
 ```
 
-### Generate HTML2Canvas screenshots
+### Generate screenshots
 This task will generate screenshots of HTML elements for canvas, it launches 2 servers:
 * the regular webpack dev server with a special option for website adaptations for screenshots (remove 3D experience)
 * a node server with [Puppeteer](https://github.com/GoogleChrome/puppeteer) to generate the screenshots of HTML elements

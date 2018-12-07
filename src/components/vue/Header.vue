@@ -34,7 +34,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import Menu from '@/components/vue/Menu.vue'
-import Link from '@/components/vue/Link.vue'
 import iconVr from '@/components/icon/icon-vr.vue'
 import Utils from '@/utils/Utils'
 
@@ -42,7 +41,6 @@ export default {
   name: 'Header',
   components: {
     'c-menu': Menu,
-    'c-link': Link,
     'icon-vr': iconVr
   },
   methods: {

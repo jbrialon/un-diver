@@ -22,7 +22,7 @@ export default class Section extends THREE.Object3D {
   }
 
   addDebugCube () {
-    const material = new THREE.MeshBasicMaterial({color: Math.random() * 0xffffff, side: THREE.DoubleSide})
+    const material = new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff, side: THREE.DoubleSide })
     const geometry = new THREE.CubeGeometry(100, 100, this.depth, material)
     material.transparent = true
     material.opacity = 0.5

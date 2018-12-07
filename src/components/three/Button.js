@@ -1,7 +1,7 @@
 import THREE from '@/utils/ThreeWithPlugins'
 import Utils from '@/utils/Utils'
 import AnimationLoopManager from '@/utils/AnimationLoopManager'
-import {TweenMax, Power4} from 'gsap'
+import { TweenMax, Power4 } from 'gsap'
 
 export default class Button extends THREE.Object3D {
   domElementID
@@ -55,7 +55,7 @@ export default class Button extends THREE.Object3D {
     if (this.visible !== visible) {
       this.visible = visible
       if (this.domElement) {
-        TweenMax.to(this.domElement, 0.3, {autoAlpha: visible ? 1 : 0, ease: Power4.easeOut})
+        TweenMax.to(this.domElement, 0.3, { autoAlpha: visible ? 1 : 0, ease: Power4.easeOut })
       }
     }
   }

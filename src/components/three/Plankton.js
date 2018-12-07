@@ -34,7 +34,7 @@ export default class Plankton extends THREE.Object3D {
     for (let i = 0; i < this.parameters.length; i++) {
       var sprite = this.parameters[i][0]
       var size = this.parameters[i][1]
-      this.materials[i] = new THREE.PointsMaterial({size: size, map: sprite, blending: THREE.AdditiveBlending, depthTest: true, transparent: true, fog: true, depthWrite: false})
+      this.materials[i] = new THREE.PointsMaterial({ size: size, map: sprite, blending: THREE.AdditiveBlending, depthTest: true, transparent: true, fog: true, depthWrite: false })
       this.materials[i].color.setHex(0xffffff)
       this.materials[i].opacity = 0.1
       var particles = new THREE.Points(this.geometry, this.materials[i])

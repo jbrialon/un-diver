@@ -17,8 +17,6 @@
 </template>
 
 <script>
-import Link from '@/components/vue/Link.vue'
-
 export default {
   name: 'Cookie',
   data () {
@@ -31,9 +29,6 @@ export default {
       this.show = false
       localStorage.setItem('cookie', true)
     }
-  },
-  components: {
-    'c-link': Link
   }
 }
 </script>

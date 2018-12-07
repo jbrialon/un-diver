@@ -28,7 +28,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import Link from '@/components/vue/Link.vue'
-import iconVr from '@/components/icon/icon-vr.vue'
 
 import Utils from '@/utils/Utils'
 import { localesList } from '@/i18n'
@@ -47,8 +46,7 @@ export default {
     }
   },
   components: {
-    'c-link': Link,
-    'icon-vr': iconVr
+    'c-link': Link
   },
   computed: {
     ...mapGetters([

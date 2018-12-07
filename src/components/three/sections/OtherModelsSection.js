@@ -50,6 +50,8 @@ export default class OtherModelsSection extends Section {
     let isPortrait = viewportSize.width < viewportSize.height
     let itemPadding = isPortrait ? 0 : (viewportSize.width * this.sectionWidth) / (this.modelsMesh.length - 1)
     itemPadding = Math.min(itemPadding, 345)
+    // TODO: improve modelsMesh order
+    // the order is handled by loader not data order
     this.modelsMesh.forEach(modelMesh => {
       modelMesh.geometry.computeBoundingBox()
       modelMesh.geometry.boundingBox.getSize(meshBoundingBox)

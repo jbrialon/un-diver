@@ -71,6 +71,7 @@ export default {
     font-weight: $fw-medium;
     text-align: center;
     @include small-only {
+      width:10000000px;
       font-size: $fs-watch-title-mobile;
     }
   }

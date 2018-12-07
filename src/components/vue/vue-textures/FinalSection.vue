@@ -8,7 +8,7 @@
     </div>
     <div id="final-section-ctas" class="final-section__ctas">
       <c-link :href="'#'" :label="$t('stage_final_3')" class="final-section__ctas--to-surface" @click.prevent="gotoSurface"></c-link>
-      <c-social-networks :footer-mode="false"></c-social-networks>
+      <c-social-networks id="footer-final-section" :footer-mode="false"></c-social-networks>
     </div>
   </div>
 </template>

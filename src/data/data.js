@@ -119,6 +119,30 @@ const database = [
         price: 'stage_7_other_3_price',
         buyLink: 'header_cta_2',
         texture: `images/screenshots/${i18n.locale}/${device}/other-models-section-white.png`
+      },
+      {
+        id: '8163-175_92',
+        title: 'stage_7_other_4_title',
+        description: 'stage_7_other_4_description',
+        price: 'stage_7_other_4_price',
+        buyLink: 'header_cta_2',
+        texture: `images/screenshots/${i18n.locale}/${device}/other-models-section-8163-175_92.png`
+      },
+      {
+        id: '8163-175-7MIL_93',
+        title: 'stage_7_other_5_title',
+        description: 'stage_7_other_5_description',
+        price: 'stage_7_other_5_price',
+        buyLink: 'header_cta_2',
+        texture: `images/screenshots/${i18n.locale}/${device}/other-models-section-8163-175-7MIL_93.png`
+      },
+      {
+        id: '8163-175LE_93-BLUESHARK',
+        title: 'stage_7_other_6_title',
+        description: 'stage_7_other_6_description',
+        price: 'stage_7_other_6_price',
+        buyLink: 'header_cta_2',
+        texture: `images/screenshots/${i18n.locale}/${device}/other-models-section-8163-175LE_93-BLUESHARK.png`
       }
     ]
   },

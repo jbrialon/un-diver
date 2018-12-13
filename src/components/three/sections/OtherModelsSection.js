@@ -18,14 +18,16 @@ export default class OtherModelsSection extends Section {
   constructor (sectionData) {
     super(sectionData)
     this.models = this.sectionData.watches
-    this.models.forEach(watch => {
+    // Init modelsMesh with null values to have a fixed order for models mesh
+    this.modelsMesh = Array(this.models.length).fill(null)
+    this.models.forEach((watch, index) => {
       this.textureLoader.load(watch.texture, texture => {
         texture.minFilter = THREE.LinearFilter
         const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, visible: true })
         const geometry = new THREE.PlaneGeometry(texture.image.width, texture.image.height)
         const modelMesh = new THREE.Mesh(geometry, material)
         modelMesh.matrixAutoUpdate = false
-        this.modelsMesh.push(modelMesh)
+        this.modelsMesh[index] = modelMesh
         Object.assign(
           modelMesh,
           new Fader(modelMesh)
@@ -52,18 +54,21 @@ export default class OtherModelsSection extends Section {
     itemPadding = Math.min(itemPadding, 345)
     // TODO: improve modelsMesh order
     // the order is handled by loader not data order
-    this.modelsMesh.forEach(modelMesh => {
-      modelMesh.geometry.computeBoundingBox()
-      modelMesh.geometry.boundingBox.getSize(meshBoundingBox)
-      xPos = (itemIndex % 2 === 0) ? -itemPadding : itemPadding
-      zPos = -(this.depth / (this.modelsMesh.length - 1)) * itemIndex
-      this.modelScaleFactor = isPortrait ? 0.25 : 0.7
-      modelMesh.position.set(xPos, 0, zPos)
-      modelMesh.scale.set(this.modelScaleFactor, this.modelScaleFactor, this.modelScaleFactor)
-      modelMesh.updateMatrix()
-      modelMesh.updateMatrixWorld()
-      itemIndex++
-    })
+    this.modelsMesh
+      // filter null values because modelsMesh is a fix length array
+      .filter(modelMesh => modelMesh !== null)
+      .forEach(modelMesh => {
+        modelMesh.geometry.computeBoundingBox()
+        modelMesh.geometry.boundingBox.getSize(meshBoundingBox)
+        xPos = (itemIndex % 2 === 0) ? -itemPadding : itemPadding
+        zPos = -(this.depth / (this.modelsMesh.length - 1)) * itemIndex
+        this.modelScaleFactor = isPortrait ? 0.25 : 0.7
+        modelMesh.position.set(xPos, 0, zPos)
+        modelMesh.scale.set(this.modelScaleFactor, this.modelScaleFactor, this.modelScaleFactor)
+        modelMesh.updateMatrix()
+        modelMesh.updateMatrixWorld()
+        itemIndex++
+      })
     this.matrix.setPosition(new THREE.Vector3(-xPos * 0.5, this.matrix.elements[13], this.matrix.elements[14])) // Fast way to set x position but leaving y and z values untouched
   }
 }
